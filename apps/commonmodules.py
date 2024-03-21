@@ -42,7 +42,7 @@ navbar = dbc.Navbar(
                 },
             ),
             width = 'auto',
-            class_name = 'ms-4'
+            class_name = 'ms-4 me-md-2'
         ),
         dbc.Col(
             html.A(
@@ -53,39 +53,70 @@ navbar = dbc.Navbar(
                                 [
                                     html.Img(
                                         src = '/assets/lamrag-wordmark.png',
-                                        style = {'height' : '1.75em'},
-                                        className = 'me-2'
+                                        style = {'height' : '1.75em'}
                                     ),
                                 ],
                                 style = {'letter-spacing' : '-0.5px'},
-                                class_name = 'ms-2'
+                                class_name = 'm-0'
                             ),
                             width = 'auto'
                         ),
                     ],
                     align = 'center',
-                    class_name = 'g-0',
+                    #class_name = 'g-0',
                     #class_name = 'justify-content-center g-0',
-                    #class_name = 'justify-content-md-center g-0',
+                    class_name = 'justify-content-md-start justify-content-center g-0',
                 ),
                 href = '/'
             ),
-            class_name = 'ms-1 me-1 md-9'
+            class_name = 'ms-md-2 me-md-2 ms-0 me-0'
         ),
         dbc.Col(
-            [
-                dbc.NavLink("Log-in", href = '/login', style = {'color' : '#FFF'})
-            ],
+            dbc.Button(
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            html.I(className = 'bi bi-person-fill'),
+                            sm = 'auto',
+                            class_name = 'p-auto pe-md-1'
+                        ),
+                        dbc.Col(
+                            "Log-in",
+                            sm = 'auto',
+                            class_name = 'p-auto ps-md-1 d-none d-md-block'
+                        )
+                    ],
+                    align = 'center',
+                    class_name = 'pad-row',
+                    style = {
+                        'height' : '100%',
+                        'margin-left' : 'auto',
+                        'margin-right' : 'auto'
+                    }
+                ),
+                id = 'cm_navbar_btn_login',
+                href = '/login',
+                color = 'light',
+                outline = True,
+                style = {
+                    'height' : '2em',
+                    'padding' : '0px'
+                },
+            ),
             width = 'auto',
-            class_name = 'ms-4 me-4',
-        )
+            class_name = 'ms-md-2 me-4'
+        ),
     ],
     id = 'cm_navbar',
     dark = True,
     #color = 'dark',
-    color = '#203354'
+    color = '#203354',
     #color = '#2e215e'
     #color = '#2a3385'
+    style = {
+        'padding-top' : '1em',
+        'padding-bottom' : '1em'
+    }
 )
 
 # Sidebar
@@ -108,7 +139,9 @@ sidebar = dbc.Offcanvas(
                                 html.I(className = 'bi bi-house me-2'),
                                 "Home"
                             ],
-                            width = sidebar_btn_col_width), class_name = sidebar_btn_row_class_name),
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
                     href = '/',
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
@@ -119,7 +152,9 @@ sidebar = dbc.Offcanvas(
                                 html.I(className = 'bi bi-grid-1x2 me-2'),
                                 "Dashboard"
                             ],
-                            width = sidebar_btn_col_width), class_name = sidebar_btn_row_class_name),
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
                     href = '/dashboard',
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
@@ -130,7 +165,9 @@ sidebar = dbc.Offcanvas(
                                 html.I(className = 'bi bi-send-exclamation me-2'),
                                 "Report an incident"
                             ],
-                            width = sidebar_btn_col_width), class_name = sidebar_btn_row_class_name),
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
                     href = '/reports/create',
                     color = 'warning', outline = True, #sidebar_btn_color,
                     size = sidebar_btn_size,
@@ -146,7 +183,9 @@ sidebar = dbc.Offcanvas(
                                 html.I(className = 'bi bi-pencil-square me-2'),
                                 "Update a report"
                             ],
-                            width = sidebar_btn_col_width), class_name = sidebar_btn_row_class_name),
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
                     href = '/reports/update',
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
@@ -172,7 +211,9 @@ sidebar = dbc.Offcanvas(
                                 html.I(className = 'bi bi-clipboard-data me-2'),
                                 "View reports"
                             ],
-                            width = sidebar_btn_col_width), class_name = sidebar_btn_row_class_name),
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
                     href = '/reports',
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
@@ -183,7 +224,9 @@ sidebar = dbc.Offcanvas(
                                 html.I(className = 'bi bi-clipboard-plus me-2'),
                                 "Request a report"
                             ],
-                            width = sidebar_btn_col_width), class_name = sidebar_btn_row_class_name),
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
                     href = '/reports/request',
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
@@ -194,7 +237,9 @@ sidebar = dbc.Offcanvas(
                                 html.I(className = 'bi bi-printer me-2'),
                                 "Generate a report"
                             ],
-                            width = sidebar_btn_col_width), class_name = sidebar_btn_row_class_name),
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
                     href = '/reports/generate',
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
@@ -218,7 +263,9 @@ sidebar = dbc.Offcanvas(
                                 html.I(className = 'bi bi-journal-bookmark me-2'),
                                 "View events"
                             ],
-                            width = sidebar_btn_col_width), class_name = sidebar_btn_row_class_name),
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
                     href = '/events',
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
@@ -258,7 +305,9 @@ sidebar = dbc.Offcanvas(
                                 html.I(className = 'bi bi-search me-2'),
                                 "Search users"
                             ],
-                            width = sidebar_btn_col_width), class_name = sidebar_btn_row_class_name),
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
                     href = '/users',
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
@@ -269,7 +318,9 @@ sidebar = dbc.Offcanvas(
                                 html.I(className = 'bi bi-person-add me-2'),
                                 "Register new user"
                             ],
-                            width = sidebar_btn_col_width), class_name = sidebar_btn_row_class_name),
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
                     href = '/users/register',
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
@@ -294,7 +345,9 @@ sidebar = dbc.Offcanvas(
                                 html.I(className = 'bi bi-houses me-2'),
                                 "View barangays"
                             ],
-                            width = sidebar_btn_col_width), class_name = sidebar_btn_row_class_name),
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
                     href = '/data/barangays',
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
@@ -305,7 +358,9 @@ sidebar = dbc.Offcanvas(
                                 html.I(className = 'bi bi-people me-2'),
                                 "View demographics"
                             ],
-                            width = sidebar_btn_col_width), class_name = sidebar_btn_row_class_name),
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
                     href = '/data/demographics',
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
@@ -358,9 +413,10 @@ sidebar = dbc.Offcanvas(
     id = 'cm_sidebar',
     style = {
     #    'color' : '#F5F5F5',
+        #'width' : '100%',
         'background-color' : '#203354'
     },
-    class_name = 'text-bg-dark'
+    class_name = 'text-bg-dark w-100 w-md-50'
 )
 
 # Footer

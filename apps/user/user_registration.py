@@ -716,7 +716,7 @@ layout = html.Div(
                             ], className = 'mb-3'
                         ),
                         html.Hr(),
-                        # Submit button
+                        # Register button
                         html.Div(
                             [
                                 dbc.Row(
@@ -730,8 +730,8 @@ layout = html.Div(
                                                 id = 'userreg_btn_submit',
                                                 style = {'width': ' 100%'}
                                             ),
-                                            md = 3, sm = 12,
-                                            class_name = 'align-self-center mb-2'
+                                            #md = 3, sm = 12,
+                                            class_name = 'align-self-center col-md-3 mb-2'
                                         )
                                     ],
                                     class_name = 'justify-content-end'
@@ -747,6 +747,8 @@ layout = html.Div(
     ]
 )
 
+userreg_url_pathname = '/users/register'
+
 # Callback for populating regions and other basic dropdown menus
 @app.callback(
     [
@@ -760,7 +762,7 @@ layout = html.Div(
 )
 
 def userreg_populateregions(pathname):
-    if pathname == '/users/register':
+    if pathname == userreg_url_pathname:
         # Regions
         sql = """SELECT name as label, id as value
         FROM utilities.addressregion;
