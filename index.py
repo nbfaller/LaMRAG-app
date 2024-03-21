@@ -13,7 +13,7 @@ from apps.user import user_registration
 
 # Layout definition
 CONTENT_STYLE = {
-    'margin' : '1em 2em 1em',
+    'margin' : '5em 2em 1em',
     'padding' : '1em 1em'
 }
 

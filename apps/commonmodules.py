@@ -114,6 +114,10 @@ navbar = dbc.Navbar(
     #color = '#2e215e'
     #color = '#2a3385'
     style = {
+        'position' : 'fixed',
+        'top' : 0,
+        'width' : '100vw',
+        'z-index' : '100',
         'padding-top' : '1em',
         'padding-bottom' : '1em'
     }
@@ -491,8 +495,8 @@ footer = html.Footer(
                             html.Small(
                                 """The City of Calbayog is a first-class component city at the northwestern corner of Samar Province.
                                 Founded as a Spanish settlement on the mouth of the Jibatang River, it has since grown into the province's foremost
-                                political, commercial, and religious center. It was constituted as a city in 1948 through the merger of the
-                                municipalities of Calbayog, Tinambacan, and Oquendo, which now define its three geographical districts."""
+                                commercial center. It was constituted as a city in 1948 through the merger of the municipalities of Calbayog, Tinambacan,
+                                and Oquendo, which now define its three geographical districts."""
                             )
                         ),
                         dbc.Row(
