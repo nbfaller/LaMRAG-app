@@ -9,7 +9,8 @@ import webbrowser
 # App definition
 from app import app
 from apps import home, commonmodules as cm, error
-from apps.user import user_registration
+from apps.users import users_register
+from apps.reports import reports_create
 
 # Layout definition
 CONTENT_STYLE = {
@@ -57,7 +58,9 @@ def displaypage(pathname):
             if pathname == '/' or pathname == '/home':
                 returnlayout = home.layout
             elif pathname == '/users/register':
-                returnlayout = user_registration.layout
+                returnlayout = users_register.layout
+            elif pathname == '/reports/create':
+                returnlayout = reports_create.layout
             else:
                 returnlayout = error.layout
             return [returnlayout]

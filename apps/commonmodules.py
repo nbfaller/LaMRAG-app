@@ -33,7 +33,7 @@ navbar = dbc.Navbar(
             dbc.Button(
                 html.I(className = 'bi bi-justify-left'),
                 id = 'cm_navbar_btn_burger',
-                color = 'light',
+                color = 'secondary',
                 outline = True,
                 style = {
                     'height' : '2em',
@@ -96,7 +96,7 @@ navbar = dbc.Navbar(
                 ),
                 id = 'cm_navbar_btn_login',
                 href = '/login',
-                color = 'light',
+                color = 'secondary',
                 outline = True,
                 style = {
                     'height' : '2em',

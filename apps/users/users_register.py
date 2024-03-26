@@ -12,7 +12,7 @@ from dash.exceptions import PreventUpdate
 from app import app
 from apps import dbconnect as db
 
-userreg_tag_required = html.Sup("*", className = 'text-danger')
+user_reg_tag_required = html.Sup("*", className = 'text-danger')
 
 layout = html.Div(
     [
@@ -28,16 +28,16 @@ layout = html.Div(
                                         html.H1("User Registration"),
                                         html.P(
                                             [
-                                                "Kinihanglan pun-on an mga patlang nga may pula nga asterisk ", userreg_tag_required, ".",
+                                                "Kinihanglan pun-on an mga patlang nga may pula nga asterisk ", user_reg_tag_required, ".",
                                                 html.Br(),
                                                 html.Small(
-                                                    ["(Fields with red asterisks ", userreg_tag_required, " are required.)"],
+                                                    ["(Fields with red asterisks ", user_reg_tag_required, " are required.)"],
                                                     className = 'text-muted'
                                                 )
                                             ]
                                         )
                                     ],
-                                    id = 'userreg_div_header'
+                                    id = 'user_reg_div_header'
                                 ),
                                 dbc.Row(
                                     [
@@ -45,22 +45,22 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "User type", userreg_tag_required,
+                                                    "User type", user_reg_tag_required,
                                                     #html.Br(), html.Small(" (Sex assigned at birth)", className = 'text-muted')
                                                 ],
-                                                id = 'userreg_label_usertype_id',
+                                                id = 'user_reg_label_usertype_id',
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dcc.Dropdown(
-                                                id = 'userreg_input_usertype_id',
+                                                id = 'user_reg_input_usertype_id',
                                                 clearable = True
                                             ),
                                             class_name = 'align-self-center mb-1 col-12 col-md-9'
                                         ),
                                     ], className = 'mb-3',
-                                    id = 'userreg_div_usertype'
+                                    id = 'user_reg_div_usertype'
                                 )
                             ]
                         ),
@@ -90,17 +90,17 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Ngaran", userreg_tag_required, html.Br(),
+                                                    "Ngaran", user_reg_tag_required, html.Br(),
                                                     html.Small(" (Name)", className = 'text-muted')
                                                 ],
-                                                id = 'userreg_label_name'
+                                                id = 'user_reg_label_name'
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dbc.Input(
                                                 type = 'text',
-                                                id = 'userreg_input_fname',
+                                                id = 'user_reg_input_fname',
                                                 placeholder = ['Primero (First name)']
                                             ),
                                             class_name = 'align-self-center mb-2 col-12 col-md-3'
@@ -108,7 +108,7 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Input(
                                                 type = 'text',
-                                                id = 'userreg_input_mname',
+                                                id = 'user_reg_input_mname',
                                                 placeholder = 'Butnga (Middle name)'
                                             ),
                                             md = 3, sm = 12,
@@ -117,14 +117,14 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Input(
                                                 type = 'text',
-                                                id = 'userreg_input_lname',
+                                                id = 'user_reg_input_lname',
                                                 placeholder = 'Apelyido (Last name)'
                                             ),
                                             md = 3, sm = 12,
                                             class_name = 'align-self-center mb-2 col-12 col-md-3'
                                         ),
                                     ],
-                                    id = 'userreg_div_name',
+                                    id = 'user_reg_div_name',
                                     class_name = 'mb-1'
                                 ),
                                 # Username
@@ -133,14 +133,14 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 "Username",
-                                                id = 'userreg_label_username',
+                                                id = 'user_reg_label_username',
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dbc.Input(
                                                 type = 'text',
-                                                id = 'userreg_input_username',
+                                                id = 'user_reg_input_username',
                                                 placeholder = 'Username',
                                                 disabled = True
                                             ),
@@ -148,7 +148,7 @@ layout = html.Div(
                                         ),
                                         dbc.Tooltip(
                                             "Usernames are automatically generated.",
-                                            target = 'userreg_label_username'
+                                            target = 'user_reg_label_username'
                                         )
                                     ], class_name = 'mb-1'
                                 ),
@@ -158,17 +158,17 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Petsa san pagkatawo", userreg_tag_required, html.Br(),
+                                                    "Petsa san pagkatawo", user_reg_tag_required, html.Br(),
                                                     html.Small(" (Date of birth)", className = 'text-muted')
                                                 ],
-                                                id = 'userreg_label_birthdate',
+                                                id = 'user_reg_label_birthdate',
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                             #class_name = 'col-md-2 col-sm-11 col-xs-11 mb-3'
                                         ),
                                         dbc.Col(
                                             dcc.DatePickerSingle(
-                                                id = 'userreg_input_birthdate',
+                                                id = 'user_reg_input_birthdate',
                                                 placeholder = 'MM/DD/YYYY',
                                                 #month_format = 'MMM Do, YYYY',
                                                 clearable = True,
@@ -180,17 +180,17 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Natawo nga babayi/lalaki", userreg_tag_required, html.Br(),
+                                                    "Natawo nga babayi/lalaki", user_reg_tag_required, html.Br(),
                                                     html.Small(" (Sex assigned at birth)", className = 'text-muted')
                                                 ],
-                                                id = 'userreg_label_assignedsex',
+                                                id = 'user_reg_label_assignedsex',
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                             #class_name = 'col-md-2 col-sm-11 col-xs-11 mb-3'
                                         ),
                                         dbc.Col(
                                             dcc.Dropdown(
-                                                id = 'userreg_input_assignedsex_id',
+                                                id = 'user_reg_input_assignedsex_id',
                                                 clearable = True
                                             ),
                                             class_name = 'align-self-center mb-2 col-12 col-md-3'
@@ -233,14 +233,14 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 "Lived name",
-                                                id = 'userreg_label_livedname'
+                                                id = 'user_reg_label_livedname'
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dbc.Input(
                                                 type = 'text',
-                                                id = 'userreg_input_livedname',
+                                                id = 'user_reg_input_livedname',
                                                 placeholder = 'Lived name'
                                             ),
                                             class_name = 'align-self-center mb-2 col-12 col-md-9'
@@ -252,14 +252,14 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 "Honorific",
-                                                id = 'userreg_label_honorific'
+                                                id = 'user_reg_label_honorific'
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dbc.Input(
                                                 type = 'text',
-                                                id = 'userreg_input_honorific',
+                                                id = 'user_reg_input_honorific',
                                                 placeholder = 'Example: Mr., Mrs., Ms., Dr.'
                                             ),
                                             class_name = 'align-self-center mb-2 col-12 col-md-3'
@@ -267,14 +267,14 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 "Pronouns",
-                                                id = 'userreg_label_pronouns'
+                                                id = 'user_reg_label_pronouns'
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dbc.Input(
                                                 type = 'text',
-                                                id = 'userreg_input_pronouns',
+                                                id = 'user_reg_input_pronouns',
                                                 placeholder = 'Example: she/her, he/him, they/them'
                                             ),
                                             class_name = 'align-self-center mb-2 col-12 col-md-3'
@@ -317,16 +317,16 @@ layout = html.Div(
                                             dbc.Label(
                                                 [
                                                     #html.I(className = 'bi bi-telephone me-2'),
-                                                    "Opisina", userreg_tag_required, html.Br(),
+                                                    "Opisina", user_reg_tag_required, html.Br(),
                                                     html.Small(" (Office)", className = 'text-muted')
                                                 ],
-                                                id = 'userreg_label_office_id',
+                                                id = 'user_reg_label_office_id',
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dcc.Dropdown(
-                                                id = 'userreg_input_office_id',
+                                                id = 'user_reg_input_office_id',
                                                 clearable = True,
                                                 placeholder = "Pili (select)..."
                                             ),
@@ -341,17 +341,17 @@ layout = html.Div(
                                             dbc.Label(
                                                 [
                                                     #html.I(className = 'bi bi-envelope-at me-2'),
-                                                    "Puwesto/katungdánan", userreg_tag_required, html.Br(),
+                                                    "Puwesto/katungdánan", user_reg_tag_required, html.Br(),
                                                     html.Small(" (Position/designation)", className = 'text-muted')
                                                 ],
-                                                id = 'userreg_label_designation',
+                                                id = 'user_reg_label_designation',
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dbc.Input(
                                                 type= 'text',
-                                                id = 'userreg_input_designation',
+                                                id = 'user_reg_input_designation',
                                                 placeholder = 'Example: City Councilor, Barangay Captain, Administrative Aide I',
                                             ),
                                             class_name = 'align-self-center mb-2 col-12 col-md-9'
@@ -387,17 +387,17 @@ layout = html.Div(
                                             dbc.Label(
                                                 [
                                                     #html.I(className = 'bi bi-telephone me-2'),
-                                                    "Numero sa cellphone/telepono", userreg_tag_required, html.Br(),
+                                                    "Numero sa cellphone/telepono", user_reg_tag_required, html.Br(),
                                                     html.Small(" (Contact number)", className = 'text-muted')
                                                 ],
-                                                id = 'userreg_label_contactnum',
+                                                id = 'user_reg_label_contactnum',
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dbc.Input(
                                                 type = 'text',
-                                                id = 'userreg_input_contactnum',
+                                                id = 'user_reg_input_contactnum',
                                                 placeholder = '09XXXXXXXXX',
                                             ),
                                             class_name = 'align-self-center mb-2 col-12 col-md-3'
@@ -408,14 +408,14 @@ layout = html.Div(
                                                     #html.I(className = 'bi bi-envelope-at me-2'),
                                                     "Email address"
                                                 ],
-                                                id = 'userreg_label_email',
+                                                id = 'user_reg_label_email',
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dbc.Input(
                                                 type= 'text',
-                                                id = 'userreg_input_email',
+                                                id = 'user_reg_input_email',
                                                 placeholder = 'example@website.com',
                                             ),
                                             class_name = 'align-self-center mb-2 col-12 col-md-3'
@@ -432,14 +432,14 @@ layout = html.Div(
                                                     "Ngaran sa Facebook", html.Br(),
                                                     html.Small(" (Facebook name)", className = 'text-muted')
                                                 ],
-                                                id = 'userreg_label_facebbok',
+                                                id = 'user_reg_label_facebbok',
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dbc.Input(
                                                 type = 'text',
-                                                id = 'userreg_input_facebook',
+                                                id = 'user_reg_input_facebook',
                                                 placeholder = 'Ngaran sa Facebook (Facebook name)',
                                             ),
                                             class_name = 'align-self-center mb-2 col-12 col-md-9'
@@ -485,16 +485,16 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Rehiyon", userreg_tag_required, html.Br(),
+                                                    "Rehiyon", user_reg_tag_required, html.Br(),
                                                     html.Small(" (Region)", className = 'text-muted')
                                                 ],
-                                                id = 'userreg_label_present_region_id'
+                                                id = 'user_reg_label_present_region_id'
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dcc.Dropdown(
-                                                id = 'userreg_input_present_region_id',
+                                                id = 'user_reg_input_present_region_id',
                                                 clearable = True,
                                                 placeholder = "Pili (select)..."
                                             ),
@@ -507,16 +507,16 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Probinsya", userreg_tag_required, html.Br(),
+                                                    "Probinsya", user_reg_tag_required, html.Br(),
                                                     html.Small(" (Province)", className = 'text-muted')
                                                 ],
-                                                id = 'userreg_label_present_province_id'
+                                                id = 'user_reg_label_present_province_id'
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dcc.Dropdown(
-                                                id = 'userreg_input_present_province_id',
+                                                id = 'user_reg_input_present_province_id',
                                                 clearable = True,
                                                 placeholder = "Pili (select)...",
                                                 disabled = True
@@ -530,16 +530,16 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Siyudad/Bungto", userreg_tag_required, html.Br(),
+                                                    "Siyudad/Bungto", user_reg_tag_required, html.Br(),
                                                     html.Small(" (City/Municipality)", className = 'text-muted')
                                                 ],
-                                                id = 'userreg_label_present_citymun_id'
+                                                id = 'user_reg_label_present_citymun_id'
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dcc.Dropdown(
-                                                id = 'userreg_input_present_citymun_id',
+                                                id = 'user_reg_input_present_citymun_id',
                                                 clearable = True,
                                                 placeholder = "Pili (select)...",
                                                 disabled = True
@@ -553,15 +553,15 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Barangay",  userreg_tag_required,
+                                                    "Barangay",  user_reg_tag_required,
                                                 ],
-                                                id = 'userreg_label_present_brgy_id'
+                                                id = 'user_reg_label_present_brgy_id'
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dcc.Dropdown(
-                                                id = 'userreg_input_present_brgy_id',
+                                                id = 'user_reg_input_present_brgy_id',
                                                 clearable = True,
                                                 placeholder = "Pili (select)...",
                                                 disabled = True
@@ -575,24 +575,24 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Kalsada", userreg_tag_required, html.Br(),
+                                                    "Kalsada", user_reg_tag_required, html.Br(),
                                                     html.Small(" (Street)", className = 'text-muted')
                                                 ],
-                                                id = 'userreg_input_present_street'
+                                                id = 'user_reg_input_present_street'
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dbc.Input(
                                                 type = 'text',
-                                                id = 'userreg_input_present_street',
+                                                id = 'user_reg_input_present_street',
                                                 placeholder = 'Kalsada (Street)',
                                                 disabled = True
                                             ),
                                             class_name = 'align-self-center mb-2 col-12 col-md-9'
                                         ),
                                     ],
-                                    id = 'userreg_div_name',
+                                    id = 'user_reg_div_name',
                                     class_name = 'mb-1'
                                 ),
                             ], className = 'mb-3'
@@ -625,7 +625,7 @@ layout = html.Div(
                                             ]
                                         ),
                                         dbc.Checkbox(
-                                            id = "userreg_cbox_permanent_address",
+                                            id = "user_reg_cbox_permanent_address",
                                             label = [
                                                 "Pareho ini sa akon adlaw-adlaw nga gin-iistaran.", html.Small(" (Same as present address)", className = 'text-muted')
                                             ],
@@ -644,16 +644,16 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Rehiyon", userreg_tag_required, html.Br(),
+                                                    "Rehiyon", user_reg_tag_required, html.Br(),
                                                     html.Small(" (Region)", className = 'text-muted')
                                                 ],
-                                                id = 'userreg_label_permanent_region_id'
+                                                id = 'user_reg_label_permanent_region_id'
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dcc.Dropdown(
-                                                id = 'userreg_input_permanent_region_id',
+                                                id = 'user_reg_input_permanent_region_id',
                                                 clearable = True,
                                                 placeholder = "Pili (select)..."
                                             ),
@@ -666,16 +666,16 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Probinsya", userreg_tag_required, html.Br(),
+                                                    "Probinsya", user_reg_tag_required, html.Br(),
                                                     html.Small(" (Province)", className = 'text-muted')
                                                 ],
-                                                id = 'userreg_label_permanent_province_id'
+                                                id = 'user_reg_label_permanent_province_id'
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dcc.Dropdown(
-                                                id = 'userreg_input_permanent_province_id',
+                                                id = 'user_reg_input_permanent_province_id',
                                                 clearable = True,
                                                 placeholder = "Pili (select)...",
                                                 disabled = True
@@ -689,16 +689,16 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Siyudad/Bungto", userreg_tag_required, html.Br(),
+                                                    "Siyudad/Bungto", user_reg_tag_required, html.Br(),
                                                     html.Small(" (City/Municipality)", className = 'text-muted')
                                                 ],
-                                                id = 'userreg_label_permanent_citymun_id'
+                                                id = 'user_reg_label_permanent_citymun_id'
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dcc.Dropdown(
-                                                id = 'userreg_input_permanent_citymun_id',
+                                                id = 'user_reg_input_permanent_citymun_id',
                                                 clearable = True,
                                                 placeholder = "Pili (select)...",
                                                 disabled = True
@@ -712,15 +712,15 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Barangay", userreg_tag_required,
+                                                    "Barangay", user_reg_tag_required,
                                                 ],
-                                                id = 'userreg_label_permanent_brgy_id'
+                                                id = 'user_reg_label_permanent_brgy_id'
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dcc.Dropdown(
-                                                id = 'userreg_input_permanent_brgy_id',
+                                                id = 'user_reg_input_permanent_brgy_id',
                                                 clearable = True,
                                                 placeholder = "Pili (select)...",
                                                 disabled = True
@@ -734,24 +734,24 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Kalsada", userreg_tag_required, html.Br(),
+                                                    "Kalsada", user_reg_tag_required, html.Br(),
                                                     html.Small(" (Street)", className = 'text-muted')
                                                 ],
-                                                id = 'userreg_input_permanent_street'
+                                                id = 'user_reg_input_permanent_street'
                                             ),
                                             class_name = 'align-self-center mb-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dbc.Input(
                                                 type = 'text',
-                                                id = 'userreg_input_permanent_street',
+                                                id = 'user_reg_input_permanent_street',
                                                 placeholder = 'Kalsada (Street)',
                                                 disabled = True
                                             ),
                                             class_name = 'align-self-center mb-2 col-12 col-md-9'
                                         ),
                                     ],
-                                    id = 'userreg_div_name',
+                                    id = 'user_reg_div_name',
                                     class_name = 'mb-1'
                                 ),
                             ], className = 'mb-3'
@@ -768,7 +768,7 @@ layout = html.Div(
                                                     html.I(className = 'bi bi-check-circle-fill me-2'),
                                                     "Rehistro (Register)"
                                                 ],
-                                                id = 'userreg_btn_submit',
+                                                id = 'user_reg_btn_submit',
                                                 style = {'width': ' 100%'}
                                             ),
                                             #md = 3, sm = 12,
@@ -780,7 +780,7 @@ layout = html.Div(
                             ]
                         )
                     ],
-                    md = 10,
+                    class_name = 'col-md-10'
                 )
             ],
             class_name = 'justify-content-center'
@@ -788,23 +788,23 @@ layout = html.Div(
     ]
 )
 
-userreg_url_pathname = '/users/register'
+user_reg_url_pathname = '/users/register'
 
 # Callback for populating regions and other basic dropdown menus
 @app.callback(
     [
-        Output('userreg_input_present_region_id', 'options'),
-        Output('userreg_input_permanent_region_id', 'options'),
-        Output('userreg_input_assignedsex_id', 'options'),
-        Output('userreg_input_office_id', 'options')
+        Output('user_reg_input_present_region_id', 'options'),
+        Output('user_reg_input_permanent_region_id', 'options'),
+        Output('user_reg_input_assignedsex_id', 'options'),
+        Output('user_reg_input_office_id', 'options')
     ],
     [
         Input('url', 'pathname')
     ]
 )
 
-def userreg_populatedropdowns(pathname):
-    if pathname == userreg_url_pathname:
+def user_reg_populatedropdowns(pathname):
+    if pathname == user_reg_url_pathname:
         # Regions
         sql = """SELECT name as label, id as value
         FROM utilities.addressregion;
@@ -838,34 +838,34 @@ def userreg_populatedropdowns(pathname):
 # Callback for setting permanent region as present region when checkbox is selected
 @app.callback(
     [
-        Output('userreg_input_permanent_region_id', 'value'),
-        Output('userreg_input_permanent_region_id', 'disabled')
+        Output('user_reg_input_permanent_region_id', 'value'),
+        Output('user_reg_input_permanent_region_id', 'disabled')
     ],
     [
-        Input('userreg_cbox_permanent_address', 'value')
+        Input('user_reg_cbox_permanent_address', 'value')
     ],
     [
-        State('userreg_input_present_region_id', 'value')
+        State('user_reg_input_present_region_id', 'value')
     ]
 )
 
-def userreg_sameregion(cbox, region):
+def user_reg_sameregion(cbox, region):
     if cbox: return [region, True]
     else: return [None, False]
 
 # Callback for populating present provinces once present region is selected
 @app.callback(
     [
-        Output('userreg_input_present_province_id', 'options'),
-        Output('userreg_input_present_province_id', 'disabled'),
-        Output('userreg_input_present_province_id', 'value'),
+        Output('user_reg_input_present_province_id', 'options'),
+        Output('user_reg_input_present_province_id', 'disabled'),
+        Output('user_reg_input_present_province_id', 'value'),
     ],
     [
-        Input('userreg_input_present_region_id', 'value'),
+        Input('user_reg_input_present_region_id', 'value'),
     ]
 )
 
-def userreg_populatepresentprovinces(region):
+def user_reg_populatepresentprovinces(region):
     provinces = []
     disabled = True
     if region:
@@ -885,20 +885,20 @@ def userreg_populatepresentprovinces(region):
 # Callback for populating permanent provinces once permanent region is selected
 @app.callback(
     [
-        Output('userreg_input_permanent_province_id', 'options'),
-        Output('userreg_input_permanent_province_id', 'disabled'),
-        Output('userreg_input_permanent_province_id', 'value'),
+        Output('user_reg_input_permanent_province_id', 'options'),
+        Output('user_reg_input_permanent_province_id', 'disabled'),
+        Output('user_reg_input_permanent_province_id', 'value'),
     ],
     [
-        Input('userreg_input_permanent_region_id', 'value'),
-        Input('userreg_cbox_permanent_address', 'value'),
+        Input('user_reg_input_permanent_region_id', 'value'),
+        Input('user_reg_cbox_permanent_address', 'value'),
     ],
     [
-        State('userreg_input_present_province_id', 'value')
+        State('user_reg_input_present_province_id', 'value')
     ]
 )
 
-def userreg_populatepermanentprovinces(region, cbox, present_province):
+def user_reg_populatepermanentprovinces(region, cbox, present_province):
     provinces = []
     disabled = True
     value = None
@@ -920,17 +920,17 @@ def userreg_populatepermanentprovinces(region, cbox, present_province):
 # Callback for populating present cities/municipalities once present province is selected
 @app.callback(
     [
-        Output('userreg_input_present_citymun_id', 'options'),
-        Output('userreg_input_present_citymun_id', 'disabled'),
-        Output('userreg_input_present_citymun_id', 'value'),
+        Output('user_reg_input_present_citymun_id', 'options'),
+        Output('user_reg_input_present_citymun_id', 'disabled'),
+        Output('user_reg_input_present_citymun_id', 'value'),
     ],
     [
-        Input('userreg_input_present_region_id', 'value'),
-        Input('userreg_input_present_province_id', 'value'),
+        Input('user_reg_input_present_region_id', 'value'),
+        Input('user_reg_input_present_province_id', 'value'),
     ]
 )
 
-def userreg_populatepresentcitymuns(region, province):
+def user_reg_populatepresentcitymuns(region, province):
     citymun = []
     disabled = True
     if region and province:
@@ -950,21 +950,21 @@ def userreg_populatepresentcitymuns(region, province):
 # Callback for populating permanent cities/municipalities once permanent province is selected
 @app.callback(
     [
-        Output('userreg_input_permanent_citymun_id', 'options'),
-        Output('userreg_input_permanent_citymun_id', 'disabled'),
-        Output('userreg_input_permanent_citymun_id', 'value'),
+        Output('user_reg_input_permanent_citymun_id', 'options'),
+        Output('user_reg_input_permanent_citymun_id', 'disabled'),
+        Output('user_reg_input_permanent_citymun_id', 'value'),
     ],
     [
-        Input('userreg_input_permanent_region_id', 'value'),
-        Input('userreg_input_permanent_province_id', 'value'),
-        Input('userreg_cbox_permanent_address', 'value'),
+        Input('user_reg_input_permanent_region_id', 'value'),
+        Input('user_reg_input_permanent_province_id', 'value'),
+        Input('user_reg_cbox_permanent_address', 'value'),
     ],
     [
-        State('userreg_input_present_citymun_id', 'value')
+        State('user_reg_input_present_citymun_id', 'value')
     ]
 )
 
-def userreg_populatepermanentcitymuns(region, province, cbox, present_citymun):
+def user_reg_populatepermanentcitymuns(region, province, cbox, present_citymun):
     citymun = []
     disabled = True
     value = None
@@ -986,18 +986,18 @@ def userreg_populatepermanentcitymuns(region, province, cbox, present_citymun):
 # Callback for populating present barangays once present city/municipality is selected
 @app.callback(
     [
-        Output('userreg_input_present_brgy_id', 'options'),
-        Output('userreg_input_present_brgy_id', 'disabled'),
-        Output('userreg_input_present_brgy_id', 'value'),
+        Output('user_reg_input_present_brgy_id', 'options'),
+        Output('user_reg_input_present_brgy_id', 'disabled'),
+        Output('user_reg_input_present_brgy_id', 'value'),
     ],
     [
-        Input('userreg_input_present_region_id', 'value'),
-        Input('userreg_input_present_province_id', 'value'),
-        Input('userreg_input_present_citymun_id', 'value'),
+        Input('user_reg_input_present_region_id', 'value'),
+        Input('user_reg_input_present_province_id', 'value'),
+        Input('user_reg_input_present_citymun_id', 'value'),
     ]
 )
 
-def userreg_populatepresentbrgys(region, province, citymun):
+def user_reg_populatepresentbrgys(region, province, citymun):
     brgy = []
     disabled = True
     if region and province and citymun:
@@ -1017,22 +1017,22 @@ def userreg_populatepresentbrgys(region, province, citymun):
 # Callback for populating permanent barangays once permanent city/municipality is selected
 @app.callback(
     [
-        Output('userreg_input_permanent_brgy_id', 'options'),
-        Output('userreg_input_permanent_brgy_id', 'disabled'),
-        Output('userreg_input_permanent_brgy_id', 'value'),
+        Output('user_reg_input_permanent_brgy_id', 'options'),
+        Output('user_reg_input_permanent_brgy_id', 'disabled'),
+        Output('user_reg_input_permanent_brgy_id', 'value'),
     ],
     [
-        Input('userreg_input_permanent_region_id', 'value'),
-        Input('userreg_input_permanent_province_id', 'value'),
-        Input('userreg_input_permanent_citymun_id', 'value'),
-        Input('userreg_cbox_permanent_address', 'value'),
+        Input('user_reg_input_permanent_region_id', 'value'),
+        Input('user_reg_input_permanent_province_id', 'value'),
+        Input('user_reg_input_permanent_citymun_id', 'value'),
+        Input('user_reg_cbox_permanent_address', 'value'),
     ],
     [
-        State('userreg_input_present_brgy_id', 'value')
+        State('user_reg_input_present_brgy_id', 'value')
     ]
 )
 
-def userreg_populatepermanentbrgys(region, province, citymun, cbox, present_brgy):
+def user_reg_populatepermanentbrgys(region, province, citymun, cbox, present_brgy):
     brgy = []
     disabled = True
     value = None
@@ -1054,18 +1054,18 @@ def userreg_populatepermanentbrgys(region, province, citymun, cbox, present_brgy
 # Callback for enabling present street address once present city/municipality is selected
 @app.callback(
     [
-        Output('userreg_input_present_street', 'disabled'),
-        Output('userreg_input_present_street', 'value'),
+        Output('user_reg_input_present_street', 'disabled'),
+        Output('user_reg_input_present_street', 'value'),
     ],
     [
-        Input('userreg_input_present_region_id', 'value'),
-        Input('userreg_input_present_province_id', 'value'),
-        Input('userreg_input_present_citymun_id', 'value'),
-        Input('userreg_input_present_brgy_id', 'value'),
+        Input('user_reg_input_present_region_id', 'value'),
+        Input('user_reg_input_present_province_id', 'value'),
+        Input('user_reg_input_present_citymun_id', 'value'),
+        Input('user_reg_input_present_brgy_id', 'value'),
     ]
 )
 
-def userreg_enablepresentstreet(region, province, citymun, brgy):
+def user_reg_enablepresentstreet(region, province, citymun, brgy):
     disabled = True
     if region and province and citymun and brgy: disabled = False
     return [disabled, None]
@@ -1073,22 +1073,22 @@ def userreg_enablepresentstreet(region, province, citymun, brgy):
 # Callback for enabling permanent street address once permanent city/municipality is selected
 @app.callback(
     [
-        Output('userreg_input_permanent_street', 'disabled'),
-        Output('userreg_input_permanent_street', 'value'),
+        Output('user_reg_input_permanent_street', 'disabled'),
+        Output('user_reg_input_permanent_street', 'value'),
     ],
     [
-        Input('userreg_input_permanent_region_id', 'value'),
-        Input('userreg_input_permanent_province_id', 'value'),
-        Input('userreg_input_permanent_citymun_id', 'value'),
-        Input('userreg_input_permanent_brgy_id', 'value'),
-        Input('userreg_cbox_permanent_address', 'value'),
+        Input('user_reg_input_permanent_region_id', 'value'),
+        Input('user_reg_input_permanent_province_id', 'value'),
+        Input('user_reg_input_permanent_citymun_id', 'value'),
+        Input('user_reg_input_permanent_brgy_id', 'value'),
+        Input('user_reg_cbox_permanent_address', 'value'),
     ],
     [
-        State('userreg_input_present_street', 'value')
+        State('user_reg_input_present_street', 'value')
     ]
 )
 
-def userreg_enablepermanentstreet(region, province, citymun, brgy, cbox, present_street):
+def user_reg_enablepermanentstreet(region, province, citymun, brgy, cbox, present_street):
     disabled = True
     value = None
     if region and province and citymun and brgy:
