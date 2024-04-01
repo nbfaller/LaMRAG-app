@@ -52,7 +52,7 @@ navbar = dbc.Navbar(
                             dbc.NavbarBrand(
                                 [
                                     html.Img(
-                                        src = '/assets/lamrag-wordmark.png',
+                                        src = '/assets/lamrag-wordmark-dmsans.png',
                                         style = {'height' : '1.75em'}
                                     ),
                                 ],
@@ -408,7 +408,7 @@ sidebar = dbc.Offcanvas(
     ],
     title = [
         html.Img(
-            src = '/assets/lamrag-wordmark.png',
+            src = '/assets/lamrag-wordmark-dmsans.png',
             style = {'height' : '1.75em'},
             className = 'me-2'
         ),
