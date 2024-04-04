@@ -8,6 +8,7 @@ from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
+import hashlib
 # App definition
 from app import app
 from apps import dbconnect as db
@@ -18,785 +19,876 @@ layout = html.Div(
     [
         dbc.Row(
             [
-                # Enter offcanvas here?
                 dbc.Col(
                     [
-                        html.Div(
+                        dbc.Form(
                             [
-                                dbc.Row(
+                                html.Div(
                                     [
-                                        html.H1("User Registration"),
-                                        html.P(
+                                        dbc.Row(
                                             [
-                                                "Kinihanglan pun-on an mga patlang nga may pula nga asterisk ", usr_reg_tag_required, ".",
-                                                html.Br(),
-                                                html.Small(
-                                                    ["(Fields with red asterisks ", usr_reg_tag_required, " are required.)"],
-                                                    className = 'text-muted'
-                                                )
-                                            ]
-                                        )
-                                    ],
-                                    id = 'usr_reg_row_header'
-                                ),
-                                dbc.Row(
-                                    [
-
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "User type", usr_reg_tag_required,
-                                                    #html.Br(), html.Small(" (Sex assigned at birth)", className = 'text-muted')
-                                                ],
-                                                id = 'usr_reg_label_usertype_id',
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dcc.Dropdown(
-                                                id = 'usr_reg_input_usertype_id',
-                                                clearable = True,
-                                                value = 1
-                                            ),
-                                            class_name = 'align-self-center col-12 col-md-9'
-                                        ),
-                                    ], #className = 'mb-3',
-                                    id = 'usr_reg_row_usertype'
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            [
-                                                dbc.Alert(
-                                                    dbc.Row(
-                                                        [
-                                                            dbc.Col(
-                                                                html.I(className = 'bi bi-exclamation-circle-fill me-2'),
-                                                                width = 'auto',
-                                                                class_name = 'pe-0 me-0'
-                                                            ),
-                                                            dbc.Col(
-                                                                [
-                                                                    html.Span(id = 'usr_reg_alert_usertype_text_war'),
-                                                                    html.Br(),
-                                                                    html.Small(
-                                                                        id = 'usr_reg_alert_usertype_text_en',
-                                                                        className = 'text-muted'
-                                                                    ),
-                                                                    html.Br(), html.Br(),
-                                                                    "Kun gintuyo mo ini, puwede mo pasagdan ini nga pahibaro.",
-                                                                    html.Br(),
-                                                                    html.Small(
-                                                                        "(If this was intended, you can disregard this warning.)",
-                                                                        className = 'text-muted'
-                                                                    ),
-                                                                ]
-                                                            )
-                                                        ]
-                                                    ),
-                                                    id = 'usr_reg_alert_usertype',
-                                                    is_open = False,
-                                                    color = 'warning',
-                                                    class_name = 'mb-0',
-                                                    dismissable = False,
-                                                    #fade = True,
-                                                )
-                                            ]
-                                        )
-                                    ], #className = 'mb-3',
-                                    id = 'usr_reg_row_alert_usertype'
-                                )
-                            ]
-                        ),
-                        html.Hr(),
-                        # Basic identity
-                        html.Div(
-                            [
-                                dbc.Row(
-                                    [
-                                        html.H4(
-                                            [
-                                                html.I(className = 'bi bi-person-vcard-fill me-2'),
-                                                "Primero nga impormasyon",
-                                                #html.Br(),
-                                                html.Small(" (Basic information)", className = 'text-muted')
-                                            ]
-                                        ),
-                                        #html.P("""The City Government seeks to promote and protect the ability of its employees to
-                                        #    freely express their sexual orientation, gender identity, and expression (SOGIE).
-                                        #    Everyone is enjoined to fill out these details whenever applicable.
-                                        #""")
-                                    ], class_name = 'mb-1'
-                                ),
-                                # Name
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Ngaran", usr_reg_tag_required, html.Br(),
-                                                    html.Small(" (Name)", className = 'text-muted')
-                                                ],
-                                                id = 'usr_reg_label_name'
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Input(
-                                                type = 'text',
-                                                id = 'usr_reg_input_fname',
-                                                placeholder = ['Primero (First name)']
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Input(
-                                                type = 'text',
-                                                id = 'usr_reg_input_mname',
-                                                placeholder = 'Butnga (Middle name)'
-                                            ),
-                                            md = 3, sm = 12,
-                                            class_name = ' align-self-center mb-2 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Input(
-                                                type = 'text',
-                                                id = 'usr_reg_input_lname',
-                                                placeholder = 'Apelyido (Last name)'
-                                            ),
-                                            md = 3, sm = 12,
-                                            class_name = 'align-self-center mb-2 col-12 col-md-3'
-                                        ),
-                                    ],
-                                    id = 'usr_reg_row_name',
-                                    class_name = 'mb-1'
-                                ),
-                                # Username
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                "Username",
-                                                id = 'usr_reg_label_username',
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Input(
-                                                type = 'text',
-                                                id = 'usr_reg_input_username',
-                                                placeholder = 'Username',
-                                                disabled = True
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-9'
-                                        ),
-                                        dbc.Tooltip(
-                                            "Usernames are automatically generated.",
-                                            target = 'usr_reg_label_username'
-                                        )
-                                    ], class_name = 'mb-1'
-                                ),
-                                # Birthdate and sex assigned at birth
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Petsa san pagkatawo", usr_reg_tag_required, html.Br(),
-                                                    html.Small(" (Date of birth)", className = 'text-muted')
-                                                ],
-                                                id = 'usr_reg_label_birthdate',
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                            #class_name = 'col-md-2 col-sm-11 col-xs-11 mb-3'
-                                        ),
-                                        dbc.Col(
-                                            dcc.DatePickerSingle(
-                                                id = 'usr_reg_input_birthdate',
-                                                placeholder = 'MM/DD/YYYY',
-                                                #month_format = 'MMM Do, YYYY',
-                                                clearable = True,
-                                                #style = {'width' : '100%'}
-                                                className = 'w-100'
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Natawo nga babayi/lalaki", usr_reg_tag_required, html.Br(),
-                                                    html.Small(" (Sex assigned at birth)", className = 'text-muted')
-                                                ],
-                                                id = 'usr_reg_label_assignedsex',
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                            #class_name = 'col-md-2 col-sm-11 col-xs-11 mb-3'
-                                        ),
-                                        dbc.Col(
-                                            dcc.Dropdown(
-                                                id = 'usr_reg_input_assignedsex_id',
-                                                clearable = True
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-3'
-                                        ),
-                                    ], class_name = 'mb-1'
-                                )
-                            ], className = 'mb-3'
-                        ),
-                        # Affirmative identity
-                        html.Div(
-                            [
-                                dbc.Row(
-                                    [
-                                        html.H4(
-                                            [
-                                                html.I(className = 'bi bi-rainbow me-2'),
-                                                "Apirmatibo nga identidad",
-                                                #html.Br(),
-                                                html.Small(" (Affirmative identity)", className = 'text-muted')
-                                            ]
-                                        ),
-                                        html.P(
-                                            [
-                                                """Guin-aaghat ug guinpapanalipdan san Siyudadnon nga Gobyerno an katungod san iya mga
-                                                empleyado nga magpahayag san ira sexual orientation, gender identity, ug expression (SOGIE).
-                                                Guin-aaghat an ngatanan nga maghatag sini nga impormasyon kun sano man ini naangay.""",
-                                                html.Br(),
-                                                html.Small(
-                                                    """(The City Government seeks to promote and protect the ability of its employees to
-                                                    freely express their sexual orientation, gender identity, and expression (SOGIE).
-                                                    Everyone is enjoined to fill out these details whenever applicable.)""",
-                                                    className = 'text-muted'
-                                                )
-                                            ]
-                                        ),
-                                    ], class_name = 'mb-1'
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                "Lived name",
-                                                id = 'usr_reg_label_livedname'
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Input(
-                                                type = 'text',
-                                                id = 'usr_reg_input_livedname',
-                                                placeholder = 'Lived name'
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-9'
-                                        )
-                                    ], class_name = 'mb-1'
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                "Honorific",
-                                                id = 'usr_reg_label_honorific'
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Input(
-                                                type = 'text',
-                                                id = 'usr_reg_input_honorific',
-                                                placeholder = 'Example: Mr., Mrs., Ms., Dr.'
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Label(
-                                                "Pronouns",
-                                                id = 'usr_reg_label_pronouns'
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Input(
-                                                type = 'text',
-                                                id = 'usr_reg_input_pronouns',
-                                                placeholder = 'Example: she/her, he/him, they/them'
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-3'
-                                        )
-                                    ], class_name = 'mb-1'
-                                )
-                            ], className = 'mb-3'
-                        ),
-                        html.Hr(),
-                        # Employment information
-                        html.Div(
-                            [
-                                dbc.Row(
-                                    [
-                                        html.H4(
-                                            [
-                                                html.I(className = 'bi bi-briefcase-fill me-2'),
-                                                "Detalye san trabaho",
-                                                html.Small(" (Work information)", className = 'text-muted')
-                                            ]
-                                        ),
-                                        html.P(
-                                            [
-                                                "Alayon paghatag san mga detalye san imo puwesto o katungdanan sa lokal nga gobyerno.",
-                                                html.Br(),
-                                                html.Small(
+                                                html.H1(
                                                     [
-                                                        "(Please provide the details of your position or designation in the local government.)",
-                                                    ],
-                                                    className = 'text-muted'
-                                                )
-                                            ]
-                                        )
-                                    ], class_name = 'mb-1'
-                                ),
-                                # Office
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    #html.I(className = 'bi bi-telephone me-2'),
-                                                    "Opisina", usr_reg_tag_required, html.Br(),
-                                                    html.Small(" (Office)", className = 'text-muted')
-                                                ],
-                                                id = 'usr_reg_label_office_id',
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dcc.Dropdown(
-                                                id = 'usr_reg_input_office_id',
-                                                clearable = True,
-                                                placeholder = "Pili (select)..."
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-9'
-                                        )
-                                    ], class_name = 'mb-1'
-                                ),
-                                # Designation
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    #html.I(className = 'bi bi-envelope-at me-2'),
-                                                    "Puwesto/katungdánan", usr_reg_tag_required, html.Br(),
-                                                    html.Small(" (Position/designation)", className = 'text-muted')
-                                                ],
-                                                id = 'usr_reg_label_designation',
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Input(
-                                                type= 'text',
-                                                id = 'usr_reg_input_designation',
-                                                placeholder = 'Example: City Councilor, Barangay Captain, Administrative Aide I',
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-9'
-                                        ),
-                                    ], class_name = 'mb-1'
-                                )
-                            ], className = 'mb-3'
-                        ),
-                        html.Hr(),
-                        # Contact information
-                        html.Div(
-                            [
-                                dbc.Row(
-                                    [
-                                        html.H4(
-                                            [
-                                                html.I(className = 'bi bi-telephone-fill me-2'),
-                                                "Contact information",
-                                                #html.Br(),
-                                                #html.Small(" (Basic information)", className = 'text-muted')
-                                            ]
-                                        ),
-                                        #html.P("""The City Government seeks to promote and protect the ability of its employees to
-                                        #    freely express their sexual orientation, gender identity, and expression (SOGIE).
-                                        #    Everyone is enjoined to fill out these details whenever applicable.
-                                        #""")
-                                    ], class_name = 'mb-1'
-                                ),
-                                # Contact number and email
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    #html.I(className = 'bi bi-telephone me-2'),
-                                                    "Numero sa cellphone/telepono", usr_reg_tag_required, html.Br(),
-                                                    html.Small(" (Contact number)", className = 'text-muted')
-                                                ],
-                                                id = 'usr_reg_label_contactnum',
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Input(
-                                                type = 'text',
-                                                id = 'usr_reg_input_contactnum',
-                                                placeholder = '09XXXXXXXXX',
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    #html.I(className = 'bi bi-envelope-at me-2'),
-                                                    "Email address"
-                                                ],
-                                                id = 'usr_reg_label_email',
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Input(
-                                                type= 'text',
-                                                id = 'usr_reg_input_email',
-                                                placeholder = 'example@website.com',
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-3'
-                                        ),
-                                    ], class_name = 'mb-1'
-                                ),
-                                # Facebook
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    #html.I(className = 'bi bi-facebook me-2'),
-                                                    "Ngaran sa Facebook", html.Br(),
-                                                    html.Small(" (Facebook name)", className = 'text-muted')
-                                                ],
-                                                id = 'usr_reg_label_facebbok',
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Input(
-                                                type = 'text',
-                                                id = 'usr_reg_input_facebook',
-                                                placeholder = 'Ngaran sa Facebook (Facebook name)',
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-9'
-                                        ),
-                                    ], class_name = 'mb-1'
-                                )
-                            ], className = 'mb-3'
-                        ),
-                        html.Hr(),
-                        # Present address
-                        html.Div(
-                            [
-                                dbc.Row(
-                                    [
-                                        html.H4(
-                                            [
-                                                html.I(className = 'bi bi-pin-map-fill me-2'),
-                                                "Adlaw-adlaw nga gin-iistaran",
-                                                #html.Br(),
-                                                html.Small(" (Present address)", className = 'text-muted')
-                                            ]
-                                        ),
-                                        html.P(
-                                            [
-                                                "Asya ini an imo adlaw-adlaw nga urkuyan nga imo gin-uulian pagkatapos trabaho. Puwede ini maiba sa imo ",
-                                                html.B("permanente nga gin-iistaran"),
-                                                " nga nakasurat sa imo mga ID, lisensiya, o iba nga legal o opisyal nga papeles.",
-                                                html.Br(),
-                                                html.Small(
+                                                        "Pagrehistro",
+                                                        html.Small(" (User Registration)", className = 'text-muted')
+                                                    ]
+                                                ),
+                                                html.P(
                                                     [
-                                                        "(This is your everyday residence where you go home after work. This can differ from your ",
-                                                        html.B("permanent residence"),
-                                                        " which is written on your IDs, licenses, or other legal or official documents.)"
-                                                    ],
-                                                    className = 'text-muted'
+                                                        "Kinihanglan pun-on an mga patlang nga may pula nga asterisk ", usr_reg_tag_required, ".",
+                                                        html.Br(),
+                                                        html.Small(
+                                                            ["(Fields with red asterisks ", usr_reg_tag_required, " are required.)"],
+                                                            className = 'text-muted'
+                                                        )
+                                                    ]
                                                 )
-                                            ]
-                                        )
-                                    ], class_name = 'mb-1'
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Rehiyon", usr_reg_tag_required, html.Br(),
-                                                    html.Small(" (Region)", className = 'text-muted')
-                                                ],
-                                                id = 'usr_reg_label_present_region_id'
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dcc.Dropdown(
-                                                id = 'usr_reg_input_present_region_id',
-                                                clearable = True,
-                                                placeholder = "Pili (select)..."
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-9'
-                                        )
-                                    ], class_name = 'mb-1'
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Probinsya", usr_reg_tag_required, html.Br(),
-                                                    html.Small(" (Province)", className = 'text-muted')
-                                                ],
-                                                id = 'usr_reg_label_present_province_id'
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dcc.Dropdown(
-                                                id = 'usr_reg_input_present_province_id',
-                                                clearable = True,
-                                                placeholder = "Pili (select)...",
-                                                disabled = True
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-9'
-                                        )
-                                    ], class_name = 'mb-1'
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Siyudad/Bungto", usr_reg_tag_required, html.Br(),
-                                                    html.Small(" (City/Municipality)", className = 'text-muted')
-                                                ],
-                                                id = 'usr_reg_label_present_citymun_id'
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dcc.Dropdown(
-                                                id = 'usr_reg_input_present_citymun_id',
-                                                clearable = True,
-                                                placeholder = "Pili (select)...",
-                                                disabled = True
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-9'
-                                        )
-                                    ], class_name = 'mb-1'
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Barangay",  usr_reg_tag_required,
-                                                ],
-                                                id = 'usr_reg_label_present_brgy_id'
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dcc.Dropdown(
-                                                id = 'usr_reg_input_present_brgy_id',
-                                                clearable = True,
-                                                placeholder = "Pili (select)...",
-                                                disabled = True
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-9'
-                                        )
-                                    ], class_name = 'mb-1'
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Kalsada", usr_reg_tag_required, html.Br(),
-                                                    html.Small(" (Street)", className = 'text-muted')
-                                                ],
-                                                id = 'usr_reg_input_present_street'
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Input(
-                                                type = 'text',
-                                                id = 'usr_reg_input_present_street',
-                                                placeholder = 'Kalsada (Street)',
-                                                disabled = True
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-9'
-                                        ),
-                                    ],
-                                    class_name = 'mb-1'
-                                ),
-                            ], className = 'mb-3'
-                        ),
-                        # Permanent address
-                        html.Div(
-                            [
-                                dbc.Row(
-                                    [
-                                        html.H4(
-                                            [
-                                                html.I(className = 'bi bi-house-fill me-2'),
-                                                "Permanente nga gin-iistaran",
-                                                #html.Br(),
-                                                html.Small(" (Permanent address)", className = 'text-muted')
-                                            ]
-                                        ),
-                                        html.P(
-                                            [
-                                                """Asya ini an imo permanente nga urkuyan nga nakasurat sa imo mga ID,
-                                                lisensiya, o iba nga mga legal o opisyal nga papeles.""",
-                                                html.Br(),
-                                                html.Small(
-                                                    [
-                                                        """(This is your permanent residence that is written on your IDs,
-                                                        licenses, or other legal or official documents.)"""
-                                                    ],
-                                                    className = 'text-muted'
-                                                )
-                                            ]
-                                        ),
-                                        dbc.Checkbox(
-                                            id = "usr_reg_cbox_permanent_address",
-                                            label = [
-                                                "Pareho ini sa akon adlaw-adlaw nga gin-iistaran.", html.Small(" (Same as present address)", className = 'text-muted')
                                             ],
-                                            value = False,
-                                            #style = {'display' : 'none'},
-                                            class_name = 'ms-3'
+                                            id = 'usr_reg_row_header'
+                                        ),
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    [
+                                                        dbc.Alert(
+                                                            dbc.Row(
+                                                                [
+                                                                    dbc.Col(
+                                                                        html.I(className = 'bi bi-exclamation-circle-fill me-2'),
+                                                                        width = 'auto',
+                                                                        class_name = 'pe-0 me-0'
+                                                                    ),
+                                                                    dbc.Col(
+                                                                        [
+                                                                            "Kulang an ginbutang nga impormasyon. Alayon pag-hatag san:",
+                                                                            html.Br(),
+                                                                            html.Small(
+                                                                                "(The information supplied is incomplete. Please enter the following:)",
+                                                                                className = 'text-muted'
+                                                                            ),
+                                                                            html.Span(id = 'usr_reg_alert_inputvalidation_span_missing')
+                                                                        ]
+                                                                    )
+                                                                ]
+                                                            ),
+                                                            id = 'usr_reg_alert_inputvalidation',
+                                                            is_open = False,
+                                                            color = 'warning',
+                                                            class_name = 'mb-0',
+                                                            dismissable = True,
+                                                            #fade = True,
+                                                        )
+                                                    ]
+                                                )
+                                            ],
+                                            id = 'usr_reg_row_inputvalidation'
+                                        ),
+                                        dbc.Row(
+                                            [
+
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Klase san magamit", usr_reg_tag_required,
+                                                            html.Br(), html.Small(" (User type)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_usertype_id',
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dcc.Dropdown(
+                                                        id = 'usr_reg_input_usertype_id',
+                                                        clearable = True,
+                                                        value = 1
+                                                    ),
+                                                    class_name = 'align-self-center col-12 col-md-9'
+                                                ),
+                                            ], #className = 'mb-3',
+                                            id = 'usr_reg_row_usertype'
+                                        ),
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    [
+                                                        dbc.Alert(
+                                                            dbc.Row(
+                                                                [
+                                                                    dbc.Col(
+                                                                        html.I(className = 'bi bi-exclamation-circle-fill me-2'),
+                                                                        width = 'auto',
+                                                                        class_name = 'pe-0 me-0'
+                                                                    ),
+                                                                    dbc.Col(
+                                                                        [
+                                                                            html.Span(id = 'usr_reg_alert_usertype_text_war'),
+                                                                            html.Br(),
+                                                                            html.Small(
+                                                                                id = 'usr_reg_alert_usertype_text_en',
+                                                                                className = 'text-muted'
+                                                                            ),
+                                                                            html.Br(), html.Br(),
+                                                                            "Kun gintuyo mo ini, puwede mo pasagdan ini nga pahibaro.",
+                                                                            html.Br(),
+                                                                            html.Small(
+                                                                                "(If this was intended, you can disregard this warning.)",
+                                                                                className = 'text-muted'
+                                                                            ),
+                                                                        ]
+                                                                    )
+                                                                ]
+                                                            ),
+                                                            id = 'usr_reg_alert_usertype',
+                                                            is_open = False,
+                                                            color = 'warning',
+                                                            class_name = 'mb-0',
+                                                            dismissable = False,
+                                                            #fade = True,
+                                                        )
+                                                    ]
+                                                )
+                                            ], #className = 'mb-3',
+                                            id = 'usr_reg_row_alert_usertype'
                                         )
-                                        #html.P("""The City Government seeks to promote and protect the ability of its employees to
-                                        #    freely express their sexual orientation, gender identity, and expression (SOGIE).
-                                        #    Everyone is enjoined to fill out these details whenever applicable.
-                                        #""")
-                                    ], class_name = 'mb-1'
+                                    ]
                                 ),
-                                dbc.Row(
+                                html.Hr(),
+                                # Basic identity
+                                html.Div(
                                     [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Rehiyon", usr_reg_tag_required, html.Br(),
-                                                    html.Small(" (Region)", className = 'text-muted')
-                                                ],
-                                                id = 'usr_reg_label_permanent_region_id'
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                        dbc.Row(
+                                            [
+                                                html.H4(
+                                                    [
+                                                        html.I(className = 'bi bi-person-vcard-fill me-2'),
+                                                        "Primero nga impormasyon",
+                                                        #html.Br(),
+                                                        html.Small(" (Basic information)", className = 'text-muted')
+                                                    ]
+                                                ),
+                                                #html.P("""The City Government seeks to promote and protect the ability of its employees to
+                                                #    freely express their sexual orientation, gender identity, and expression (SOGIE).
+                                                #    Everyone is enjoined to fill out these details whenever applicable.
+                                                #""")
+                                            ], class_name = 'mb-1'
                                         ),
-                                        dbc.Col(
-                                            dcc.Dropdown(
-                                                id = 'usr_reg_input_permanent_region_id',
-                                                clearable = True,
-                                                placeholder = "Pili (select)..."
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                        # Name
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Ngaran", usr_reg_tag_required, html.Br(),
+                                                            html.Small(" (Name)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_name'
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dbc.Input(
+                                                        type = 'text',
+                                                        id = 'usr_reg_input_fname',
+                                                        placeholder = ['Primero (First name)'],
+                                                        invalid = False
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dbc.Input(
+                                                        type = 'text',
+                                                        id = 'usr_reg_input_mname',
+                                                        placeholder = 'Butnga (Middle name)'
+                                                    ),
+                                                    md = 3, sm = 12,
+                                                    class_name = ' align-self-center mb-2 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dbc.Input(
+                                                        type = 'text',
+                                                        id = 'usr_reg_input_lname',
+                                                        placeholder = 'Apelyido (Last name)',
+                                                        invalid = False
+                                                    ),
+                                                    md = 3, sm = 12,
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-3'
+                                                ),
+                                            ],
+                                            id = 'usr_reg_row_name',
+                                            class_name = 'mb-1'
+                                        ),
+                                        # Input validation for name
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Alert(
+                                                        dbc.Row(
+                                                            [
+                                                                dbc.Col(
+                                                                    html.I(className = 'bi bi-exclamation-circle-fill me-2'),
+                                                                    width = 'auto',
+                                                                    class_name = 'pe-0 me-0'
+                                                                ),
+                                                                dbc.Col(
+                                                                    [
+                                                                        "Mayda ka na account sa LáMRAG. Usa la nga account an puwede ihatag sa kada magamit. Alayon pag-contact san administrator para mabuligan ka.",
+                                                                        html.Br(),
+                                                                        html.Small(
+                                                                            "(You already have an account in LáMRAG. Each user can only have one account. Please contact the administrator for guidance.)",
+                                                                            className = 'text-muted'
+                                                                        ),
+                                                                    ]
+                                                                )
+                                                            ]
+                                                        ),
+                                                        id = 'usr_reg_alert_namevalidation',
+                                                        is_open = False,
+                                                        color = 'warning',
+                                                        class_name = 'mb-0',
+                                                        dismissable = True,
+                                                        #fade = True,
+                                                    )
+                                                )
+                                            ]
+                                        ),
+                                        # Username
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        "Username",
+                                                        id = 'usr_reg_label_username',
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dbc.Input(
+                                                        type = 'text',
+                                                        id = 'usr_reg_input_username',
+                                                        placeholder = 'Username',
+                                                        disabled = True
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                ),
+                                                dbc.Tooltip(
+                                                    "Usernames are automatically generated.",
+                                                    target = 'usr_reg_label_username'
+                                                )
+                                            ], class_name = 'mb-1'
+                                        ),
+                                        # Birthdate and sex assigned at birth
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Petsa san pagkatawo", usr_reg_tag_required, html.Br(),
+                                                            html.Small(" (Date of birth)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_birthdate',
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    #class_name = 'col-md-2 col-sm-11 col-xs-11 mb-3'
+                                                ),
+                                                dbc.Col(
+                                                    dcc.DatePickerSingle(
+                                                        id = 'usr_reg_input_birthdate',
+                                                        placeholder = 'MM/DD/YYYY',
+                                                        #month_format = 'MMM Do, YYYY',
+                                                        clearable = True,
+                                                        #style = {'width' : '100%'}
+                                                        className = 'w-100'
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Natawo nga babayi/lalaki", usr_reg_tag_required, html.Br(),
+                                                            html.Small(" (Sex assigned at birth)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_assignedsex',
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    #class_name = 'col-md-2 col-sm-11 col-xs-11 mb-3'
+                                                ),
+                                                dbc.Col(
+                                                    dcc.Dropdown(
+                                                        id = 'usr_reg_input_assignedsex_id',
+                                                        clearable = True
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-3'
+                                                ),
+                                            ], class_name = 'mb-1'
                                         )
-                                    ], class_name = 'mb-1'
+                                    ], className = 'mb-3'
                                 ),
-                                dbc.Row(
+                                # Affirmative identity
+                                html.Div(
                                     [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Probinsya", usr_reg_tag_required, html.Br(),
-                                                    html.Small(" (Province)", className = 'text-muted')
-                                                ],
-                                                id = 'usr_reg_label_permanent_province_id'
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                        dbc.Row(
+                                            [
+                                                html.H4(
+                                                    [
+                                                        html.I(className = 'bi bi-rainbow me-2'),
+                                                        "Apirmatibo nga identidad",
+                                                        #html.Br(),
+                                                        html.Small(" (Affirmative identity)", className = 'text-muted')
+                                                    ]
+                                                ),
+                                                html.P(
+                                                    [
+                                                        """Guin-aaghat ug guinpapanalipdan san Siyudadnon nga Gobyerno an katungod san iya mga
+                                                        empleyado nga magpahayag san ira sexual orientation, gender identity, ug expression (SOGIE).
+                                                        Guin-aaghat an ngatanan nga maghatag sini nga impormasyon kun sano man ini naangay.""",
+                                                        html.Br(),
+                                                        html.Small(
+                                                            """(The City Government seeks to promote and protect the ability of its employees to
+                                                            freely express their sexual orientation, gender identity, and expression (SOGIE).
+                                                            Everyone is enjoined to fill out these details whenever applicable.)""",
+                                                            className = 'text-muted'
+                                                        )
+                                                    ]
+                                                ),
+                                            ], class_name = 'mb-1'
                                         ),
-                                        dbc.Col(
-                                            dcc.Dropdown(
-                                                id = 'usr_reg_input_permanent_province_id',
-                                                clearable = True,
-                                                placeholder = "Pili (select)...",
-                                                disabled = True
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        "Lived name",
+                                                        id = 'usr_reg_label_livedname'
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dbc.Input(
+                                                        type = 'text',
+                                                        id = 'usr_reg_input_livedname',
+                                                        placeholder = 'Lived name'
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                )
+                                            ], class_name = 'mb-1'
+                                        ),
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Honoripiko",
+                                                            html.Br(), html.Small(" (Honorific)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_honorific'
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dbc.Input(
+                                                        type = 'text',
+                                                        id = 'usr_reg_input_honorific',
+                                                        placeholder = 'Example: Mr., Mrs., Ms., Dr.'
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Mga pronoun",
+                                                            html.Br(), html.Small(" (Pronouns)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_pronouns'
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dbc.Input(
+                                                        type = 'text',
+                                                        id = 'usr_reg_input_pronouns',
+                                                        placeholder = 'Example: she/her, he/him, they/them'
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-3'
+                                                )
+                                            ], class_name = 'mb-1'
                                         )
-                                    ], class_name = 'mb-1'
+                                    ], className = 'mb-3'
                                 ),
-                                dbc.Row(
+                                html.Hr(),
+                                # Employment information
+                                html.Div(
                                     [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Siyudad/Bungto", usr_reg_tag_required, html.Br(),
-                                                    html.Small(" (City/Municipality)", className = 'text-muted')
-                                                ],
-                                                id = 'usr_reg_label_permanent_citymun_id'
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                        dbc.Row(
+                                            [
+                                                html.H4(
+                                                    [
+                                                        html.I(className = 'bi bi-briefcase-fill me-2'),
+                                                        "Detalye san trabaho",
+                                                        html.Small(" (Work information)", className = 'text-muted')
+                                                    ]
+                                                ),
+                                                html.P(
+                                                    [
+                                                        "Alayon paghatag san mga detalye san imo puwesto o katungdanan sa lokal nga gobyerno.",
+                                                        html.Br(),
+                                                        html.Small(
+                                                            [
+                                                                "(Please provide the details of your position or designation in the local government.)",
+                                                            ],
+                                                            className = 'text-muted'
+                                                        )
+                                                    ]
+                                                )
+                                            ], class_name = 'mb-1'
                                         ),
-                                        dbc.Col(
-                                            dcc.Dropdown(
-                                                id = 'usr_reg_input_permanent_citymun_id',
-                                                clearable = True,
-                                                placeholder = "Pili (select)...",
-                                                disabled = True
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                        # Office
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            #html.I(className = 'bi bi-telephone me-2'),
+                                                            "Opisina", usr_reg_tag_required, html.Br(),
+                                                            html.Small(" (Office)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_office_id',
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dcc.Dropdown(
+                                                        id = 'usr_reg_input_office_id',
+                                                        clearable = True,
+                                                        placeholder = "Pili (select)..."
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                )
+                                            ], class_name = 'mb-1'
+                                        ),
+                                        # Designation
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            #html.I(className = 'bi bi-envelope-at me-2'),
+                                                            "Puwesto/katungdánan", usr_reg_tag_required, html.Br(),
+                                                            html.Small(" (Position/designation)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_designation',
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dbc.Input(
+                                                        type= 'text',
+                                                        id = 'usr_reg_input_designation',
+                                                        placeholder = 'Example: City Councilor, Barangay Captain, Administrative Aide I',
+                                                        invalid = False
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                ),
+                                            ], class_name = 'mb-1'
                                         )
-                                    ], class_name = 'mb-1'
+                                    ], className = 'mb-3'
                                 ),
-                                dbc.Row(
+                                html.Hr(),
+                                # Contact information
+                                html.Div(
                                     [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Barangay", usr_reg_tag_required,
-                                                ],
-                                                id = 'usr_reg_label_permanent_brgy_id'
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                        dbc.Row(
+                                            [
+                                                html.H4(
+                                                    [
+                                                        html.I(className = 'bi bi-telephone-fill me-2'),
+                                                        "Contact information",
+                                                        #html.Br(),
+                                                        #html.Small(" (Basic information)", className = 'text-muted')
+                                                    ]
+                                                ),
+                                                #html.P("""The City Government seeks to promote and protect the ability of its employees to
+                                                #    freely express their sexual orientation, gender identity, and expression (SOGIE).
+                                                #    Everyone is enjoined to fill out these details whenever applicable.
+                                                #""")
+                                            ], class_name = 'mb-1'
                                         ),
-                                        dbc.Col(
-                                            dcc.Dropdown(
-                                                id = 'usr_reg_input_permanent_brgy_id',
-                                                clearable = True,
-                                                placeholder = "Pili (select)...",
-                                                disabled = True
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                        # Contact number and email
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            #html.I(className = 'bi bi-telephone me-2'),
+                                                            "Numero sa cellphone/telepono", usr_reg_tag_required, html.Br(),
+                                                            html.Small(" (Contact number)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_contactnum',
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dbc.Input(
+                                                        type = 'text',
+                                                        id = 'usr_reg_input_contactnum',
+                                                        placeholder = '09XXXXXXXXX',
+                                                        invalid = False
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            #html.I(className = 'bi bi-envelope-at me-2'),
+                                                            "Email address"
+                                                        ],
+                                                        id = 'usr_reg_label_email',
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dbc.Input(
+                                                        type= 'text',
+                                                        id = 'usr_reg_input_email',
+                                                        placeholder = 'example@website.com',
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-3'
+                                                ),
+                                            ], class_name = 'mb-1'
+                                        ),
+                                        # Facebook
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            #html.I(className = 'bi bi-facebook me-2'),
+                                                            "Ngaran sa Facebook", html.Br(),
+                                                            html.Small(" (Facebook name)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_facebbok',
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dbc.Input(
+                                                        type = 'text',
+                                                        id = 'usr_reg_input_facebook',
+                                                        placeholder = 'Ngaran sa Facebook (Facebook name)',
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                ),
+                                            ], class_name = 'mb-1'
                                         )
-                                    ], class_name = 'mb-1'
+                                    ], className = 'mb-3'
                                 ),
-                                dbc.Row(
+                                html.Hr(),
+                                # Present address
+                                html.Div(
                                     [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Kalsada", usr_reg_tag_required, html.Br(),
-                                                    html.Small(" (Street)", className = 'text-muted')
-                                                ],
-                                                id = 'usr_reg_input_permanent_street'
-                                            ),
-                                            class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                        dbc.Row(
+                                            [
+                                                html.H4(
+                                                    [
+                                                        html.I(className = 'bi bi-pin-map-fill me-2'),
+                                                        "Adlaw-adlaw nga gin-iistaran",
+                                                        #html.Br(),
+                                                        html.Small(" (Present address)", className = 'text-muted')
+                                                    ]
+                                                ),
+                                                html.P(
+                                                    [
+                                                        "Asya ini an imo adlaw-adlaw nga urkuyan nga imo gin-uulian pagkatapos trabaho. Puwede ini maiba sa imo ",
+                                                        html.B("permanente nga gin-iistaran"),
+                                                        " nga nakasurat sa imo mga ID, lisensiya, o iba nga legal o opisyal nga papeles.",
+                                                        html.Br(),
+                                                        html.Small(
+                                                            [
+                                                                "(This is your everyday residence where you go home after work. This can differ from your ",
+                                                                html.B("permanent residence"),
+                                                                " which is written on your IDs, licenses, or other legal or official documents.)"
+                                                            ],
+                                                            className = 'text-muted'
+                                                        )
+                                                    ]
+                                                )
+                                            ], class_name = 'mb-1'
                                         ),
-                                        dbc.Col(
-                                            dbc.Input(
-                                                type = 'text',
-                                                id = 'usr_reg_input_permanent_street',
-                                                placeholder = 'Kalsada (Street)',
-                                                disabled = True
-                                            ),
-                                            class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Rehiyon", usr_reg_tag_required, html.Br(),
+                                                            html.Small(" (Region)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_present_region_id'
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dcc.Dropdown(
+                                                        id = 'usr_reg_input_present_region_id',
+                                                        clearable = True,
+                                                        placeholder = "Pili (select)..."
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                )
+                                            ], class_name = 'mb-1'
                                         ),
-                                    ],
-                                    class_name = 'mb-1'
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Probinsya", usr_reg_tag_required, html.Br(),
+                                                            html.Small(" (Province)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_present_province_id'
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dcc.Dropdown(
+                                                        id = 'usr_reg_input_present_province_id',
+                                                        clearable = True,
+                                                        placeholder = "Pili (select)...",
+                                                        disabled = True
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                )
+                                            ], class_name = 'mb-1'
+                                        ),
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Siyudad/Bungto", usr_reg_tag_required, html.Br(),
+                                                            html.Small(" (City/Municipality)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_present_citymun_id'
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dcc.Dropdown(
+                                                        id = 'usr_reg_input_present_citymun_id',
+                                                        clearable = True,
+                                                        placeholder = "Pili (select)...",
+                                                        disabled = True
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                )
+                                            ], class_name = 'mb-1'
+                                        ),
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Barangay",  usr_reg_tag_required,
+                                                        ],
+                                                        id = 'usr_reg_label_present_brgy_id'
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dcc.Dropdown(
+                                                        id = 'usr_reg_input_present_brgy_id',
+                                                        clearable = True,
+                                                        placeholder = "Pili (select)...",
+                                                        disabled = True
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                )
+                                            ], class_name = 'mb-1'
+                                        ),
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Kalsada", usr_reg_tag_required, html.Br(),
+                                                            html.Small(" (Street)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_present_street'
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dbc.Input(
+                                                        type = 'text',
+                                                        id = 'usr_reg_input_present_street',
+                                                        placeholder = 'House No., Lot No., Block No., Street/Road, Village/Subdivision',
+                                                        disabled = True,
+                                                        invalid = False
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                ),
+                                            ],
+                                            class_name = 'mb-1'
+                                        ),
+                                    ], className = 'mb-3'
                                 ),
-                            ], className = 'mb-3'
+                                # Permanent address
+                                html.Div(
+                                    [
+                                        dbc.Row(
+                                            [
+                                                html.H4(
+                                                    [
+                                                        html.I(className = 'bi bi-house-fill me-2'),
+                                                        "Permanente nga gin-iistaran",
+                                                        #html.Br(),
+                                                        html.Small(" (Permanent address)", className = 'text-muted')
+                                                    ]
+                                                ),
+                                                html.P(
+                                                    [
+                                                        """Asya ini an imo permanente nga urkuyan nga nakasurat sa imo mga ID,
+                                                        lisensiya, o iba nga mga legal o opisyal nga papeles.""",
+                                                        html.Br(),
+                                                        html.Small(
+                                                            [
+                                                                """(This is your permanent residence that is written on your IDs,
+                                                                licenses, or other legal or official documents.)"""
+                                                            ],
+                                                            className = 'text-muted'
+                                                        )
+                                                    ]
+                                                ),
+                                                dbc.Checkbox(
+                                                    id = "usr_reg_cbox_permanent_address",
+                                                    label = [
+                                                        "Pareho ini sa akon adlaw-adlaw nga gin-iistaran.", html.Small(" (Same as present address)", className = 'text-muted')
+                                                    ],
+                                                    value = False,
+                                                    #style = {'display' : 'none'},
+                                                    class_name = 'ms-3'
+                                                )
+                                                #html.P("""The City Government seeks to promote and protect the ability of its employees to
+                                                #    freely express their sexual orientation, gender identity, and expression (SOGIE).
+                                                #    Everyone is enjoined to fill out these details whenever applicable.
+                                                #""")
+                                            ], class_name = 'mb-1'
+                                        ),
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Rehiyon", usr_reg_tag_required, html.Br(),
+                                                            html.Small(" (Region)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_permanent_region_id'
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dcc.Dropdown(
+                                                        id = 'usr_reg_input_permanent_region_id',
+                                                        clearable = True,
+                                                        placeholder = "Pili (select)..."
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                )
+                                            ], class_name = 'mb-1'
+                                        ),
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Probinsya", usr_reg_tag_required, html.Br(),
+                                                            html.Small(" (Province)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_permanent_province_id'
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dcc.Dropdown(
+                                                        id = 'usr_reg_input_permanent_province_id',
+                                                        clearable = True,
+                                                        placeholder = "Pili (select)...",
+                                                        disabled = True
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                )
+                                            ], class_name = 'mb-1'
+                                        ),
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Siyudad/Bungto", usr_reg_tag_required, html.Br(),
+                                                            html.Small(" (City/Municipality)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_permanent_citymun_id'
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dcc.Dropdown(
+                                                        id = 'usr_reg_input_permanent_citymun_id',
+                                                        clearable = True,
+                                                        placeholder = "Pili (select)...",
+                                                        disabled = True
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                )
+                                            ], class_name = 'mb-1'
+                                        ),
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Barangay", usr_reg_tag_required,
+                                                        ],
+                                                        id = 'usr_reg_label_permanent_brgy_id'
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dcc.Dropdown(
+                                                        id = 'usr_reg_input_permanent_brgy_id',
+                                                        clearable = True,
+                                                        placeholder = "Pili (select)...",
+                                                        disabled = True
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                )
+                                            ], class_name = 'mb-1'
+                                        ),
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Kalsada", usr_reg_tag_required, html.Br(),
+                                                            html.Small(" (Street)", className = 'text-muted')
+                                                        ],
+                                                        id = 'usr_reg_label_permanent_street'
+                                                    ),
+                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    dbc.Input(
+                                                        type = 'text',
+                                                        id = 'usr_reg_input_permanent_street',
+                                                        placeholder = 'House No., Lot No., Block No., Street/Road, Village/Subdivision',
+                                                        disabled = True,
+                                                        invalid = False
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                ),
+                                            ],
+                                            class_name = 'mb-1'
+                                        ),
+                                    ], className = 'mb-3'
+                                ),
+                            ]
                         ),
                         html.Hr(),
                         # Register button
@@ -811,7 +903,8 @@ layout = html.Div(
                                                     "Rehistro (Register)"
                                                 ],
                                                 id = 'usr_reg_btn_submit',
-                                                style = {'width': ' 100%'}
+                                                style = {'width': ' 100%'},
+                                                href = '#'
                                             ),
                                             #md = 3, sm = 12,
                                             class_name = 'align-self-center col-md-3 mb-2'
@@ -826,6 +919,129 @@ layout = html.Div(
                 )
             ],
             class_name = 'justify-content-center'
+        ),
+        dbc.Modal(
+            [
+                #dbc.ModalHeader(
+                #    None
+                #),
+                dbc.ModalBody(
+                    [
+                        dbc.Form(
+                            [
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.H4("Complete your registration"),
+                                                html.P(
+                                                    [
+                                                        """Alayon paghimo san imo password para mahuman imo pagrehistro.
+                                                        Alayon liwat pagseguro nga sakto an ngatanan nga impormasyon nga imo ginhatag.""",
+                                                        html.Br(),
+                                                        html.Small(
+                                                            """(Please create your password to finish your registration.
+                                                            Also, please ensure that the information that you're submitting is correct.)
+                                                            """,
+                                                            className = 'text-muted'
+                                                        )
+                                                    ], className = 'mb-0'
+                                                ),
+                                            ]
+                                        )
+                                    ], class_name = 'mb-3'
+                                ),
+                                #html.Hr(),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                dbc.Alert(
+                                                    dbc.Row(
+                                                        [
+                                                            dbc.Col(
+                                                                html.I(className = 'bi bi-exclamation-circle-fill me-2'),
+                                                                width = 'auto',
+                                                                class_name = 'pe-0 me-0'
+                                                            ),
+                                                            dbc.Col(
+                                                                id = 'usr_reg_alert_passwordvalidation_col_text'
+                                                            )
+                                                        ]
+                                                    ),
+                                                    id = 'usr_reg_alert_passwordvalidation',
+                                                    is_open = False,
+                                                    color = 'warning',
+                                                    class_name = 'mb-0',
+                                                    dismissable = True,
+                                                    #fade = True,
+                                                )
+                                            ]
+                                        )
+                                    ]
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                dbc.Input(
+                                                    type = 'password',
+                                                    id = 'usr_reg_input_password_initial',
+                                                    placeholder = ['Enter password'],
+                                                    invalid = False
+                                                ),
+                                            ]
+                                        )
+                                    ], class_name = 'mb-2'
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                dbc.Input(
+                                                    type = 'password',
+                                                    id = 'usr_reg_input_password_confirm',
+                                                    placeholder = ['Confirm password'],
+                                                    invalid = False
+                                                ),
+                                            ]
+                                        )
+                                    ], class_name = 'mb-0'
+                                )
+                            ]
+                        )
+                    ],
+                    id = 'usr_reg_modal_confirm_body'
+                ),
+                dbc.ModalFooter(
+                    [
+                        dbc.Row(
+                            [
+                                dbc.Col(
+                                    dbc.Button(
+                                        [
+                                            html.I(className = 'bi bi-check-circle-fill me-2'),
+                                            "I-kumpirma (Confirm)"
+                                        ],
+                                        id = 'usr_reg_btn_confirm',
+                                        style = {'width': ' 100%'}
+                                    ),
+                                    #md = 3, sm = 12,
+                                    class_name = 'align-self-center col-12 col-md-auto'
+                                )
+                            ],
+                            class_name = 'justify-content-end'
+                        )
+                    ],
+                    id = 'usr_reg_modal_confirm_footer'
+                )
+            ],
+            id = 'usr_reg_modal_confirm',
+            is_open = False,
+            centered = True,
+            scrollable = True,
+            #backdrop = 'static',
+            #size = 'lg',
         )
     ]
 )
@@ -1241,3 +1457,477 @@ def usr_reg_displayusertypealert(usertype):
         war = df['war']
         en += df['en'] + ")"
     return [above_class_name, class_name, is_open, color, war, en]
+
+# Callback for confirming registration
+@app.callback(
+    [
+        # Modal
+        Output('usr_reg_modal_confirm', 'is_open'),
+        #Output('usr_reg_modal_confirm_body', 'children'),
+        # Overall validation alert
+        Output('usr_reg_alert_inputvalidation', 'is_open'),
+        Output('usr_reg_alert_inputvalidation', 'class_name'),
+        Output('usr_reg_alert_inputvalidation_span_missing', 'children'),
+        # Name validation alert
+        Output('usr_reg_alert_namevalidation', 'is_open'),
+        Output('usr_reg_alert_namevalidation', 'class_name'),
+        # Input validation
+        Output('usr_reg_input_fname', 'invalid'),
+        Output('usr_reg_input_lname', 'invalid'),
+        Output('usr_reg_input_designation', 'invalid'),
+        Output('usr_reg_input_contactnum', 'invalid'),
+        Output('usr_reg_input_present_street', 'invalid'),
+        Output('usr_reg_input_permanent_street', 'invalid')
+    ],
+    [
+        Input('usr_reg_btn_submit', 'n_clicks')
+    ],
+    [
+        # User type
+        State('usr_reg_input_usertype_id', 'value'), # REQUIRED
+        # Basic information
+        State('usr_reg_input_fname', 'value'), # REQUIRED
+        State('usr_reg_input_mname', 'value'),
+        State('usr_reg_input_lname', 'value'), # REQUIRED
+        State('usr_reg_input_username', 'value'),
+        State('usr_reg_input_birthdate', 'date'), # REQUIRED
+        State('usr_reg_input_assignedsex_id', 'value'), # REQUIRED
+        # Affirmative identity
+        State('usr_reg_input_livedname', 'value'),
+        State('usr_reg_input_honorific', 'value'),
+        State('usr_reg_input_pronouns', 'value'),
+        # Work information
+        State('usr_reg_input_office_id', 'value'), # REQUIRED
+        State('usr_reg_input_designation', 'value'), # REQUIRED
+        # Contact information
+        State('usr_reg_input_contactnum', 'value'), # REQUIRED
+        State('usr_reg_input_email', 'value'),
+        State('usr_reg_input_facebook', 'value'),
+        # Present address
+        State('usr_reg_input_present_region_id', 'value'), # REQUIRED
+        State('usr_reg_input_present_province_id', 'value'), # REQUIRED
+        State('usr_reg_input_present_citymun_id', 'value'), # REQUIRED
+        State('usr_reg_input_present_brgy_id', 'value'), # REQUIRED
+        State('usr_reg_input_present_street', 'value'), # REQUIRED
+        # Permanent address
+        State('usr_reg_input_permanent_region_id', 'value'), # REQUIRED
+        State('usr_reg_input_permanent_province_id', 'value'), # REQUIRED
+        State('usr_reg_input_permanent_citymun_id', 'value'), # REQUIRED
+        State('usr_reg_input_permanent_brgy_id', 'value'), # REQUIRED
+        State('usr_reg_input_permanent_street', 'value'), # REQUIRED
+    ]
+)
+
+def usr_reg_confirmregistration(
+    btn, usertype_id,
+    # Basic information
+    fname, mname, lname, username, birthdate, assignedsex_id,
+    # Affirmative identity
+    livedname, honorific, pronouns,
+    # Work information
+    office_id, designation,
+    # Contact information
+    contactnum, email, facebook,
+    # Present address
+    present_region_id, present_province_id, present_citymun_id, present_brgy_id, present_street,
+    # Permanent address
+    permanent_region_id, permanent_province_id, permanent_citymun_id, permanent_brgy_id, permanent_street,
+):
+    ctx = dash.callback_context
+    if ctx.triggered:
+        eventid = ctx.triggered[0]['prop_id'].split('.')[0]
+        if eventid == 'usr_reg_btn_submit' and btn:
+            # Modal
+            modal_open = False
+            modal_body = ''
+            # Overall validation alert
+            alert_open = False
+            alert_class_name = None
+            alert_span = []
+            # Name validation alert
+            alert_name_open = False
+            alert_name_class_name = None
+            # Input validation
+            fname_invalid = False
+            lname_invalid = False
+            designation_invalid = False
+            contactnum_invalid = False
+            present_street_invalid = False
+            permanent_street_invalid = False
+
+            sql = """SELECT id FROM users.user
+            WHERE fname = %s AND mname = %s AND lname = %s;
+            """
+            values = [fname, mname, lname]
+            cols = ['id']
+            df = db.querydatafromdatabase(sql, values, cols)
+            if not df.empty:
+                alert_name_open = True
+                alert_name_class_name = 'mb-3'
+            
+            if (not(usertype_id) or not(fname) or not(lname) or not (birthdate) or not (assignedsex_id)
+                or not(office_id) or not(designation) or not (contactnum)
+                or not(present_region_id) or not (present_province_id) or not (present_citymun_id) or not(present_brgy_id) or not(present_street)
+                or not(permanent_region_id) or not (permanent_province_id) or not (permanent_citymun_id) or not(permanent_brgy_id) or not(permanent_street)
+            ):
+                alert_open = True
+                alert_class_name = 'mb-3'
+                if not(usertype_id):
+                    # Add input validation here
+                    alert_span += html.Li(
+                        [
+                            "Klase san magamit", html.Br(),
+                            html.Small(" (User type)", className = 'ms-3 text-muted'),
+                        ]
+                    ),
+                if not(fname):
+                    fname_invalid = True
+                    alert_span += html.Li(
+                        [
+                            "Primero nga ngaran", html.Br(),
+                            html.Small(" (First name)", className = 'ms-3 text-muted'),
+                        ]
+                    ),
+                if not(lname):
+                    lname_invalid = True
+                    alert_span += html.Li(
+                        [
+                            "Apelyido", html.Br(),
+                            html.Small(" (Last name)", className = 'ms-3 text-muted'),
+                        ]
+                    ),
+                if not(birthdate):
+                    # Add input validation here
+                    alert_span += html.Li(
+                        [
+                            "Petsa san pagkatawo", html.Br(),
+                            html.Small(" (Date of birth)", className = 'ms-3 text-muted'),
+                        ]
+                    ),
+                if not(assignedsex_id):
+                    # Add input validation here
+                    alert_span += html.Li(
+                        [
+                            "Natawo nga babayi/lalaki", html.Br(),
+                            html.Small(" (Sex assigned at birth)", className = 'ms-3 text-muted'),
+                        ]
+                    ),
+                if not(office_id):
+                    # Add input validation here
+                    alert_span += html.Li(
+                        [
+                            "Opisina", html.Br(),
+                            html.Small(" (Office)", className = 'ms-3 text-muted'),
+                        ]
+                    ),
+                if not(designation):
+                    designation_invalid = True
+                    alert_span += html.Li(
+                        [
+                            "Puwesto/katungdánan", html.Br(),
+                            html.Small(" (Position/designation)", className = 'ms-3 text-muted'),
+                        ]
+                    ),
+                if not(contactnum):
+                    contactnum_invalid = True
+                    alert_span += html.Li(
+                        [
+                            "Numero sa cellphone/telepono", html.Br(),
+                            html.Small(" (Contact number)", className = 'ms-3 text-muted'),
+                        ]
+                    ),
+                if not(present_region_id) or not(present_province_id) or not (present_citymun_id) or not (present_brgy_id) or not (present_street):
+                    # Add input validation here
+                    present_street_invalid = True
+                    text_war = 'Adlaw-adlaw nga gin-iistaran: '
+                    text_en = 'Present address: '
+                    len = 0
+                    if not present_region_id:
+                        text_war += 'Rehiyon'
+                        text_en += 'Region'
+                        len += 1
+                    if not present_province_id:
+                        if len > 0:
+                            text_war += ', '
+                            text_en += ', '
+                        text_war += 'Probinsya'
+                        text_en += 'Province'
+                        len += 1
+                    if not present_citymun_id:
+                        if len > 0:
+                            text_war += ', '
+                            text_en += ', '
+                        text_war += 'Siyudad/bungto'
+                        text_en += 'City/municipality'
+                        len += 1
+                    if not present_brgy_id:
+                        if len > 0:
+                            text_war += ', '
+                            text_en += ', '
+                        text_war += 'Barangay'
+                        text_en += 'Barangay'
+                        len += 1
+                    if not present_street:
+                        if len > 0:
+                            text_war += ', '
+                            text_en += ', '
+                        text_war += 'Kalsada'
+                        text_en += 'Street'
+                        len += 1
+                    alert_span.append(
+                        html.Li(
+                            [
+                                text_war, html.Br(),
+                                html.Small(" (%s)" % text_en, className = 'ms-3 text-muted')
+                            ]
+                        )
+                    )
+                if not(permanent_region_id) or not(permanent_province_id) or not (permanent_citymun_id) or not (permanent_brgy_id) or not (permanent_street):
+                    # Add input validation here
+                    permanent_street_invalid = True
+                    text_war = 'Permanente nga gin-iistaran: '
+                    text_en = 'Permanent address: '
+                    len = 0
+                    if not permanent_region_id:
+                        text_war += 'Rehiyon'
+                        text_en += 'Region'
+                        len += 1
+                    if not permanent_province_id:
+                        if len > 0:
+                            text_war += ', '
+                            text_en += ', '
+                        text_war += 'Probinsya'
+                        text_en += 'Province'
+                        len += 1
+                    if not permanent_citymun_id:
+                        if len > 0:
+                            text_war += ', '
+                            text_en += ', '
+                        text_war += 'Siyudad/bungto'
+                        text_en += 'City/municipality'
+                        len += 1
+                    if not permanent_brgy_id:
+                        if len > 0:
+                            text_war += ', '
+                            text_en += ', '
+                        text_war += 'Barangay'
+                        text_en += 'Barangay'
+                        len += 1
+                    if not permanent_street:
+                        if len > 0:
+                            text_war += ', '
+                            text_en += ', '
+                        text_war += 'Kalsada'
+                        text_en += 'Street'
+                        len += 1
+                    alert_span.append(
+                        html.Li(
+                            [
+                                text_war, html.Br(),
+                                html.Small(" (%s)" % text_en, className = 'ms-3 text-muted')
+                            ]
+                        )
+                    )
+            else:
+                modal_open = True
+            return [
+                # Modal
+                modal_open, #modal_body,
+                # Overall validation alert
+                alert_open, alert_class_name, alert_span,
+                # Name validation alert
+                alert_name_open, alert_name_class_name,
+                # Input validation
+                fname_invalid, lname_invalid, designation_invalid, contactnum_invalid, present_street_invalid, permanent_street_invalid
+            ]
+        else: raise PreventUpdate
+    else: raise PreventUpdate
+
+# Callback for creating new user
+@app.callback(
+    [
+        # Webpage
+        #Output('url', 'pathname'),
+        #Output('usr_reg_modal_confirm_body', 'children'),
+        # Alert
+        Output('usr_reg_alert_passwordvalidation', 'is_open'),
+        Output('usr_reg_alert_passwordvalidation', 'class_name'),
+        Output('usr_reg_alert_passwordvalidation', 'color'),
+        Output('usr_reg_alert_passwordvalidation_col_text', 'children'),
+        # Input validation
+        Output('usr_reg_input_password_initial', 'invalid'),
+        Output('usr_reg_input_password_confirm', 'invalid')
+    ],
+    [
+        Input('usr_reg_btn_confirm', 'n_clicks')
+    ],
+    [
+        # Password
+        State('usr_reg_input_password_initial', 'value'), # REQUIRED
+        State('usr_reg_input_password_confirm', 'value'), # REQUIRED
+        # User type
+        State('usr_reg_input_usertype_id', 'value'), # REQUIRED
+        # Basic information
+        State('usr_reg_input_fname', 'value'), # REQUIRED
+        State('usr_reg_input_mname', 'value'),
+        State('usr_reg_input_lname', 'value'), # REQUIRED
+        State('usr_reg_input_username', 'value'),
+        State('usr_reg_input_birthdate', 'date'), # REQUIRED
+        State('usr_reg_input_assignedsex_id', 'value'), # REQUIRED
+        # Affirmative identity
+        State('usr_reg_input_livedname', 'value'),
+        State('usr_reg_input_honorific', 'value'),
+        State('usr_reg_input_pronouns', 'value'),
+        # Work information
+        State('usr_reg_input_office_id', 'value'), # REQUIRED
+        State('usr_reg_input_designation', 'value'), # REQUIRED
+        # Contact information
+        State('usr_reg_input_contactnum', 'value'), # REQUIRED
+        State('usr_reg_input_email', 'value'),
+        State('usr_reg_input_facebook', 'value'),
+        # Present address
+        State('usr_reg_input_present_region_id', 'value'), # REQUIRED
+        State('usr_reg_input_present_province_id', 'value'), # REQUIRED
+        State('usr_reg_input_present_citymun_id', 'value'), # REQUIRED
+        State('usr_reg_input_present_brgy_id', 'value'), # REQUIRED
+        State('usr_reg_input_present_street', 'value'), # REQUIRED
+        # Permanent address
+        State('usr_reg_input_permanent_region_id', 'value'), # REQUIRED
+        State('usr_reg_input_permanent_province_id', 'value'), # REQUIRED
+        State('usr_reg_input_permanent_citymun_id', 'value'), # REQUIRED
+        State('usr_reg_input_permanent_brgy_id', 'value'), # REQUIRED
+        State('usr_reg_input_permanent_street', 'value'), # REQUIRED
+    ]
+)
+
+def usr_reg_submitregistration(
+    btn,
+    # Password
+    password_initial, password_confirm,
+    # User type
+    usertype_id,
+    # Basic information
+    fname, mname, lname, username, birthdate, assignedsex_id,
+    # Affirmative identity
+    livedname, honorific, pronouns,
+    # Work information
+    office_id, designation,
+    # Contact information
+    contactnum, email, facebook,
+    # Present address
+    present_region_id, present_province_id, present_citymun_id, present_brgy_id, present_street,
+    # Permanent address
+    permanent_region_id, permanent_province_id, permanent_citymun_id, permanent_brgy_id, permanent_street,
+):
+    ctx = dash.callback_context
+    if ctx.triggered:
+        eventid = ctx.triggered[0]['prop_id'].split('.')[0]
+        if eventid == 'usr_reg_btn_confirm' and btn:
+            url = '#'
+            #url = '/users/profile?id=%s' % # code for determing latest id number to grant
+            # Alert
+            alert_open = False
+            alert_class_name = None
+            alert_color = None
+            alert_col_text = None
+            # Input validation
+            password_initial_invalid = False
+            password_confirm_invalid = False
+            if not(password_initial) or not(password_confirm):
+                alert_open = True
+                alert_class_name = 'mb-3'
+                alert_color = 'warning'
+                if not(password_initial): password_initial_invalid = True
+                if not(password_confirm): password_confirm_invalid = True
+                if (not(password_initial) and not(password_confirm)) or (not(password_initial) and password_confirm):
+                    alert_col_text = [
+                        "Alayon paghimo san imo password.",
+                        html.Br(),
+                        html.Small(
+                            "(Please create your password.)",
+                            className = 'text-muted'
+                        ),
+                    ]
+                else: #elif password_initial and not(password_confirm):
+                    alert_col_text = [
+                        "Alayon pagkumpirma san imo password.",
+                        html.Br(),
+                        html.Small(
+                            "(Please confirm your password.)",
+                            className = 'text-muted'
+                        ),
+                    ]
+            elif password_initial != password_confirm:
+                alert_open = True
+                alert_class_name = 'mb-3'
+                alert_color = 'warning'
+                alert_col_text = [
+                    "Dapat pareho an imo password sa duha nga patlang.",
+                    html.Br(),
+                    html.Small(
+                        "(Your password in both fields must match.)",
+                        className = 'text-muted'
+                    ),
+                ]
+            elif len(password_initial) < 8:
+                alert_open = True
+                alert_class_name = 'mb-3'
+                alert_color = 'warning'
+                alert_col_text = [
+                    "Dapat diri kulang san walo (8) nga mga letra, numero, o simbolo an imo password.",
+                    html.Br(),
+                    html.Small(
+                        "(Your password should have a minimum of eight (8) characters.)",
+                        className = 'text-muted'
+                    ),
+                ]
+            else:
+                alert_open = True
+                alert_class_name = 'mb-3'
+                alert_color = 'success'
+                alert_col_text = [
+                    "Nakarawat an imo password. Ibabalyo ka na sa imo profile.",
+                    html.Br(),
+                    html.Small(
+                        "(Your password has been accepted. You will be redirected to your profile.)",
+                        className = 'text-muted'
+                    ),
+                ]
+                url = '/users/profile?id=%s' % 1 # Note: add code for determing latest id number to grant
+                encrypt_string = lambda string: hashlib.sha256(string.encode('utf-8')).hexdigest()
+                sql = """INSERT INTO users.user (usertype_id, password,
+                    fname, mname, lname, username, birthdate, assignedsex_id,
+                    livedname, honorific, pronouns, office_id, designation,
+                    contactnum, email, facebook,
+                    present_region_id, present_province_id, present_citymun_id, present_brgy_id, present_street,
+                    permanent_region_id, permanent_province_id, permanent_citymun_id, permanent_brgy_id, permanent_street)
+                    VALUES (%s, %s,
+                    %s, %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s,
+                    %s, %s, %s,
+                    %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s)
+                """
+                values = [
+                    usertype_id, encrypt_string(password_initial),
+                    # Basic information
+                    fname, mname, lname, username, birthdate, assignedsex_id,
+                    # Affirmative identity
+                    livedname, honorific, pronouns,
+                    # Work information
+                    office_id, designation,
+                    # Contact information
+                    contactnum, email, facebook,
+                    # Present address
+                    present_region_id, present_province_id, present_citymun_id, present_brgy_id, present_street,
+                    # Permanent address
+                    permanent_region_id, permanent_province_id, permanent_citymun_id, permanent_brgy_id, permanent_street,
+                ]
+                db.modifydatabase(sql, values)
+            return [
+                #url,
+                alert_open, alert_class_name, alert_color, alert_col_text,
+                password_initial_invalid, password_confirm_invalid
+            ]
+        else: raise PreventUpdate
+    else: raise PreventUpdate

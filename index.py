@@ -11,6 +11,7 @@ from app import app
 from apps import home, commonmodules as cm, error
 from apps.users import users_register
 from apps.reports import reports_create
+from apps.events import events_create
 
 # Layout definition
 CONTENT_STYLE = {
@@ -28,6 +29,10 @@ app.layout = html.Div(
         ),
         # Location variable: contains details about the url
         dcc.Location(id = 'url', refresh = True),
+        # Store variables for locking location of app
+        dcc.Store(id = 'app_region_id', data = 8, storage_type = 'session'),
+        dcc.Store(id = 'app_province_id', data = 60, storage_type = 'session'),
+        dcc.Store(id = 'app_citymun_id', data = 3, storage_type = 'session'),
         # Navbar
         cm.navbar,
         # Sidebar
@@ -61,6 +66,8 @@ def displaypage(pathname):
                 returnlayout = users_register.layout
             elif pathname == '/reports/create':
                 returnlayout = reports_create.layout
+            elif pathname == '/events/create':
+                returnlayout = events_create.layout
             else:
                 returnlayout = error.layout
             return [returnlayout]

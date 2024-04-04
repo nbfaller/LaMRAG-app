@@ -8,7 +8,7 @@ from dash.exceptions import PreventUpdate
 from app import app
 from apps import dbconnect as db
 
-userreg_tag_required = html.Sup("*", className = 'text-danger')
+tag_required = html.Sup("*", className = 'text-danger')
 hyperlink_style = {
     'text-decoration' : 'none',
     'color' : 'inherit'
@@ -28,10 +28,10 @@ layout = html.Div(
                                         html.H1("File a report"),
                                         html.P(
                                             [
-                                                "Kinihanglan pun-on an mga patlang nga may pula nga asterisk ", userreg_tag_required, ".",
+                                                "Kinihanglan pun-on an mga patlang nga may pula nga asterisk ", tag_required, ".",
                                                 html.Br(),
                                                 html.Small(
-                                                    ["(Fields with red asterisks ", userreg_tag_required, " are required.)"],
+                                                    ["(Fields with red asterisks ", tag_required, " are required.)"],
                                                     className = 'text-muted'
                                                 )
                                             ]
@@ -44,7 +44,7 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Nahinabó", userreg_tag_required, html.Br(),
+                                                    "Nahinabó", tag_required, html.Br(),
                                                     html.Small(" (Event)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_event_id'
@@ -54,7 +54,7 @@ layout = html.Div(
                                         dbc.Col(
                                             [
                                                 dcc.Dropdown(
-                                                    id = 'rep_cre_input_eventtype_id',
+                                                    id = 'rep_cre_input_event_id',
                                                     clearable = True,
                                                     className = 'mb-1'
                                                 ),
@@ -73,7 +73,7 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Klase san report", userreg_tag_required, html.Br(),
+                                                    "Klase san report", tag_required, html.Br(),
                                                     html.Small(" (Report type)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_reporttype_id'
@@ -412,7 +412,7 @@ def rep_cre_geolocrefresh(pos, date):
         href = 'https://www.google.com/maps/place/%s,%s' % (lat, lon)
     return [href, href]
 
-# Callback for populating regions and other basic dropdown menus
+# Callback for populating basic dropdown menus
 @app.callback(
     [
         Output('rep_cre_input_reporttype_id', 'options'),

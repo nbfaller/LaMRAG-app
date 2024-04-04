@@ -1,3 +1,4 @@
+/* Date picker */
 .DateInput, .DateInput_1, .DateInput_input, .DateInput_input_1 {
     width: 100%;
     margin: 0px;
@@ -49,6 +50,27 @@
     border: 0px solid #dbdbdb;
 }
 
+.CalendarDay__selected, .CalendarDay__selected:active, .CalendarDay__selected:hover {
+    background: #0d6efd;
+    border: 1px double #0d6efd;
+    color: #fff;
+}
+
+.DayPickerKeyboardShortcuts_show__bottomRight::before {
+    border-top: 26px solid transparent;
+    border-right: 33px solid #0d6efd;
+    bottom: 0;
+    right: 0;
+}
+
+/*.DayPicker, .DayPicker_transitionContainer {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}*/
+
+/* Text area */
 textarea {
     display: block;
     width: 100%;
