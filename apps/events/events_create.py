@@ -69,12 +69,13 @@ layout = html.Div(
                                                     ),
                                                     id = 'eve_cre_alert_geolocnotice',
                                                     color = 'info',
-                                                    class_name = 'mt-3 mb-0',
+                                                    class_name = 'mb-0',
                                                     dismissable = True
                                                 )
                                             ]
                                         )
-                                    ]
+                                    ],
+                                    class_name = 'mb-2'
                                 )
                             ], className = 'mb-3'
                         ),

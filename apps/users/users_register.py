@@ -82,7 +82,8 @@ layout = html.Div(
                                                     ]
                                                 )
                                             ],
-                                            id = 'usr_reg_row_inputvalidation'
+                                            id = 'usr_reg_row_inputvalidation',
+                                            class_name = 'mb-2'
                                         ),
                                         dbc.Row(
                                             [
@@ -150,7 +151,8 @@ layout = html.Div(
                                                     ]
                                                 )
                                             ],
-                                            id = 'usr_reg_row_alert_usertype'
+                                            id = 'usr_reg_row_alert_usertype',
+                                            class_name = 'mb-2'
                                         )
                                     ], className = 'mb-3',
                                 ),

@@ -37,7 +37,7 @@ layout = html.Div(
                                             ]
                                         )
                                     ],
-                                    id = 'rep_cre_row_header'
+                                    id = 'rep_cre_row_header',
                                 ),
                                 dbc.Row(
                                     [
@@ -66,8 +66,9 @@ layout = html.Div(
                                             ],
                                             class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9 col-lg-9'
                                         )
-                                    ], class_name = 'mb-2',
-                                    id = 'rep_cre_row_event'
+                                    ],
+                                    id = 'rep_cre_row_event',
+                                    class_name = 'mb-2',
                                 ),
                                 dbc.Row(
                                     [
@@ -96,8 +97,9 @@ layout = html.Div(
                                             ],
                                             class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9 col-lg-9'
                                         )
-                                    ], class_name = 'mb-2',
-                                    id = 'rep_cre_row_reporttype'
+                                    ],
+                                    id = 'rep_cre_row_reporttype',
+                                    class_name = 'mb-2'
                                 ),
                                 dbc.Row(
                                     [
@@ -150,7 +152,8 @@ layout = html.Div(
                                                 )
                                             ]
                                         )
-                                    ]
+                                    ],
+                                    class_name = 'mb-2'
                                 )
                             ],
                             id = 'rep_cre_div_basicdetails',
