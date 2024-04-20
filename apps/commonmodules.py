@@ -147,6 +147,7 @@ sidebar = dbc.Offcanvas(
                         ), class_name = sidebar_btn_row_class_name
                     ),
                     href = '/',
+                    external_link = True,
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
                 dbc.Button(
@@ -160,6 +161,7 @@ sidebar = dbc.Offcanvas(
                         ), class_name = sidebar_btn_row_class_name
                     ),
                     href = '/dashboard',
+                    external_link = True,
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
                 dbc.Button(
@@ -167,12 +169,13 @@ sidebar = dbc.Offcanvas(
                         dbc.Col(
                             [
                                 html.I(className = 'bi bi-send-exclamation me-2'),
-                                "Report an incident"
+                                "File a report"
                             ],
                             width = sidebar_btn_col_width
                         ), class_name = sidebar_btn_row_class_name
                     ),
                     href = '/reports/create',
+                    external_link = True,
                     color = 'warning', outline = True, #sidebar_btn_color,
                     size = sidebar_btn_size,
                     style = {
@@ -191,6 +194,7 @@ sidebar = dbc.Offcanvas(
                         ), class_name = sidebar_btn_row_class_name
                     ),
                     href = '/reports/update',
+                    external_link = True,
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
             ],
@@ -219,6 +223,7 @@ sidebar = dbc.Offcanvas(
                         ), class_name = sidebar_btn_row_class_name
                     ),
                     href = '/reports',
+                    external_link = True,
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
                 dbc.Button(
@@ -232,6 +237,7 @@ sidebar = dbc.Offcanvas(
                         ), class_name = sidebar_btn_row_class_name
                     ),
                     href = '/reports/request',
+                    external_link = True,
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
                 dbc.Button(
@@ -245,6 +251,7 @@ sidebar = dbc.Offcanvas(
                         ), class_name = sidebar_btn_row_class_name
                     ),
                     href = '/reports/generate',
+                    external_link = True,
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
             ], className = 'mb-3',
@@ -271,6 +278,7 @@ sidebar = dbc.Offcanvas(
                         ), class_name = sidebar_btn_row_class_name
                     ),
                     href = '/events',
+                    external_link = True,
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
                 dbc.Button(
@@ -282,6 +290,7 @@ sidebar = dbc.Offcanvas(
                             ],
                             width = sidebar_btn_col_width), class_name = sidebar_btn_row_class_name),
                     href = '/events/create',
+                    external_link = True,
                     color = 'warning', outline = True, #sidebar_btn_color,
                     size = sidebar_btn_size,
                     style = {
@@ -313,6 +322,7 @@ sidebar = dbc.Offcanvas(
                         ), class_name = sidebar_btn_row_class_name
                     ),
                     href = '/users',
+                    external_link = True,
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
                 dbc.Button(
@@ -326,6 +336,7 @@ sidebar = dbc.Offcanvas(
                         ), class_name = sidebar_btn_row_class_name
                     ),
                     href = '/users/register',
+                    external_link = True,
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
             ], className = 'mb-3',
@@ -353,6 +364,7 @@ sidebar = dbc.Offcanvas(
                         ), class_name = sidebar_btn_row_class_name
                     ),
                     href = '/data/barangays',
+                    external_link = True,
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
                 dbc.Button(
@@ -366,6 +378,7 @@ sidebar = dbc.Offcanvas(
                         ), class_name = sidebar_btn_row_class_name
                     ),
                     href = '/data/demographics',
+                    external_link = True,
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
             ], className = 'mb-3',
@@ -376,6 +389,13 @@ sidebar = dbc.Offcanvas(
                 html.Hr(),
                 dbc.Row(
                     [
+                        #dbc.Col(
+                        #    html.Img(
+                        #        src = app.get_asset_url('ph-arms-mono-dark.png'),
+                        #        style = {'height' : '3em'},
+                        #    ),
+                        #    width = 'auto',
+                        #),
                         dbc.Col(
                             html.Img(
                                 src = app.get_asset_url('city-seal-mono-dark.png'),
@@ -437,6 +457,13 @@ footer = html.Footer(
                     [
                         dbc.Row(
                             [
+                                #dbc.Col(
+                                #    html.Img(
+                                #        src = app.get_asset_url('ph-arms-mono.png'),
+                                #        style = {'height' : '5em'},
+                                #    ),
+                                #    width = 'auto',
+                                #),
                                 dbc.Col(
                                     html.Img(
                                         src = app.get_asset_url('city-seal-mono.png'),
@@ -455,7 +482,7 @@ footer = html.Footer(
                         ),
                         html.Div(
                             [
-                                html.P(html.Small("Republika san Pilipinas • Siyudad san Calbayog"), className = 'mb-0'),
+                                html.P(html.Small("Republic of the Philippines • City of Calbayog"), className = 'mb-0'),
                                 html.H4("City Disaster Risk Reduction and Management Office", className = 'mb-0 fw-bold'),
                                 html.A(html.P(html.Small([html.I(className = 'bi bi-pin-map-fill me-2'), "Government Center, Magsaysay Extension (Diversion Road), Brgy. Bagacay, Calbayog City, Samar 6710"]), className = 'mb-0'), href = 'https://maps.app.goo.gl/Sjw7n6DwXn5qvUfg9', style = hyperlink_style, target = '_blank')
                             ], className = 'mb-3'

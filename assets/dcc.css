@@ -1,5 +1,5 @@
 /* Date picker */
-.DateInput, .DateInput_1, .DateInput_input, .DateInput_input_1 {
+.DateInput, .DateInput_1, .DateInput_input, .DateInput_input_1, .SingleDatePickerInput {
     width: 100%;
     margin: 0px;
     padding: 0px;
@@ -45,20 +45,26 @@
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
+.SingleDatePickerInput__disabled, .DateInput__disabled, .DateInput_input__disabled {
+    height: 100%;
+    width: 100%;
+    background: #e9ecef;
+}
+
 .SingleDatePickerInput__withBorder {
     border-radius: 0px;
     border: 0px solid #dbdbdb;
 }
 
 .CalendarDay__selected, .CalendarDay__selected:active, .CalendarDay__selected:hover {
-    background: #0d6efd;
-    border: 1px double #0d6efd;
+    background: #87715a;
+    border: 1px double #87715a;
     color: #fff;
 }
 
 .DayPickerKeyboardShortcuts_show__bottomRight::before {
     border-top: 26px solid transparent;
-    border-right: 33px solid #0d6efd;
+    border-right: 33px solid #87715a;
     bottom: 0;
     right: 0;
 }

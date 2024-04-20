@@ -4,7 +4,7 @@
 
 # Dash related dependencies
 import dash
-from dash import dcc, html, dash_table
+from dash import dcc, html, dash_table, callback
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
@@ -17,6 +17,7 @@ usr_reg_tag_required = html.Sup("*", className = 'text-danger')
 
 layout = html.Div(
     [
+        #dcc.Store(id = 'usr_reg_store_regsuccess', data = False, storage_type = 'memory'),
         dbc.Row(
             [
                 dbc.Col(
@@ -29,8 +30,8 @@ layout = html.Div(
                                             [
                                                 html.H1(
                                                     [
-                                                        "Pagrehistro",
-                                                        html.Small(" (User Registration)", className = 'text-muted')
+                                                        "User Registration",
+                                                        #html.Small(" (User Registration)", className = 'text-muted')
                                                     ]
                                                 ),
                                                 html.P(
@@ -93,8 +94,9 @@ layout = html.Div(
                                                             html.Br(), html.Small(" (User type)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_usertype_id',
+                                                        class_name = 'mb-2'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dcc.Dropdown(
@@ -102,9 +104,9 @@ layout = html.Div(
                                                         clearable = True,
                                                         value = 1
                                                     ),
-                                                    class_name = 'align-self-center col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
                                                 ),
-                                            ], #className = 'mb-3',
+                                            ], className = 'mb-1 mb-md-0',
                                             id = 'usr_reg_row_usertype'
                                         ),
                                         dbc.Row(
@@ -147,10 +149,10 @@ layout = html.Div(
                                                         )
                                                     ]
                                                 )
-                                            ], #className = 'mb-3',
+                                            ],
                                             id = 'usr_reg_row_alert_usertype'
                                         )
-                                    ]
+                                    ], className = 'mb-3',
                                 ),
                                 html.Hr(),
                                 # Basic identity
@@ -170,7 +172,7 @@ layout = html.Div(
                                                 #    freely express their sexual orientation, gender identity, and expression (SOGIE).
                                                 #    Everyone is enjoined to fill out these details whenever applicable.
                                                 #""")
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         # Name
                                         dbc.Row(
@@ -181,9 +183,10 @@ layout = html.Div(
                                                             "Ngaran", usr_reg_tag_required, html.Br(),
                                                             html.Small(" (Name)", className = 'text-muted')
                                                         ],
-                                                        id = 'usr_reg_label_name'
+                                                        id = 'usr_reg_label_name',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dbc.Input(
@@ -192,7 +195,7 @@ layout = html.Div(
                                                         placeholder = ['Primero (First name)'],
                                                         invalid = False
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dbc.Input(
@@ -201,7 +204,7 @@ layout = html.Div(
                                                         placeholder = 'Butnga (Middle name)'
                                                     ),
                                                     md = 3, sm = 12,
-                                                    class_name = ' align-self-center mb-2 col-12 col-md-3'
+                                                    class_name = ' align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dbc.Input(
@@ -211,11 +214,11 @@ layout = html.Div(
                                                         invalid = False
                                                     ),
                                                     md = 3, sm = 12,
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                             ],
                                             id = 'usr_reg_row_name',
-                                            class_name = 'mb-1'
+                                            class_name = 'mb-2'
                                         ),
                                         # Input validation for name
                                         dbc.Row(
@@ -258,8 +261,9 @@ layout = html.Div(
                                                     dbc.Label(
                                                         "Username",
                                                         id = 'usr_reg_label_username',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dbc.Input(
@@ -268,13 +272,13 @@ layout = html.Div(
                                                         placeholder = 'Username',
                                                         disabled = True
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
                                                 ),
                                                 dbc.Tooltip(
                                                     "Usernames are automatically generated.",
                                                     target = 'usr_reg_label_username'
                                                 )
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         # Birthdate and sex assigned at birth
                                         dbc.Row(
@@ -286,9 +290,9 @@ layout = html.Div(
                                                             html.Small(" (Date of birth)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_birthdate',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                                    #class_name = 'col-md-2 col-sm-11 col-xs-11 mb-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dcc.DatePickerSingle(
@@ -299,7 +303,7 @@ layout = html.Div(
                                                         #style = {'width' : '100%'}
                                                         className = 'w-100'
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dbc.Label(
@@ -308,20 +312,20 @@ layout = html.Div(
                                                             html.Small(" (Sex assigned at birth)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_assignedsex',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
-                                                    #class_name = 'col-md-2 col-sm-11 col-xs-11 mb-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dcc.Dropdown(
                                                         id = 'usr_reg_input_assignedsex_id',
                                                         clearable = True
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         )
-                                    ], className = 'mb-3'
+                                    ], className = 'mt-3 mb-3'
                                 ),
                                 # Affirmative identity
                                 html.Div(
@@ -350,16 +354,17 @@ layout = html.Div(
                                                         )
                                                     ]
                                                 ),
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         "Lived name",
-                                                        id = 'usr_reg_label_livedname'
+                                                        id = 'usr_reg_label_livedname',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dbc.Input(
@@ -367,9 +372,9 @@ layout = html.Div(
                                                         id = 'usr_reg_input_livedname',
                                                         placeholder = 'Lived name'
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         dbc.Row(
                                             [
@@ -379,9 +384,10 @@ layout = html.Div(
                                                             "Honoripiko",
                                                             html.Br(), html.Small(" (Honorific)", className = 'text-muted')
                                                         ],
-                                                        id = 'usr_reg_label_honorific'
+                                                        id = 'usr_reg_label_honorific',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dbc.Input(
@@ -389,7 +395,7 @@ layout = html.Div(
                                                         id = 'usr_reg_input_honorific',
                                                         placeholder = 'Example: Mr., Mrs., Ms., Dr.'
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dbc.Label(
@@ -397,9 +403,10 @@ layout = html.Div(
                                                             "Mga pronoun",
                                                             html.Br(), html.Small(" (Pronouns)", className = 'text-muted')
                                                         ],
-                                                        id = 'usr_reg_label_pronouns'
+                                                        id = 'usr_reg_label_pronouns',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dbc.Input(
@@ -407,11 +414,11 @@ layout = html.Div(
                                                         id = 'usr_reg_input_pronouns',
                                                         placeholder = 'Example: she/her, he/him, they/them'
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 )
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         )
-                                    ], className = 'mb-3'
+                                    ], className = 'mt-3 mb-3'
                                 ),
                                 html.Hr(),
                                 # Employment information
@@ -438,7 +445,7 @@ layout = html.Div(
                                                         )
                                                     ]
                                                 )
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         # Office
                                         dbc.Row(
@@ -451,8 +458,9 @@ layout = html.Div(
                                                             html.Small(" (Office)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_office_id',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dcc.Dropdown(
@@ -460,9 +468,9 @@ layout = html.Div(
                                                         clearable = True,
                                                         placeholder = "Pili (select)..."
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         # Designation
                                         dbc.Row(
@@ -475,8 +483,9 @@ layout = html.Div(
                                                             html.Small(" (Position/designation)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_designation',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dbc.Input(
@@ -485,11 +494,11 @@ layout = html.Div(
                                                         placeholder = 'Example: City Councilor, Barangay Captain, Administrative Aide I',
                                                         invalid = False
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
                                                 ),
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         )
-                                    ], className = 'mb-3'
+                                    ], className = 'mt-3 mb-3'
                                 ),
                                 html.Hr(),
                                 # Contact information
@@ -509,7 +518,7 @@ layout = html.Div(
                                                 #    freely express their sexual orientation, gender identity, and expression (SOGIE).
                                                 #    Everyone is enjoined to fill out these details whenever applicable.
                                                 #""")
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         # Contact number and email
                                         dbc.Row(
@@ -522,8 +531,9 @@ layout = html.Div(
                                                             html.Small(" (Contact number)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_contactnum',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dbc.Input(
@@ -532,7 +542,7 @@ layout = html.Div(
                                                         placeholder = '09XXXXXXXXX',
                                                         invalid = False
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dbc.Label(
@@ -541,8 +551,9 @@ layout = html.Div(
                                                             "Email address"
                                                         ],
                                                         id = 'usr_reg_label_email',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dbc.Input(
@@ -550,9 +561,9 @@ layout = html.Div(
                                                         id = 'usr_reg_input_email',
                                                         placeholder = 'example@website.com',
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         # Facebook
                                         dbc.Row(
@@ -565,8 +576,9 @@ layout = html.Div(
                                                             html.Small(" (Facebook name)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_facebbok',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-0 mb-md-2 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dbc.Input(
@@ -574,11 +586,11 @@ layout = html.Div(
                                                         id = 'usr_reg_input_facebook',
                                                         placeholder = 'Ngaran sa Facebook (Facebook name)',
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-0 mb-md-2 col-12 col-md-9'
                                                 ),
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         )
-                                    ], className = 'mb-3'
+                                    ], className = 'mt-3 mb-3'
                                 ),
                                 html.Hr(),
                                 # Present address
@@ -610,7 +622,7 @@ layout = html.Div(
                                                         )
                                                     ]
                                                 )
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         dbc.Row(
                                             [
@@ -620,9 +632,10 @@ layout = html.Div(
                                                             "Rehiyon", usr_reg_tag_required, html.Br(),
                                                             html.Small(" (Region)", className = 'text-muted')
                                                         ],
-                                                        id = 'usr_reg_label_present_region_id'
+                                                        id = 'usr_reg_label_present_region_id',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dcc.Dropdown(
@@ -630,9 +643,9 @@ layout = html.Div(
                                                         clearable = True,
                                                         placeholder = "Pili (select)..."
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         dbc.Row(
                                             [
@@ -642,9 +655,10 @@ layout = html.Div(
                                                             "Probinsya", usr_reg_tag_required, html.Br(),
                                                             html.Small(" (Province)", className = 'text-muted')
                                                         ],
-                                                        id = 'usr_reg_label_present_province_id'
+                                                        id = 'usr_reg_label_present_province_id',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dcc.Dropdown(
@@ -653,21 +667,22 @@ layout = html.Div(
                                                         placeholder = "Pili (select)...",
                                                         disabled = True
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Siyudad/Bungto", usr_reg_tag_required, html.Br(),
-                                                            html.Small(" (City/Municipality)", className = 'text-muted')
+                                                            "Siyudad/bungto", usr_reg_tag_required, html.Br(),
+                                                            html.Small(" (City/municipality)", className = 'text-muted')
                                                         ],
-                                                        id = 'usr_reg_label_present_citymun_id'
+                                                        id = 'usr_reg_label_present_citymun_id',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dcc.Dropdown(
@@ -676,9 +691,9 @@ layout = html.Div(
                                                         placeholder = "Pili (select)...",
                                                         disabled = True
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         dbc.Row(
                                             [
@@ -687,9 +702,10 @@ layout = html.Div(
                                                         [
                                                             "Barangay",  usr_reg_tag_required,
                                                         ],
-                                                        id = 'usr_reg_label_present_brgy_id'
+                                                        id = 'usr_reg_label_present_brgy_id',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dcc.Dropdown(
@@ -698,9 +714,9 @@ layout = html.Div(
                                                         placeholder = "Pili (select)...",
                                                         disabled = True
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         dbc.Row(
                                             [
@@ -710,24 +726,25 @@ layout = html.Div(
                                                             "Kalsada", usr_reg_tag_required, html.Br(),
                                                             html.Small(" (Street)", className = 'text-muted')
                                                         ],
-                                                        id = 'usr_reg_label_present_street'
+                                                        id = 'usr_reg_label_present_street',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dbc.Input(
                                                         type = 'text',
                                                         id = 'usr_reg_input_present_street',
-                                                        placeholder = 'House No., Lot No., Block No., Street/Road, Village/Subdivision',
+                                                        placeholder = 'House No., Lot No., Block No., Street/Road, Village/Subdivision, Purok/Sitio',
                                                         disabled = True,
                                                         invalid = False
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
                                                 ),
                                             ],
-                                            class_name = 'mb-1'
+                                            class_name = 'mb-2'
                                         ),
-                                    ], className = 'mb-3'
+                                    ], className = 'mt-3 mb-3'
                                 ),
                                 # Permanent address
                                 html.Div(
@@ -769,7 +786,7 @@ layout = html.Div(
                                                 #    freely express their sexual orientation, gender identity, and expression (SOGIE).
                                                 #    Everyone is enjoined to fill out these details whenever applicable.
                                                 #""")
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         dbc.Row(
                                             [
@@ -779,9 +796,10 @@ layout = html.Div(
                                                             "Rehiyon", usr_reg_tag_required, html.Br(),
                                                             html.Small(" (Region)", className = 'text-muted')
                                                         ],
-                                                        id = 'usr_reg_label_permanent_region_id'
+                                                        id = 'usr_reg_label_permanent_region_id',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dcc.Dropdown(
@@ -789,7 +807,7 @@ layout = html.Div(
                                                         clearable = True,
                                                         placeholder = "Pili (select)..."
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
                                                 )
                                             ], class_name = 'mb-1'
                                         ),
@@ -801,9 +819,10 @@ layout = html.Div(
                                                             "Probinsya", usr_reg_tag_required, html.Br(),
                                                             html.Small(" (Province)", className = 'text-muted')
                                                         ],
-                                                        id = 'usr_reg_label_permanent_province_id'
+                                                        id = 'usr_reg_label_permanent_province_id',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dcc.Dropdown(
@@ -812,21 +831,22 @@ layout = html.Div(
                                                         placeholder = "Pili (select)...",
                                                         disabled = True
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Siyudad/Bungto", usr_reg_tag_required, html.Br(),
-                                                            html.Small(" (City/Municipality)", className = 'text-muted')
+                                                            "Siyudad/bungto", usr_reg_tag_required, html.Br(),
+                                                            html.Small(" (City/municipality)", className = 'text-muted')
                                                         ],
-                                                        id = 'usr_reg_label_permanent_citymun_id'
+                                                        id = 'usr_reg_label_permanent_citymun_id',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dcc.Dropdown(
@@ -835,9 +855,9 @@ layout = html.Div(
                                                         placeholder = "Pili (select)...",
                                                         disabled = True
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         dbc.Row(
                                             [
@@ -846,9 +866,10 @@ layout = html.Div(
                                                         [
                                                             "Barangay", usr_reg_tag_required,
                                                         ],
-                                                        id = 'usr_reg_label_permanent_brgy_id'
+                                                        id = 'usr_reg_label_permanent_brgy_id',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dcc.Dropdown(
@@ -857,9 +878,9 @@ layout = html.Div(
                                                         placeholder = "Pili (select)...",
                                                         disabled = True
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = 'mb-1'
+                                            ], class_name = 'mb-2'
                                         ),
                                         dbc.Row(
                                             [
@@ -869,24 +890,25 @@ layout = html.Div(
                                                             "Kalsada", usr_reg_tag_required, html.Br(),
                                                             html.Small(" (Street)", className = 'text-muted')
                                                         ],
-                                                        id = 'usr_reg_label_permanent_street'
+                                                        id = 'usr_reg_label_permanent_street',
+                                                        class_name = 'mb-0'
                                                     ),
-                                                    class_name = 'align-self-center mb-0 col-12 col-md-3'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
                                                     dbc.Input(
                                                         type = 'text',
                                                         id = 'usr_reg_input_permanent_street',
-                                                        placeholder = 'House No., Lot No., Block No., Street/Road, Village/Subdivision',
+                                                        placeholder = 'House No., Lot No., Block No., Street/Road, Village/Subdivision, Purok/Sitio',
                                                         disabled = True,
                                                         invalid = False
                                                     ),
-                                                    class_name = 'align-self-center mb-2 col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
                                                 ),
                                             ],
-                                            class_name = 'mb-1'
+                                            class_name = 'mb-2'
                                         ),
-                                    ], className = 'mb-3'
+                                    ], className = 'mt-3 mb-3'
                                 ),
                             ]
                         ),
@@ -912,7 +934,7 @@ layout = html.Div(
                                     ],
                                     class_name = 'justify-content-end'
                                 )
-                            ]
+                            ], className = 'mt-3'
                         )
                     ],
                     class_name = 'col-md-10'
@@ -1515,7 +1537,8 @@ def usr_reg_displayusertypealert(usertype):
         State('usr_reg_input_permanent_citymun_id', 'value'), # REQUIRED
         State('usr_reg_input_permanent_brgy_id', 'value'), # REQUIRED
         State('usr_reg_input_permanent_street', 'value'), # REQUIRED
-    ]
+    ],
+    prevent_initial_call = True
 )
 
 def usr_reg_confirmregistration(
@@ -1747,7 +1770,7 @@ def usr_reg_confirmregistration(
 @app.callback(
     [
         # Webpage
-        #Output('url', 'pathname'),
+        Output('usr_reg_store_regsuccess', 'data'),
         #Output('usr_reg_modal_confirm_body', 'children'),
         # Alert
         Output('usr_reg_alert_passwordvalidation', 'is_open'),
@@ -1797,7 +1820,8 @@ def usr_reg_confirmregistration(
         State('usr_reg_input_permanent_citymun_id', 'value'), # REQUIRED
         State('usr_reg_input_permanent_brgy_id', 'value'), # REQUIRED
         State('usr_reg_input_permanent_street', 'value'), # REQUIRED
-    ]
+    ],
+    prevent_initial_call = True
 )
 
 def usr_reg_submitregistration(
@@ -1823,8 +1847,9 @@ def usr_reg_submitregistration(
     if ctx.triggered:
         eventid = ctx.triggered[0]['prop_id'].split('.')[0]
         if eventid == 'usr_reg_btn_confirm' and btn:
-            url = '#'
+            #url = '#'
             #url = '/users/profile?id=%s' % # code for determing latest id number to grant
+            regsuccess = False
             # Alert
             alert_open = False
             alert_class_name = None
@@ -1893,7 +1918,8 @@ def usr_reg_submitregistration(
                         className = 'text-muted'
                     ),
                 ]
-                url = '/users/profile?id=%s' % 1 # Note: add code for determing latest id number to grant
+                #url = '/users/profile?id=%s' % 1 # Note: add code for determing latest id number to grant
+                regsuccess = True
                 encrypt_string = lambda string: hashlib.sha256(string.encode('utf-8')).hexdigest()
                 sql = """INSERT INTO users.user (usertype_id, password,
                     fname, mname, lname, username, birthdate, assignedsex_id,
@@ -1925,7 +1951,7 @@ def usr_reg_submitregistration(
                 ]
                 db.modifydatabase(sql, values)
             return [
-                #url,
+                regsuccess, #url,
                 alert_open, alert_class_name, alert_color, alert_col_text,
                 password_initial_invalid, password_confirm_invalid
             ]

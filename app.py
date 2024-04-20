@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 import logging
 
 # Create the application object (stored in app variable) along with CSS stylesheets
-app = dash.Dash(__name__, external_stylesheets = ["assets/bootstrap.css", "assets/dcc.css", dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP])
+app = dash.Dash(__name__, external_stylesheets = ["assets/bootstrap.css", "assets/dcc.css", dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME])
 
 # Make sure that the cllbacks are not activated when input elements enter the layout
 app.config.suppress_callback_exceptions = True
