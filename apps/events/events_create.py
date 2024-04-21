@@ -94,7 +94,7 @@ layout = html.Div(
                                                 id = 'eve_cre_label_eventtype_id',
                                                 class_name = 'mb-0'
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             [
@@ -111,7 +111,7 @@ layout = html.Div(
                                                     class_name = 'mt-1'
                                                 ),
                                             ],
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         )
                                     ], class_name = 'mb-2',
                                     id = 'eve_cre_row_event'
@@ -128,7 +128,7 @@ layout = html.Div(
                                                 id = 'eve_cre_label_reporttype_id',
                                                 class_name = 'mb-0'
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             [
@@ -150,7 +150,7 @@ layout = html.Div(
                                                     class_name = 'mt-1'
                                                 ),
                                             ],
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         )
                                     ], class_name = 'mb-3',
                                     id = 'eve_cre_row_name'
@@ -167,7 +167,7 @@ layout = html.Div(
                                                 id = 'eve_cre_label_brgy_id',
                                                 class_name = 'mb-0'
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             [
@@ -185,7 +185,7 @@ layout = html.Div(
                                                     class_name = 'mt-1'
                                                 ),
                                             ],
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         )
                                     ], class_name = 'mb-2',
                                     id = 'eve_cre_row_brgy'
@@ -202,7 +202,7 @@ layout = html.Div(
                                                 id = 'eve_cre_label_startdate',
                                                 class_name = 'mb-0'
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             [
@@ -221,7 +221,7 @@ layout = html.Div(
                                                     class_name = 'mt-1'
                                                 ),
                                             ],
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         ),
                                     ], class_name = 'mb-2'
                                 ),
@@ -237,7 +237,7 @@ layout = html.Div(
                                                 id = 'eve_cre_label_enddate',
                                                 class_name = 'mb-0'
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             [
@@ -257,7 +257,7 @@ layout = html.Div(
                                                     class_name = 'mt-1'
                                                 ),
                                             ],
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         ),
                                     ], class_name = 'mb-2'
                                 ),
@@ -273,7 +273,7 @@ layout = html.Div(
                                                 id = 'eve_cre_label_description',
                                                 class_name = 'mb-0'
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             [
@@ -287,10 +287,10 @@ layout = html.Div(
                                                     },
                                                 )
                                             ],
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         )
                                     ], class_name = 'mb-2',
-                                    id = 'rep_cre_row_synopsis'
+                                    id = 'eve_cre_row_synopsis'
                                 ),
                             ],
                             id = 'eve_cre_div_details',
@@ -359,7 +359,7 @@ layout = html.Div(
                             className = 'mt-3'
                         )
                     ],
-                    class_name = 'col-md-10'
+                    class_name = 'col-lg-10'
                 )
             ],
             class_name = 'justify-content-center'
@@ -385,7 +385,7 @@ eve_cre_url_pathname = '/events/create'
     ]
 )
 
-def rep_cre_populatedropdowns(pathname, region, province, citymun):
+def eve_cre_populatedropdowns(pathname, region, province, citymun):
     if pathname == eve_cre_url_pathname:
         dropdowns = []
 

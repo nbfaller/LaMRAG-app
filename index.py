@@ -33,6 +33,7 @@ app.layout = html.Div(
         dcc.Store(id = 'app_region_id', data = 8, storage_type = 'session'),
         dcc.Store(id = 'app_province_id', data = 60, storage_type = 'session'),
         dcc.Store(id = 'app_citymun_id', data = 3, storage_type = 'session'),
+        dcc.Store(id = 'app_brgy_id', data = 1, storage_type = 'session'), # CHANGE
         # Navbar
         cm.navbar,
         # Sidebar
