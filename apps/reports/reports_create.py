@@ -1147,6 +1147,7 @@ layout = html.Div(
                                                 #dcc.Dropdown(
                                                     id = 'rep_cre_input_pubutil_id',
                                                     #clearable = True,
+                                                    disabled = True
                                                 ),
                                                 #dbc.FormText(
                                                 #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
@@ -1467,7 +1468,7 @@ def rep_cre_geolocrefresh(pathname):
     ]
 )
 
-def rep_cre_geolocrefresh(pos, date):
+def rep_cre_geolocset(pos, date):
     href = None
     hh = None
     mm = None
@@ -1494,6 +1495,7 @@ def rep_cre_geolocrefresh(pos, date):
         Output('rep_cre_input_casualty_region_id', 'value'),
         Output('rep_cre_input_casualtytype_id', 'options'),
         Output('rep_cre_input_casualtystatus_id', 'options'),
+        Output('rep_cre_input_pubutiltype_id', 'options'),
     ],
     [
         Input('url', 'pathname')
@@ -1569,6 +1571,17 @@ def rep_cre_populatedropdowns(pathname, region):
         df = df.sort_values('value')
         casualtystatuses = df.to_dict('records')
         dropdowns.append(casualtystatuses)
+
+        # Public utility types
+        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') as label, id as value
+        FROM utilities.pubutiltype;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        pubutiltypes = df.to_dict('records')
+        dropdowns.append(pubutiltypes)
 
         return dropdowns
     else: raise PreventUpdate
@@ -1714,3 +1727,50 @@ def rep_cre_populaterelincstatus(type):
             options = df.to_dict('records')
             disabled = False
     return [options, None, disabled]
+
+# Callback for populating local public utility once utility type is selected
+@app.callback(
+    [
+        Output('rep_cre_input_pubutil_id', 'options'),
+        Output('rep_cre_input_pubutil_id', 'value'),
+        Output('rep_cre_input_pubutil_id', 'disabled'),
+    ],
+    [
+        Input('rep_cre_input_pubutiltype_id', 'value')
+    ],
+    [
+        State('app_region_id', 'data'),
+        State('app_province_id', 'data'),
+        State('app_citymun_id', 'data'),
+        State('app_brgy_id', 'data')
+    ],
+    prevent_initial_update = True
+)
+
+def rep_cre_setpubutil(pubutiltype, region, province, citymun, brgy):
+    options = None
+    value = None
+    disabled = True
+    if pubutiltype:
+        pubutiltype = int(pubutiltype)
+        sql = """SELECT CONCAT(acronym, ' (', name, ')') AS label, id AS value
+            FROM utilities.pubutil WHERE type_id = %s;"""
+        values = [pubutiltype]
+        cols = ['label', 'value']
+        df = db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        options = df.to_dict('records')
+        if pubutiltype == 1 or pubutiltype == 2:
+            if pubutiltype == 1:
+                sql = """SELECT pubutil_elec_id AS pubutil_id FROM utilities.addressbrgy
+                    WHERE region_id = %s AND province_id = %s AND citymun_id = %s AND id = %s;"""
+            else:
+                sql = """SELECT pubutil_water_id AS pubutil_id FROM utilities.addressbrgy
+                    WHERE region_id = %s AND province_id = %s AND citymun_id = %s AND id = %s;"""
+            values = [region, province, citymun, brgy]
+            cols = ['pubutil_id']
+            df = db.querydatafromdatabase(sql, values, cols)
+            value = df.at[0, 'pubutil_id']
+        else:
+            disabled = False
+    return [options, value, disabled]
