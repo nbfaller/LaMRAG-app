@@ -14,6 +14,17 @@ hyperlink_style = {
     'color' : 'inherit'
 }
 
+# Default margins and spacing settings
+header_m = 'mb-3'
+div_m = 'mt-3 mb-3'
+row_m = 'mb-2'
+subhead_m = 'mt-3'
+p_m = 'mb-0'
+label_m = 'mb-0'
+ftext_m = 'mt-1'
+alert_i_m = 'pe-0 me-0 col-12 col-md-auto mb-2 mb-md-0'
+footer_m = 'mt-3'
+
 layout = html.Div(
     [
         dcc.Geolocation(id = 'rep_cre_geoloc'),
@@ -35,72 +46,11 @@ layout = html.Div(
                                                     ["(Fields with red asterisks ", tag_required, " are required.)"],
                                                     className = 'text-muted'
                                                 )
-                                            ]
+                                            ], className = p_m
                                         )
                                     ],
                                     id = 'rep_cre_row_header',
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Panhitabó", tag_required, html.Br(),
-                                                    html.Small(" (Event)", className = 'text-muted')
-                                                ],
-                                                id = 'rep_cre_label_event_id',
-                                                class_name = 'mb-0'
-                                            ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
-                                        ),
-                                        dbc.Col(
-                                            [
-                                                dcc.Dropdown(
-                                                    id = 'rep_cre_input_event_id',
-                                                    clearable = True,
-                                                ),
-                                                dbc.FormText(
-                                                    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
-                                                    color = 'secondary',
-                                                    class_name = 'mt-1'
-                                                ),
-                                            ],
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
-                                        )
-                                    ],
-                                    id = 'rep_cre_row_event',
-                                    class_name = 'mb-2',
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Klase san report", tag_required, html.Br(),
-                                                    html.Small(" (Report type)", className = 'text-muted')
-                                                ],
-                                                id = 'rep_cre_label_reporttype_id',
-                                                class_name = 'mb-0'
-                                            ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
-                                        ),
-                                        dbc.Col(
-                                            [
-                                                dcc.Dropdown(
-                                                    id = 'rep_cre_input_reporttype_id',
-                                                    clearable = True,
-                                                ),
-                                                dbc.FormText(
-                                                    "Usa la nga initial report an puwede himuon. (Initial reports can only be filed once.)",
-                                                    color = 'secondary',
-                                                    class_name = 'mt-1'
-                                                ),
-                                            ],
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
-                                        )
-                                    ],
-                                    id = 'rep_cre_row_reporttype',
-                                    class_name = 'mb-2'
+                                    class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -112,7 +62,7 @@ layout = html.Div(
                                                             dbc.Col(
                                                                 html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                 width = 'auto',
-                                                                class_name = 'pe-0 me-0'
+                                                                class_name = alert_i_m
                                                             ),
                                                             dbc.Col(
                                                                 [
@@ -148,22 +98,205 @@ layout = html.Div(
                                                     ),
                                                     id = 'rep_cre_alert_geolocnotice',
                                                     color = 'info',
-                                                    class_name = 'mb-0',
+                                                    class_name = 'mb-3',
                                                     dismissable = True
                                                 )
                                             ]
                                         )
                                     ],
-                                    class_name = 'mb-2'
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Panhitabó", tag_required, html.Br(),
+                                                    html.Small(" (Event)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_event_id',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dcc.Dropdown(
+                                                    id = 'rep_cre_input_event_id',
+                                                    clearable = True,
+                                                ),
+                                                dbc.FormText(
+                                                    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
+                                                    color = 'secondary',
+                                                    class_name = ftext_m
+                                                ),
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
+                                        )
+                                    ],
+                                    id = 'rep_cre_row_event',
+                                    class_name = row_m,
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Klase san report", tag_required, html.Br(),
+                                                    html.Small(" (Report type)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_reporttype_id',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dcc.Dropdown(
+                                                    id = 'rep_cre_input_reporttype_id',
+                                                    clearable = True,
+                                                ),
+                                                dbc.FormText(
+                                                    "Usa la nga initial report an puwede himuon. (Initial reports can only be filed once.)",
+                                                    color = 'secondary',
+                                                    class_name = ftext_m
+                                                ),
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
+                                        )
+                                    ],
+                                    id = 'rep_cre_row_reporttype',
+                                    class_name = row_m
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Purok san panhitabó", tag_required, html.Br(),
+                                                    html.Small(" (Purok of occurrence)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_purok',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dbc.Input(
+                                                    id = 'rep_cre_input_purok',
+                                                    type = 'number',
+                                                    min = '1',
+                                                    invalid = False,
+                                                ),
+                                                #dbc.FormText(
+                                                #    "Alayon pagbutang san numero san purok kun diin ini natabó. (Please input the purok number where this incident occurred.)",
+                                                #    color = 'secondary',
+                                                #    class_name = ftext_m
+                                                #),
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Petsa san panhitabó", tag_required, html.Br(),
+                                                    html.Small(" (Date of occurrence)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_date',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-2'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dcc.DatePickerSingle(
+                                                    id = 'rep_cre_input_date',
+                                                    placeholder = 'MM/DD/YYYY',
+                                                    #month_format = 'MMM Do, YYYY',
+                                                    clearable = True,
+                                                    #style = {'width' : '100%'}
+                                                    className = 'w-100'
+                                                ),
+                                                #dbc.FormText(
+                                                #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
+                                                #    color = 'secondary',
+                                                #    class_name = ftext_m
+                                                #),
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-4'
+                                        ),
+                                    ], class_name = row_m,
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Oras san panhitabó", #tag_required,
+                                                    html.Br(),
+                                                    html.Small(" (Time of occurrence)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_time',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dbc.InputGroup(
+                                                    [
+                                                        dbc.Input(
+                                                            id = 'rep_cre_input_time_hh',
+                                                            placeholder = 'HH',
+                                                            type = 'number',
+                                                            min = 1,
+                                                            max = 12,
+                                                            invalid = False
+                                                        ),
+                                                        dbc.InputGroupText(":"),
+                                                        dbc.Input(
+                                                            id = 'rep_cre_input_time_mm',
+                                                            placeholder = 'MM',
+                                                            type = 'number',
+                                                            min = 0,
+                                                            max = 59,
+                                                            invalid = False
+                                                        ),
+                                                        dbc.InputGroupText(":"),
+                                                        dbc.Input(
+                                                            id = 'rep_cre_input_time_ss',
+                                                            placeholder = 'SS',
+                                                            type = 'number',
+                                                            min = 0,
+                                                            max = 59,
+                                                            invalid = False
+                                                        ),
+                                                        dbc.Select(
+                                                            id = 'rep_cre_input_time_ampm',
+                                                            placeholder = 'AM/PM',
+                                                            options = ['AM', 'PM']
+                                                        )
+                                                    ]
+                                                ),
+                                                dbc.FormText(
+                                                    """Awtomátikó nga ginkukuha san LáMRAG an oras yana komo oras san panhitabó. Alayon pagbalyo sini kun sa iba nga oras nahitabó an imo ginhihimuan report.
+                                                    (LáMRAG automatically sets the current time as the time of occurrence. Please change this if the event you are reporting occurred at a different time.)""",
+                                                    color = 'secondary',
+                                                    class_name = ftext_m
+                                                ),
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
+                                        ),
+                                    ], class_name = row_m,
                                 )
                             ],
                             id = 'rep_cre_div_basicdetails',
-                            className = 'mb-3'
+                            className = header_m
                         ),
-                        html.Hr(),
                         # Related incidents
                         html.Div(
                             [
+                                html.Hr(),
                                 dbc.Row(
                                     [
                                         dbc.Col(
@@ -176,19 +309,9 @@ layout = html.Div(
                                                         html.Small(" (Related incident)", className = 'text-muted')
                                                     ]
                                                 ),
-                                                #html.P(
-                                                #    [
-                                                #        "Pinduta la an plus button", html.I(className = 'bi bi-plus-square ms-2 me-2'), "kun kinihanglan mo mag-report san damo nga insidente.",
-                                                #        html.Br(),
-                                                #        html.Small(
-                                                #            ["(Click on the plus button", html.I(className = 'bi bi-plus-square ms-2 me-2'), "if you want to report multiple related incidents.)"],
-                                                #            className = 'text-muted'
-                                                #        )
-                                                #    ]
-                                                #)
                                             ]
                                         )
-                                    ], class_name = 'mb-2'
+                                    ], class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -199,7 +322,7 @@ layout = html.Div(
                                                     html.Small(" (Type of incident)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_relinc_id',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -213,7 +336,7 @@ layout = html.Div(
                                                 #dbc.FormText(
                                                 #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                 #    color = 'secondary',
-                                                #    class_name = 'mt-1'
+                                                #    class_name = ftext_m
                                                 #),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-4'
@@ -225,7 +348,7 @@ layout = html.Div(
                                                     html.Small(" (Quantity of incident)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_relinc_qty',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -240,134 +363,12 @@ layout = html.Div(
                                                 #dbc.FormText(
                                                 #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                 #    color = 'secondary',
-                                                #    class_name = 'mt-1'
+                                                #    class_name = ftext_m
                                                 #),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-2'
                                         ),
-                                    ], class_name = 'mb-2',
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Purok san insidente", tag_required, html.Br(),
-                                                    html.Small(" (Purok of occurrence)", className = 'text-muted')
-                                                ],
-                                                id = 'rep_cre_label_relinc_purok',
-                                                class_name = 'mb-0'
-                                            ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
-                                        ),
-                                        dbc.Col(
-                                            [
-                                                dbc.Input(
-                                                    id = 'rep_cre_input_relinc_purok',
-                                                    type = 'number',
-                                                    min = '1',
-                                                    invalid = False,
-                                                ),
-                                                #dbc.FormText(
-                                                #    "Alayon pagbutang san numero san purok kun diin ini natabó. (Please input the purok number where this incident occurred.)",
-                                                #    color = 'secondary',
-                                                #    class_name = 'mt-1'
-                                                #),
-                                            ],
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Petsa san insidente", tag_required, html.Br(),
-                                                    html.Small(" (Date of occurrence)", className = 'text-muted')
-                                                ],
-                                                id = 'rep_cre_label_relinc_date',
-                                                class_name = 'mb-0'
-                                            ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-2'
-                                        ),
-                                        dbc.Col(
-                                            [
-                                                dcc.DatePickerSingle(
-                                                    id = 'rep_cre_input_relinc_date',
-                                                    placeholder = 'MM/DD/YYYY',
-                                                    #month_format = 'MMM Do, YYYY',
-                                                    clearable = True,
-                                                    #style = {'width' : '100%'}
-                                                    className = 'w-100'
-                                                ),
-                                                #dbc.FormText(
-                                                #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
-                                                #    color = 'secondary',
-                                                #    class_name = 'mt-1'
-                                                #),
-                                            ],
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-4'
-                                        ),
-                                    ], class_name = 'mb-2',
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Oras san insidente", #tag_required,
-                                                    html.Br(),
-                                                    html.Small(" (Time of occurrence)", className = 'text-muted')
-                                                ],
-                                                id = 'rep_cre_label_relinc_time',
-                                                class_name = 'mb-0'
-                                            ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
-                                        ),
-                                        dbc.Col(
-                                            [
-                                                dbc.InputGroup(
-                                                    [
-                                                        dbc.Input(
-                                                            id = 'rep_cre_input_relinc_time_hh',
-                                                            placeholder = 'HH',
-                                                            type = 'number',
-                                                            min = 1,
-                                                            max = 12,
-                                                            invalid = False
-                                                        ),
-                                                        dbc.InputGroupText(":"),
-                                                        dbc.Input(
-                                                            id = 'rep_cre_input_relinc_time_mm',
-                                                            placeholder = 'MM',
-                                                            type = 'number',
-                                                            min = 0,
-                                                            max = 59,
-                                                            invalid = False
-                                                        ),
-                                                        dbc.InputGroupText(":"),
-                                                        dbc.Input(
-                                                            id = 'rep_cre_input_relinc_time_ss',
-                                                            placeholder = 'SS',
-                                                            type = 'number',
-                                                            min = 0,
-                                                            max = 59,
-                                                            invalid = False
-                                                        ),
-                                                        dbc.Select(
-                                                            id = 'rep_cre_input_relinc_time_ampm',
-                                                            placeholder = 'AM/PM',
-                                                            options = ['AM', 'PM']
-                                                        )
-                                                    ]
-                                                ),
-                                                #dbc.FormText(
-                                                #    """Awtomátikó nga ginkukuha san LáMRAG an oras yana komo oras san panhitabó. Alayon pagbalyo sini kun sa iba nga oras nahitabó an imo ginhihimuan report.
-                                                #    (LáMRAG automatically sets the current time as the time of occurrence. Please change this if the event you are reporting occurred at a different time.)""",
-                                                #    color = 'secondary',
-                                                #    class_name = 'mt-1'
-                                                #),
-                                            ],
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
-                                        ),
-                                    ], class_name = 'mb-2',
+                                    ], class_name = row_m,
                                 ),
                                 dbc.Row(
                                     [
@@ -378,7 +379,7 @@ layout = html.Div(
                                                     html.Small(" (Description)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_relinc_desc',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -396,7 +397,7 @@ layout = html.Div(
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                         )
-                                    ], class_name = 'mb-2'
+                                    ], class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -407,7 +408,7 @@ layout = html.Div(
                                                     html.Small(" (Actions taken)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_relinc_actions',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -425,7 +426,7 @@ layout = html.Div(
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                         )
-                                    ], class_name = 'mb-2'
+                                    ], class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -436,7 +437,7 @@ layout = html.Div(
                                                     html.Small(" (Remarks)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_relinc_remarks',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -454,7 +455,7 @@ layout = html.Div(
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                         )
-                                    ], class_name = 'mb-2'
+                                    ], class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -465,7 +466,7 @@ layout = html.Div(
                                                     html.Small(" (Status)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_relincstatus_id',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -479,21 +480,22 @@ layout = html.Div(
                                                 #dbc.FormText(
                                                 #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                 #    color = 'secondary',
-                                                #    class_name = 'mt-1'
+                                                #    class_name = ftext_m
                                                 #),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                         ),
-                                    ], class_name = 'mb-2',
+                                    ], class_name = row_m,
                                 ),
                             ],
                             id = 'rep_cre_div_relinc',
-                            className = 'mt-3 mb-3'
+                            className = div_m,
+                            style = {'display' : 'none'}
                         ),
-                        html.Hr(),
                         # Casualties
                         html.Div(
                             [
+                                html.Hr(),
                                 dbc.Row(
                                     [
                                         dbc.Col(
@@ -506,19 +508,9 @@ layout = html.Div(
                                                         html.Small(" (Casualty)", className = 'text-muted')
                                                     ]
                                                 ),
-                                                #html.P(
-                                                #    [
-                                                #        "Pinduta la an plus button", html.I(className = 'bi bi-plus-square ms-2 me-2'), "kun kinihanglan mo mag-report san damo nga insidente.",
-                                                #        html.Br(),
-                                                #        html.Small(
-                                                #            ["(Click on the plus button", html.I(className = 'bi bi-plus-square ms-2 me-2'), "if you want to report multiple related incidents.)"],
-                                                #            className = 'text-muted'
-                                                #        )
-                                                #    ]
-                                                #)
                                             ]
                                         )
-                                    ], class_name = 'mb-3'
+                                    ], class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -529,7 +521,7 @@ layout = html.Div(
                                                     html.Small(" (Type of casualty)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_casualtytype_id',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -542,134 +534,12 @@ layout = html.Div(
                                                 #dbc.FormText(
                                                 #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                 #    color = 'secondary',
-                                                #    class_name = 'mt-1'
+                                                #    class_name = ftext_m
                                                 #),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                         ),
-                                    ], class_name = 'mb-2',
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Purok san disgrasiya", tag_required, html.Br(),
-                                                    html.Small(" (Purok of occurrence)", className = 'text-muted')
-                                                ],
-                                                id = 'rep_cre_label_casualty_purok',
-                                                class_name = 'mb-0'
-                                            ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
-                                        ),
-                                        dbc.Col(
-                                            [
-                                                dbc.Input(
-                                                    id = 'rep_cre_input_casualty_purok',
-                                                    type = 'number',
-                                                    min = '1',
-                                                    invalid = False,
-                                                ),
-                                                #dbc.FormText(
-                                                #    "Alayon pagbutang san numero san purok kun diin ini natabó. (Please input the purok number where this incident occurred.)",
-                                                #    color = 'secondary',
-                                                #    class_name = 'mt-1'
-                                                #),
-                                            ],
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-3'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Petsa san disgrasiya", tag_required, html.Br(),
-                                                    html.Small(" (Date of occurrence)", className = 'text-muted')
-                                                ],
-                                                id = 'rep_cre_label_casualty_date',
-                                                class_name = 'mb-0'
-                                            ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-2'
-                                        ),
-                                        dbc.Col(
-                                            [
-                                                dcc.DatePickerSingle(
-                                                    id = 'rep_cre_input_casualty_date',
-                                                    placeholder = 'MM/DD/YYYY',
-                                                    #month_format = 'MMM Do, YYYY',
-                                                    clearable = True,
-                                                    #style = {'width' : '100%'}
-                                                    className = 'w-100'
-                                                ),
-                                                #dbc.FormText(
-                                                #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
-                                                #    color = 'secondary',
-                                                #    class_name = 'mt-1'
-                                                #),
-                                            ],
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-4'
-                                        ),
-                                    ], class_name = 'mb-2',
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
-                                                    "Oras san disgrasiya", #tag_required,
-                                                    html.Br(),
-                                                    html.Small(" (Time of occurrence)", className = 'text-muted')
-                                                ],
-                                                id = 'rep_cre_label_casualty_time',
-                                                class_name = 'mb-0'
-                                            ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
-                                        ),
-                                        dbc.Col(
-                                            [
-                                                dbc.InputGroup(
-                                                    [
-                                                        dbc.Input(
-                                                            id = 'rep_cre_input_casualty_time_hh',
-                                                            placeholder = 'HH',
-                                                            type = 'number',
-                                                            min = 1,
-                                                            max = 12,
-                                                            invalid = False
-                                                        ),
-                                                        dbc.InputGroupText(":"),
-                                                        dbc.Input(
-                                                            id = 'rep_cre_input_casualty_time_mm',
-                                                            placeholder = 'MM',
-                                                            type = 'number',
-                                                            min = 0,
-                                                            max = 59,
-                                                            invalid = False
-                                                        ),
-                                                        dbc.InputGroupText(":"),
-                                                        dbc.Input(
-                                                            id = 'rep_cre_input_casualty_time_ss',
-                                                            placeholder = 'SS',
-                                                            type = 'number',
-                                                            min = 0,
-                                                            max = 59,
-                                                            invalid = False
-                                                        ),
-                                                        dbc.Select(
-                                                            id = 'rep_cre_input_casualty_time_ampm',
-                                                            placeholder = 'AM/PM',
-                                                            options = ['AM', 'PM']
-                                                        )
-                                                    ]
-                                                ),
-                                                #dbc.FormText(
-                                                #    """Awtomátikó nga ginkukuha san LáMRAG an oras yana komo oras san panhitabó. Alayon pagbalyo sini kun sa iba nga oras nahitabó an imo ginhihimuan report.
-                                                #    (LáMRAG automatically sets the current time as the time of occurrence. Please change this if the event you are reporting occurred at a different time.)""",
-                                                #    color = 'secondary',
-                                                #    class_name = 'mt-1'
-                                                #),
-                                            ],
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
-                                        ),
-                                    ], class_name = 'mb-2',
+                                    ], class_name = row_m,
                                 ),
                                 dbc.Row(
                                     [
@@ -685,7 +555,7 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = 'mt-3'
+                                    ], class_name = subhead_m
                                 ),
                                 dbc.Row(
                                     [
@@ -696,7 +566,7 @@ layout = html.Div(
                                                     html.Small(" (Name)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_casualty_name',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -733,7 +603,7 @@ layout = html.Div(
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
-                                    ], class_name = 'mb-2',
+                                    ], class_name = row_m,
                                 ),
                                 dbc.Row(
                                     [
@@ -744,7 +614,7 @@ layout = html.Div(
                                                     html.Small(" (Age in years)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_casualty_age',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -760,7 +630,7 @@ layout = html.Div(
                                                 #dbc.FormText(
                                                 #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                 #    color = 'secondary',
-                                                #    class_name = 'mt-1'
+                                                #    class_name = ftext_m
                                                 #),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-3'
@@ -772,7 +642,7 @@ layout = html.Div(
                                                     html.Small(" (Sex assigned at birth)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_casualty_assignedsex_id',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -785,12 +655,12 @@ layout = html.Div(
                                                 #dbc.FormText(
                                                 #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                 #    color = 'secondary',
-                                                #    class_name = 'mt-1'
+                                                #    class_name = ftext_m
                                                 #),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-3'
                                         ),
-                                    ], class_name = 'mb-2',
+                                    ], class_name = row_m,
                                 ),
                                 dbc.Row(
                                     [
@@ -806,7 +676,7 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = 'mt-3'
+                                    ], class_name = subhead_m
                                 ),
                                 dbc.Row(
                                     [
@@ -818,7 +688,7 @@ layout = html.Div(
                                                     html.Small(" (Region)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_casualty_region_id',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
@@ -831,7 +701,7 @@ layout = html.Div(
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         )
-                                    ], class_name = 'mb-2'
+                                    ], class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -843,7 +713,7 @@ layout = html.Div(
                                                     html.Small(" (Province)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_casualty_province_id',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
@@ -856,7 +726,7 @@ layout = html.Div(
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         )
-                                    ], class_name = 'mb-2'
+                                    ], class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -868,7 +738,7 @@ layout = html.Div(
                                                     html.Small(" (City/municipality)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_casualty_citymun_id',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
@@ -881,7 +751,7 @@ layout = html.Div(
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         )
-                                    ], class_name = 'mb-2'
+                                    ], class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -893,7 +763,7 @@ layout = html.Div(
                                                     #html.Small(" (Barangay of residence)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_casualty_brgy_id',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
@@ -906,7 +776,7 @@ layout = html.Div(
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         )
-                                    ], class_name = 'mb-2'
+                                    ], class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -918,7 +788,7 @@ layout = html.Div(
                                                     html.Small(" (Street)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_casualty_street',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
@@ -933,7 +803,7 @@ layout = html.Div(
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         ),
                                     ],
-                                    class_name = 'mb-2'
+                                    class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -949,7 +819,7 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = 'mt-3'
+                                    ], class_name = subhead_m
                                 ),
                                 dbc.Row(
                                     [
@@ -960,7 +830,7 @@ layout = html.Div(
                                                     html.Small(" (Cause of casualty)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_casualty_cause',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 mb-md-1 col-12 col-md-3 col-lg-3'
                                         ),
@@ -978,7 +848,7 @@ layout = html.Div(
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                         )
-                                    ], class_name = 'mb-2'
+                                    ], class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -989,7 +859,7 @@ layout = html.Div(
                                                     html.Small(" (Remarks)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_casualty_remarks',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -1007,7 +877,7 @@ layout = html.Div(
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                         )
-                                    ], class_name = 'mb-2'
+                                    ], class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -1018,7 +888,7 @@ layout = html.Div(
                                                     html.Small(" (Source of data)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_casualty_source',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -1033,7 +903,7 @@ layout = html.Div(
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                         )
-                                    ], class_name = 'mb-2'
+                                    ], class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -1044,7 +914,7 @@ layout = html.Div(
                                                     html.Small(" (Validated)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_casualtystatus_id',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -1057,21 +927,22 @@ layout = html.Div(
                                                 #dbc.FormText(
                                                 #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                 #    color = 'secondary',
-                                                #    class_name = 'mt-1'
+                                                #    class_name = ftext_m
                                                 #),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                         ),
-                                    ], class_name = 'mb-2',
+                                    ], class_name = row_m,
                                 ),
                             ],
-                            id = 'rep_cre_div_casual',
-                            className = 'mt-3 mb-3'
+                            id = 'rep_cre_div_casualty',
+                            className = div_m,
+                            style = {'display' : 'none'}
                         ),
-                        html.Hr(),
                         # Public utilities
                         html.Div(
                             [
+                                html.Hr(),
                                 dbc.Row(
                                     [
                                         dbc.Col(
@@ -1079,24 +950,14 @@ layout = html.Div(
                                                 html.H4(
                                                     [
                                                         html.I(className = 'bi bi-gear-wide-connected me-2'),
-                                                        "Pag-úndang san panpubliko nga utilidad",
+                                                        "Kabutangan san panpubliko nga utilidad",
                                                         #html.Br(),
-                                                        html.Small(" (Interruption of public utilities)", className = 'text-muted')
+                                                        html.Small(" (Status of public utilities)", className = 'text-muted')
                                                     ]
                                                 ),
-                                                #html.P(
-                                                #    [
-                                                #        "Pinduta la an plus button", html.I(className = 'bi bi-plus-square ms-2 me-2'), "kun kinihanglan mo mag-report san damo nga insidente.",
-                                                #        html.Br(),
-                                                #        html.Small(
-                                                #            ["(Click on the plus button", html.I(className = 'bi bi-plus-square ms-2 me-2'), "if you want to report multiple related incidents.)"],
-                                                #            className = 'text-muted'
-                                                #        )
-                                                #    ]
-                                                #)
                                             ]
                                         )
-                                    ], class_name = 'mb-3'
+                                    ], class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -1107,7 +968,7 @@ layout = html.Div(
                                                     html.Small(" (Type of utility)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_pubutiltype_id',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -1121,12 +982,12 @@ layout = html.Div(
                                                 #dbc.FormText(
                                                 #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                 #    color = 'secondary',
-                                                #    class_name = 'mt-1'
+                                                #    class_name = ftext_m
                                                 #),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                         ),
-                                    ], class_name = 'mb-2',
+                                    ], class_name = row_m,
                                 ),
                                 dbc.Row(
                                     [
@@ -1137,7 +998,7 @@ layout = html.Div(
                                                     html.Small(" (Service provider)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_pubutil_id',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -1152,12 +1013,19 @@ layout = html.Div(
                                                 #dbc.FormText(
                                                 #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                 #    color = 'secondary',
-                                                #    class_name = 'mt-1'
+                                                #    class_name = ftext_m
                                                 #),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                         ),
-                                    ], class_name = 'mb-2',
+                                    ], class_name = row_m,
+                                ),
+                                dbc.Row(
+                                    dbc.Col(
+                                        id = 'rep_cre_col_pubutilinttype_desc',
+                                        class_name = 'align-self-center mb-2 mb-lg-0 col-12'
+                                    ),
+                                    class_name = label_m,
                                 ),
                                 dbc.Row(
                                     [
@@ -1165,10 +1033,10 @@ layout = html.Div(
                                             dbc.Label(
                                                 [
                                                     "Klase san pag-úndang", tag_required, html.Br(),
-                                                    html.Small(" (Type of interruption)", className = 'text-muted')
+                                                    html.Small(" (Type of interruption/outage)", className = 'text-muted')
                                                 ],
-                                                id = 'rep_cre_label_utilinttype_id',
-                                                class_name = 'mb-0'
+                                                id = 'rep_cre_label_pubutilinttype_id',
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -1176,29 +1044,29 @@ layout = html.Div(
                                             [
                                                 dbc.Select(
                                                 #dcc.Dropdown(
-                                                    id = 'rep_cre_input_utilinttype_id',
+                                                    id = 'rep_cre_input_pubutilinttype_id',
                                                     #clearable = True,
                                                 ),
                                                 #dbc.FormText(
                                                 #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                 #    color = 'secondary',
-                                                #    class_name = 'mt-1'
+                                                #    class_name = ftext_m
                                                 #),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                         ),
-                                    ], class_name = 'mb-2',
+                                    ], class_name = row_m,
                                 ),
                                 dbc.Row(
                                     [
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Petsa san pag-úndang o pagparong", tag_required, html.Br(),
-                                                    html.Small(" (Date of interruption or outage)", className = 'text-muted')
+                                                    "Petsa san pag-undang", html.Br(),
+                                                    html.Small(" (Date of interruption/outage)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_pubutilint_intdate',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -1210,12 +1078,13 @@ layout = html.Div(
                                                     #month_format = 'MMM Do, YYYY',
                                                     clearable = True,
                                                     #style = {'width' : '100%'}
-                                                    className = 'w-100'
+                                                    className = 'w-100',
+                                                    disabled = True
                                                 ),
                                                 #dbc.FormText(
                                                 #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                 #    color = 'secondary',
-                                                #    class_name = 'mt-1'
+                                                #    class_name = ftext_m
                                                 #),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-2'
@@ -1223,12 +1092,12 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Oras san pag-úndang o pagparong", #tag_required,
+                                                    "Oras san pag-undang", #tag_required,
                                                     html.Br(),
-                                                    html.Small(" (Time of interruption or outage)", className = 'text-muted')
+                                                    html.Small(" (Time of interruption/outage)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_pubutilint_inttime',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -1242,7 +1111,8 @@ layout = html.Div(
                                                             type = 'number',
                                                             min = 1,
                                                             max = 12,
-                                                            invalid = False
+                                                            invalid = False,
+                                                            disabled = True
                                                         ),
                                                         dbc.InputGroupText(":"),
                                                         dbc.Input(
@@ -1251,7 +1121,8 @@ layout = html.Div(
                                                             type = 'number',
                                                             min = 0,
                                                             max = 59,
-                                                            invalid = False
+                                                            invalid = False,
+                                                            disabled = True
                                                         ),
                                                         dbc.InputGroupText(":"),
                                                         dbc.Input(
@@ -1260,12 +1131,14 @@ layout = html.Div(
                                                             type = 'number',
                                                             min = 0,
                                                             max = 59,
-                                                            invalid = False
+                                                            invalid = False,
+                                                            disabled = True
                                                         ),
                                                         dbc.Select(
                                                             id = 'rep_cre_input_pubutilint_inttime_ampm',
                                                             placeholder = 'AM/PM',
-                                                            options = ['AM', 'PM']
+                                                            options = ['AM', 'PM'],
+                                                            disabled = True
                                                         )
                                                     ]
                                                 ),
@@ -1273,12 +1146,12 @@ layout = html.Div(
                                                 #    """Awtomátikó. nga ginkukuha san LáMRAG an oras yana komo oras san panhitabó. Alayon pagbalyo sini kun sa iba nga oras nahitabó an imo ginhihimuan report.
                                                 #    (LáMRAG automatically sets the current time as the time of occurrence. Please change this if the event you are reporting occurred at a different time.)""",
                                                 #    color = 'secondary',
-                                                #    class_name = 'mt-1'
+                                                #    class_name = ftext_m
                                                 #),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-4'
                                         ),
-                                    ], class_name = 'mb-2',
+                                    ], class_name = row_m,
                                 ),
                                 dbc.Row(
                                     [
@@ -1289,7 +1162,7 @@ layout = html.Div(
                                                     html.Small(" (Date of restoration)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_pubutilint_resdate',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -1306,7 +1179,7 @@ layout = html.Div(
                                                 #dbc.FormText(
                                                 #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                 #    color = 'secondary',
-                                                #    class_name = 'mt-1'
+                                                #    class_name = ftext_m
                                                 #),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-2'
@@ -1319,7 +1192,7 @@ layout = html.Div(
                                                     html.Small(" (Time of restoration)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_pubutilint_restime',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -1364,12 +1237,12 @@ layout = html.Div(
                                                 #    """Awtomátikó. nga ginkukuha san LáMRAG an oras yana komo oras san panhitabó. Alayon pagbalyo sini kun sa iba nga oras nahitabó an imo ginhihimuan report.
                                                 #    (LáMRAG automatically sets the current time as the time of occurrence. Please change this if the event you are reporting occurred at a different time.)""",
                                                 #    color = 'secondary',
-                                                #    class_name = 'mt-1'
+                                                #    class_name = ftext_m
                                                 #),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-4'
                                         ),
-                                    ], class_name = 'mb-2',
+                                    ], class_name = row_m,
                                 ),
                                 dbc.Row(
                                     [
@@ -1380,7 +1253,7 @@ layout = html.Div(
                                                     html.Small(" (Remarks)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_pubutilint_remarks',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                         ),
@@ -1398,15 +1271,264 @@ layout = html.Div(
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                         )
-                                    ], class_name = 'mb-2'
+                                    ], class_name = row_m
                                 ),
                             ],
-                            id = 'rep_cre_div_pubutil'
+                            id = 'rep_cre_div_pubutil',
+                            className = div_m,
+                            style = {'display' : 'none'}
                         ),
-                        html.Hr(),
+                        # Damaged house
+                        html.Div(
+                            [
+                                html.Hr(),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.H4(
+                                                    [
+                                                        html.I(className = 'bi bi-house-x-fill me-2'),
+                                                        "Narubat nga balay",
+                                                        #html.Br(),
+                                                        html.Small(" (Damaged house)", className = 'text-muted')
+                                                    ]
+                                                ),
+                                            ]
+                                        )
+                                    ], class_name = row_m
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Klase san pagkarubat", tag_required, html.Br(),
+                                                    html.Small(" (Type of damage)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_dmgdhousetype_id',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dcc.Dropdown(
+                                                    id = 'rep_cre_input_dmgdhousetype_id',
+                                                    clearable = True,
+                                                ),
+                                                #dbc.FormText(
+                                                #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
+                                                #    color = 'secondary',
+                                                #    class_name = ftext_m
+                                                #),
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
+                                        ),
+                                    ], class_name = row_m,
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.H5(
+                                                    [
+                                                        html.I(className = 'bi bi-person-vcard me-2'),
+                                                        "Primero nga impormasyon san tag-iya",
+                                                        #html.Br(),
+                                                        html.Small(" (Basic information of homeowner)", className = 'text-muted')
+                                                    ]
+                                                ),
+                                            ]
+                                        )
+                                    ], class_name = subhead_m
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Ngaran", tag_required, html.Br(),
+                                                    html.Small(" (Name)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_dmgdhouse_name',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dbc.Input(
+                                                    type = 'text',
+                                                    id = 'rep_cre_input_dmgdhouse_fname',
+                                                    placeholder = 'Primero (First name)',
+                                                    invalid = False
+                                                )
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dbc.Input(
+                                                    type = 'text',
+                                                    id = 'rep_cre_input_dmgdhouse_mname',
+                                                    placeholder = 'Butnga (Middle name)',
+                                                    invalid = False
+                                                )
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dbc.Input(
+                                                    type = 'text',
+                                                    id = 'rep_cre_input_dmgdhouse_lname',
+                                                    placeholder = 'Apelyido (Last name)',
+                                                    invalid = False
+                                                )
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
+                                        ),
+                                    ], class_name = row_m,
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Edad (tuig)", tag_required, html.Br(),
+                                                    html.Small(" (Age in years)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_dmgdhouse_age',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dbc.Input(
+                                                    type = 'number',
+                                                    id = 'rep_cre_input_dmgdhouse_age',
+                                                    #placeholder = 'Primero (First name)',
+                                                    min = 0,
+                                                    invalid = False
+                                                ),
+                                                #dbc.FormText(
+                                                #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
+                                                #    color = 'secondary',
+                                                #    class_name = ftext_m
+                                                #),
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Natawo nga babayi/lalaki", tag_required, html.Br(),
+                                                    html.Small(" (Sex assigned at birth)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_dmgdhouse_assignedsex_id',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dcc.Dropdown(
+                                                    id = 'rep_cre_input_dmgdhouse_assignedsex_id',
+                                                    clearable = True
+                                                ),
+                                                #dbc.FormText(
+                                                #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
+                                                #    color = 'secondary',
+                                                #    class_name = ftext_m
+                                                #),
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-3'
+                                        ),
+                                    ], class_name = row_m,
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Lokasiyon san balay", #tag_required,
+                                                    html.Br(),
+                                                    html.Small(" (Location of home)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_dmgdhouse_geoloc',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dbc.Input(
+                                                    id = 'rep_cre_input_dmgdhouse_geoloc',
+                                                    disabled = True,
+                                                    #placeholder = "Pili (select)...",
+                                                    #value = 8
+                                                )
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
+                                        )
+                                    ], class_name = row_m
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.H5(
+                                                    [
+                                                        html.I(className = 'bi bi-file-earmark-richtext me-2'),
+                                                        "Dugang nga impormasyon",
+                                                        #html.Br(),
+                                                        html.Small(" (Additional information)", className = 'text-muted')
+                                                    ]
+                                                ),
+                                            ]
+                                        )
+                                    ], class_name = subhead_m
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Iba pa nga komento", html.Br(),
+                                                    html.Small(" (Remarks)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_dmgdhouse_remarks',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dcc.Textarea(
+                                                    id = 'rep_cre_input_dmgdhouse_remarks',
+                                                    #clearable = True,
+                                                    wrap = True,
+                                                    style = {
+                                                        'height' : '5em',
+                                                        'width' : '100%',
+                                                    },
+                                                )
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
+                                        )
+                                    ], class_name = row_m
+                                ),
+                            ],
+                            id = 'rep_cre_div_dmgdhouse',
+                            className = div_m,
+                            style = {'display' : 'none'}
+                        ),
                         # Submit button
                         html.Div(
                             [
+                                html.Hr(),
                                 dbc.Row(
                                     [
                                         dbc.Col(
@@ -1425,7 +1547,10 @@ layout = html.Div(
                                     ],
                                     class_name = 'justify-content-end'
                                 )
-                            ], className = 'mt-3'
+                            ],
+                            id = 'rep_cre_div_submit',
+                            className = footer_m,
+                            style = {'display' : 'none'}
                         )
                     ],
                     class_name = 'col-lg-10'
@@ -1457,10 +1582,11 @@ def rep_cre_geolocrefresh(pathname):
     [
         Output('rep_cre_geoloc_loc_war', 'href'),
         Output('rep_cre_geoloc_loc_en', 'href'),
-        Output('rep_cre_input_time_hh', 'value'),
-        Output('rep_cre_input_time_mm', 'value'),
-        Output('rep_cre_input_time_ss', 'value'),
-        Output('rep_cre_input_time_ampm', 'value')
+        Output('rep_cre_input_dmgdhouse_geoloc', 'value'),
+        #Output('rep_cre_input_time_hh', 'value'),
+        #Output('rep_cre_input_time_mm', 'value'),
+        #Output('rep_cre_input_time_ss', 'value'),
+        #Output('rep_cre_input_time_ampm', 'value')
     ],
     [
         Input('rep_cre_geoloc', 'position'),
@@ -1470,22 +1596,26 @@ def rep_cre_geolocrefresh(pathname):
 
 def rep_cre_geolocset(pos, date):
     href = None
-    hh = None
-    mm = None
-    ss = None
-    ampm = None
+    #hh = None
+    #mm = None
+    #ss = None
+    #ampm = None
+    geoloc = None
     if pos:
         lat = pos['lat']
         lon = pos ['lon']
+        geoloc = '%s, %s' % (lat, lon)
         href = 'https://www.google.com/maps/place/%s,%s' % (lat, lon)
-    if date:
-        ampm = date.split(', ')[1].split(' ')[1]
-        hh = date.split(', ')[1].split(' ')[0].split(':')[0]
-        mm = date.split(', ')[1].split(' ')[0].split(':')[1]
-        ss = date.split(', ')[1].split(' ')[0].split(':')[2]
-    return [href, href, hh, mm, ss, ampm]
+    #if date:
+    #    ampm = date.split(', ')[1].split(' ')[1]
+    #    hh = date.split(', ')[1].split(' ')[0].split(':')[0]
+    #    mm = date.split(', ')[1].split(' ')[0].split(':')[1]
+    #    ss = date.split(', ')[1].split(' ')[0].split(':')[2]
+    return [href, href, geoloc,
+        #curdate, hh, mm, ss, ampm
+    ]
 
-# Callback for populating basic dropdown menus
+# Callback for populating basic dropdown menus and descriptions
 @app.callback(
     [
         Output('rep_cre_input_reporttype_id', 'options'),
@@ -1496,6 +1626,8 @@ def rep_cre_geolocset(pos, date):
         Output('rep_cre_input_casualtytype_id', 'options'),
         Output('rep_cre_input_casualtystatus_id', 'options'),
         Output('rep_cre_input_pubutiltype_id', 'options'),
+        Output('rep_cre_input_pubutilinttype_id', 'options'),
+        Output('rep_cre_col_pubutilinttype_desc', 'children')
     ],
     [
         Input('url', 'pathname')
@@ -1510,7 +1642,7 @@ def rep_cre_populatedropdowns(pathname, region):
         dropdowns = []
 
         # Report types
-        sql = """SELECT label AS label, id AS value
+        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
         FROM utilities.reporttype;
         """
         values = []
@@ -1583,8 +1715,97 @@ def rep_cre_populatedropdowns(pathname, region):
         pubutiltypes = df.to_dict('records')
         dropdowns.append(pubutiltypes)
 
+        # Public utility interruption types
+        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') as label, id as value, desc_war, desc_en
+        FROM utilities.pubutilinttype;
+        """
+        values = []
+        cols = ['label', 'value', 'desc_war', 'desc_en']
+        df = db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        pubutilinttypes = df[['label', 'value']].to_dict('records')
+        dropdowns.append(pubutilinttypes)
+
+        pubutilinttype_list = []
+        pubutilinttypes = df.to_dict('records')
+        for i in pubutilinttypes:
+            pubutilinttype_list.append(
+                html.Li(
+                    [
+                        html.B(i['label']), html.Br(),
+                        html.Div(
+                            [
+                                i['desc_war'], html.Br(),
+                                html.Small(i['desc_en'], className = 'text-muted')
+                            ],
+                            className = 'ms-3'
+                        )
+                    ],
+                    className = 'mb-1'
+                )
+            )
+
+        pubutilinttype_desc = dbc.Alert(
+            [
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            html.I(className = 'bi bi-exclamation-circle-fill me-2'),
+                            class_name = alert_i_m
+                        ),
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    [
+                                        "Maupay hinumduman an karuyag signgon sini nga mga klase san pag-úndang", html.Br(),
+                                        html.Small("(It would be helpful to remember the following definitions for interruption/outage type):", className = 'text-muted')
+                                    ],
+                                    className = 'mb-2'
+                                ),
+                                html.Div(pubutilinttype_list)
+                            ]
+                        )
+                    ]
+                ),
+            ],
+            color = 'info',
+            class_name = row_m,
+            dismissable = True
+        )
+        dropdowns.append(pubutilinttype_desc)
+
         return dropdowns
     else: raise PreventUpdate
+
+# Callback for showing report forms based on type
+@app.callback(
+    [
+        Output('rep_cre_div_submit', 'style'),
+        Output('rep_cre_div_relinc', 'style'),
+        Output('rep_cre_div_casualty', 'style'),
+        Output('rep_cre_div_pubutil', 'style'),
+        Output('rep_cre_div_dmgdhouse', 'style')
+    ],
+    [
+        Input('rep_cre_input_reporttype_id', 'value')
+    ]
+)
+
+def rep_cre_showreportform(type):
+    disp_none = {'display' : 'none'}
+    disp_show = {'display' : 'block'}
+    style_submit = disp_none
+    style_relinc = disp_none
+    style_casualty = disp_none
+    style_pubutil = disp_none
+    style_dmgdhouse = disp_none
+    if type:
+        style_submit = disp_show
+        if type == 1: style_relinc = disp_show
+        elif type == 2: style_casualty = disp_show
+        elif type == 3: style_pubutil = disp_show
+        elif type == 4: style_dmgdhouse = disp_show
+    return [style_submit, style_relinc, style_casualty, style_pubutil, style_dmgdhouse]
 
 # Callback for populating present provinces once present region is selected
 @app.callback(
@@ -1599,7 +1820,7 @@ def rep_cre_populatedropdowns(pathname, region):
     prevent_initial_call = True
 )
 
-def rep_cre_populatepresentprovinces(region):
+def rep_cre_populateprovinces(region):
     provinces = []
     disabled = True
     if region:
@@ -1630,7 +1851,7 @@ def rep_cre_populatepresentprovinces(region):
     prevent_initial_call = True
 )
 
-def rep_cre_populatepresentcitymuns(region, province):
+def rep_cre_populatecitymuns(region, province):
     citymun = []
     disabled = True
     if region and province:
@@ -1662,7 +1883,7 @@ def rep_cre_populatepresentcitymuns(region, province):
     prevent_initial_call = True
 )
 
-def rep_cre_populatepresentbrgys(region, province, citymun):
+def rep_cre_populatebrgys(region, province, citymun):
     brgy = []
     disabled = True
     if region and province and citymun:
@@ -1694,7 +1915,7 @@ def rep_cre_populatepresentbrgys(region, province, citymun):
     prevent_initial_call = True
 )
 
-def rep_cre_enablepresentstreet(region, province, citymun, brgy):
+def rep_cre_enablestreet(region, province, citymun, brgy):
     disabled = True
     if region and province and citymun and brgy: disabled = False
     return [disabled, None]
@@ -1774,3 +1995,24 @@ def rep_cre_setpubutil(pubutiltype, region, province, citymun, brgy):
         else:
             disabled = False
     return [options, value, disabled]
+
+# Callback for setting common date/time as utility interruption date/time
+@app.callback(
+    [
+        Output('rep_cre_input_pubutilint_intdate', 'date'),
+        Output('rep_cre_input_pubutilint_inttime_hh', 'value'),
+        Output('rep_cre_input_pubutilint_inttime_mm', 'value'),
+        Output('rep_cre_input_pubutilint_inttime_ss', 'value'),
+        Output('rep_cre_input_pubutilint_inttime_ampm', 'value')
+    ],
+    [
+        Input('rep_cre_input_date', 'date'),
+        Input('rep_cre_input_time_hh', 'value'),
+        Input('rep_cre_input_time_mm', 'value'),
+        Input('rep_cre_input_time_ss', 'value'),
+        Input('rep_cre_input_time_ampm', 'value')
+    ]
+)
+
+def rep_cre_setpubutilintdatetime(date, hh, mm, ss, ampm):
+    return[date, hh, mm, ss, ampm]

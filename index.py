@@ -8,10 +8,11 @@ from dash.exceptions import PreventUpdate
 import webbrowser
 # App definition
 from app import app
-from apps import home, commonmodules as cm, error
+from apps import home, commonmodules as cm, error, sandbox
 from apps.users import users_register
 from apps.reports import reports_create
 from apps.events import events_create
+from apps.data import data_barangays
 
 # Layout definition
 CONTENT_STYLE = {
@@ -33,7 +34,8 @@ app.layout = html.Div(
         dcc.Store(id = 'app_region_id', data = 8, storage_type = 'session'),
         dcc.Store(id = 'app_province_id', data = 60, storage_type = 'session'),
         dcc.Store(id = 'app_citymun_id', data = 3, storage_type = 'session'),
-        dcc.Store(id = 'app_brgy_id', data = 1, storage_type = 'session'), # CHANGE
+        dcc.Store(id = 'app_brgy_id', data = 1, storage_type = 'memory'), # CHANGE
+        dcc.Store(id = 'app_census_cols', data = ['name', 2000, 2007, 2010, 2015, 2020], storage_type = 'session'),
         # Navbar
         cm.navbar,
         # Sidebar
@@ -69,6 +71,11 @@ def displaypage(pathname):
                 returnlayout = reports_create.layout
             elif pathname == '/events/create':
                 returnlayout = events_create.layout
+            elif pathname == '/data/barangays':
+                returnlayout = data_barangays.layout
+            # SANDBOX PAGE
+            elif pathname == '/sandbox':
+                returnlayout = sandbox.layout
             else:
                 returnlayout = error.layout
             return [returnlayout]

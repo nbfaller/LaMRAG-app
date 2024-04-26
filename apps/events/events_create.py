@@ -14,6 +14,17 @@ hyperlink_style = {
     'color' : 'inherit'
 }
 
+# Default margins and spacing settings
+header_m = 'mb-3'
+div_m = 'mt-3 mb-3'
+row_m = 'mb-2'
+subhead_m = 'mt-3'
+p_m = 'mb-0'
+label_m = 'mb-0'
+ftext_m = 'mt-1'
+alert_i_m = 'pe-0 me-0 col-12 col-md-auto mb-2 mb-md-0'
+footer_m = 'mt-3'
+
 layout = html.Div(
     [
         dbc.Row(
@@ -33,10 +44,11 @@ layout = html.Div(
                                                     ["(Fields with red asterisks ", tag_required, " are required.)"],
                                                     className = 'text-muted'
                                                 )
-                                            ], className = 'mb-0'
+                                            ], className = p_m
                                         )
                                     ],
-                                    id = 'eve_cre_row_header'
+                                    id = 'eve_cre_row_header',
+                                    class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -48,7 +60,7 @@ layout = html.Div(
                                                             dbc.Col(
                                                                 html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                 width = 'auto',
-                                                                class_name = 'pe-0 me-0'
+                                                                class_name = alert_i_m
                                                             ),
                                                             dbc.Col(
                                                                 [
@@ -69,15 +81,15 @@ layout = html.Div(
                                                     ),
                                                     id = 'eve_cre_alert_geolocnotice',
                                                     color = 'info',
-                                                    class_name = 'mb-0',
+                                                    class_name = label_m,
                                                     dismissable = True
                                                 )
                                             ]
                                         )
                                     ],
-                                    class_name = 'mb-2'
+                                    class_name = row_m
                                 )
-                            ], className = 'mb-3'
+                            ], className = header_m
                         ),
                         html.Hr(),
                         html.Div(
@@ -92,7 +104,7 @@ layout = html.Div(
                                                     html.Small(" (Event type)", className = 'text-muted')
                                                 ],
                                                 id = 'eve_cre_label_eventtype_id',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
@@ -108,12 +120,12 @@ layout = html.Div(
                                                     (Separate events should be created for those caused by others, such as
                                                     tsunamis caused by earthquakes or storm surges caused by typhoons.)""",
                                                     color = 'secondary',
-                                                    class_name = 'mt-1'
+                                                    class_name = ftext_m
                                                 ),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         )
-                                    ], class_name = 'mb-2',
+                                    ], class_name = row_m,
                                     id = 'eve_cre_row_event'
                                 ),
                                 # Event name
@@ -126,7 +138,7 @@ layout = html.Div(
                                                     html.Small(" (Event name, if possible)", className = 'text-muted')
                                                 ],
                                                 id = 'eve_cre_label_reporttype_id',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
@@ -147,12 +159,12 @@ layout = html.Div(
                                                     type of event here if you chose "Others" in the menu
                                                     above.)""",
                                                     color = 'secondary',
-                                                    class_name = 'mt-1'
+                                                    class_name = ftext_m
                                                 ),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         )
-                                    ], class_name = 'mb-3',
+                                    ], class_name = row_m,
                                     id = 'eve_cre_row_name'
                                 ),
                                 # Affected barangays
@@ -165,7 +177,7 @@ layout = html.Div(
                                                     html.Small(" (Affected barangays)", className = 'text-muted')
                                                 ],
                                                 id = 'eve_cre_label_brgy_id',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
@@ -182,12 +194,12 @@ layout = html.Div(
                                                     (Please select all barangays that were affected,
                                                     have been affected, or may be affected.)""",
                                                     color = 'secondary',
-                                                    class_name = 'mt-1'
+                                                    class_name = ftext_m
                                                 ),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         )
-                                    ], class_name = 'mb-2',
+                                    ], class_name = row_m,
                                     id = 'eve_cre_row_brgy'
                                 ),
                                 # Start date
@@ -200,7 +212,7 @@ layout = html.Div(
                                                     html.Small(" (Date of occurrence)", className = 'text-muted')
                                                 ],
                                                 id = 'eve_cre_label_startdate',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
@@ -218,12 +230,12 @@ layout = html.Div(
                                                     """Pwede himuan event an mga panhitabó nga natabó na o matatabó pala.
                                                     (Events that have already occurred or are yet to occur can be created.)""",
                                                     color = 'secondary',
-                                                    class_name = 'mt-1'
+                                                    class_name = ftext_m
                                                 ),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         ),
-                                    ], class_name = 'mb-2'
+                                    ], class_name = row_m
                                 ),
                                 # Date of occurrence
                                 dbc.Row(
@@ -235,7 +247,7 @@ layout = html.Div(
                                                     html.Small(" (End date)", className = 'text-muted')
                                                 ],
                                                 id = 'eve_cre_label_enddate',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
@@ -254,12 +266,12 @@ layout = html.Div(
                                                     """Alayon pagbilin nga blangko kun usa la ini nga adlaw natabo.
                                                     (Please leave blank if the event only occurs for one day)""",
                                                     color = 'secondary',
-                                                    class_name = 'mt-1'
+                                                    class_name = ftext_m
                                                 ),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         ),
-                                    ], class_name = 'mb-2'
+                                    ], class_name = row_m
                                 ),
                                 # Event escription
                                 dbc.Row(
@@ -271,7 +283,7 @@ layout = html.Div(
                                                     html.Small(" (Description)", className = 'text-muted')
                                                 ],
                                                 id = 'eve_cre_label_description',
-                                                class_name = 'mb-0'
+                                                class_name = label_m
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
@@ -289,12 +301,12 @@ layout = html.Div(
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         )
-                                    ], class_name = 'mb-2',
+                                    ], class_name = row_m,
                                     id = 'eve_cre_row_synopsis'
                                 ),
                             ],
                             id = 'eve_cre_div_details',
-                            className = 'mt-3 mb-3'
+                            className = div_m
                         ),
                         html.Hr(),
                         # Create button
@@ -305,7 +317,7 @@ layout = html.Div(
                                         dbc.Col(
                                             html.I(className = 'bi bi-exclamation-square-fill me-2'),
                                             width = 'auto',
-                                            class_name = 'pe-0 me-0'
+                                            class_name = alert_i_m
                                         ),
                                         dbc.Col(
                                             html.P(
@@ -333,10 +345,10 @@ layout = html.Div(
                                                         """,
                                                         className = 'text-muted'
                                                     )
-                                                ]
+                                                ], className = p_m
                                             )
                                         )
-                                    ], class_name = 'mb-2'
+                                    ], class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -356,7 +368,7 @@ layout = html.Div(
                                     class_name = 'justify-content-end'
                                 )
                             ],
-                            className = 'mt-3'
+                            className = footer_m
                         )
                     ],
                     class_name = 'col-lg-10'
