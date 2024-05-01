@@ -8,7 +8,7 @@ from dash.exceptions import PreventUpdate
 import webbrowser
 # App definition
 from app import app
-from apps import home, commonmodules as cm, error, sandbox
+from apps import dashboard, home, commonmodules as cm, error, sandbox
 from apps.users import users_register
 from apps.reports import reports_create
 from apps.events import events_create
@@ -30,12 +30,16 @@ app.layout = html.Div(
         ),
         # Location variable: contains details about the url
         dcc.Location(id = 'url', refresh = True),
+        # Login data
+        dcc.Store(id = 'app_sessionlogout', data = True, storage_type = 'session'),
+        dcc.Store(id = 'app_currentuser_id', data = -1, storage_type = 'session'),
+        dcc.Store(id = 'app_usertype_id', data = -1, storage_type = 'session'),
         # Store variables for locking location of app
         dcc.Store(id = 'app_region_id', data = 8, storage_type = 'session'),
         dcc.Store(id = 'app_province_id', data = 60, storage_type = 'session'),
         dcc.Store(id = 'app_citymun_id', data = 3, storage_type = 'session'),
         dcc.Store(id = 'app_brgy_id', data = 1, storage_type = 'memory'), # CHANGE
-        dcc.Store(id = 'app_census_cols', data = ['name', 2000, 2007, 2010, 2015, 2020], storage_type = 'session'),
+        dcc.Store(id = 'app_brgyinfo_cols', data = ['name', 2000, 2007, 2010, 2015, 2020], storage_type = 'memory'),
         # Navbar
         cm.navbar,
         # Sidebar
@@ -50,21 +54,29 @@ app.layout = html.Div(
 # Callback for displaying page
 @app.callback(
     [
-        Output('page-content', 'children')
+        Output('page-content', 'children'),
+        Output('app_sessionlogout', 'data')
     ],
     [
         # Callback is triggered when path changes
         Input('url', 'pathname')
+    ],
+    [
+        State('app_sessionlogout', 'data'),
+        State('app_currentuser_id', 'data'),
+        State('app_usertype_id', 'data')
     ]
 )
 
-def displaypage(pathname):
+def displaypage(pathname, sessionlogout, user_id, usertype_id):
     ctx = dash.callback_context
     if ctx.triggered:
         eventid = ctx.triggered[0]['prop_id'].split('.')[0]
         if eventid == 'url':
             if pathname == '/' or pathname == '/home':
                 returnlayout = home.layout
+            elif pathname == '/dashboard':
+                returnlayout = dashboard.layout
             elif pathname == '/users/register':
                 returnlayout = users_register.layout
             elif pathname == '/reports/create':
@@ -78,8 +90,8 @@ def displaypage(pathname):
                 returnlayout = sandbox.layout
             else:
                 returnlayout = error.layout
-            return [returnlayout]
         else: raise PreventUpdate
+        return [returnlayout, sessionlogout]
     else: raise PreventUpdate
 
 if __name__ == '__main__':

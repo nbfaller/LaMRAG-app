@@ -4,8 +4,11 @@ from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
+# Other libraries
+import hashlib
 # App definition
 from app import app
+from apps import dbconnect as db
 
 layout = html.Div(
     [
@@ -54,6 +57,7 @@ layout = html.Div(
                                                     html.H4("Local Management Platform for Risk Analytics & Governance"),
                                                     class_name = 'mb-3'
                                                 ),
+                                                html.Hr(),
                                                 dbc.Form(
                                                     [
                                                         dbc.Row(
@@ -85,7 +89,8 @@ layout = html.Div(
                                                                     dbc.Button(
                                                                         "Log-in",
                                                                         style = {'width' : '100%'},
-                                                                        id = 'com_hom_btn_login'
+                                                                        id = 'com_hom_btn_login',
+                                                                        type = 'submit'
                                                                         #color = 'secondary'
                                                                     )
                                                                 )
@@ -93,19 +98,22 @@ layout = html.Div(
                                                         )
                                                     ]
                                                 ),
+                                                html.Hr(),
+                                                html.P("Forgot password?")
                                             ]
                                         )
                                     ],
-                                    class_name = 'col-12 col-md-4'
+                                    class_name = 'align-self-center col-12 col-md-4'
                                 )
                             ]
                         )
                     ],
                     style = {
                         'border-radius' : '0.75rem',
-                        'overflow' : 'hidden',
+                        #'overflow' : 'hidden',
                         'box-shadow' : '0 0 32px 4px rgba(135, 113, 90, 0.2)'
-                    }
+                    },
+                    class_name = 'overflow-hidden'
                 )
             ]
         )
