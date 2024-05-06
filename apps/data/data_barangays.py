@@ -35,6 +35,8 @@ footer_m = 'mt-3'
 
 layout = html.Div(
     [
+        dcc.Store(id = 'dat_bar_sto_brgycurrentpop'),
+        dcc.Store(id = 'dat_bar_sto_brgypctchange'),
         dbc.Row(
             [
                 dbc.Col(
@@ -59,7 +61,32 @@ layout = html.Div(
                                         ),
                                     ],
                                     class_name = row_m,
-                                )
+                                ),
+                                dbc.Row(
+                                    [
+
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Barangay",
+                                                    #html.Br(), html.Small(" (User type)", className = 'text-muted')
+                                                ],
+                                                id = 'dat_bar_label_brgy_id',
+                                                class_name = row_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-2'
+                                        ),
+                                        dbc.Col(
+                                            dcc.Dropdown(
+                                                id = 'dat_bar_input_brgy_id',
+                                                clearable = True,
+                                                #value = 1
+                                               ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-10'
+                                        ),
+                                    ], className = 'mb-1 mb-md-0',
+                                    id = 'dat_bar_row_selectbrgy'
+                                ),
                             ],
                             id = 'dat_bar_div_header',
                             className = header_m
@@ -132,6 +159,96 @@ layout = html.Div(
                                                                         )
                                                                     ], class_name = row_m
                                                                 ),
+                                                                html.Hr(),
+                                                                dbc.Row(
+                                                                    [
+                                                                        dbc.Col(
+                                                                            [
+                                                                                html.H5(
+                                                                                    [
+                                                                                        html.I(className = 'bi bi-calculator me-2'),
+                                                                                        "Population calculator",
+                                                                                        #html.Br(),
+                                                                                        #html.Small(" (Population)", className = 'text-muted')
+                                                                                    ]
+                                                                                ),
+                                                                            ]
+                                                                        )
+                                                                    ], class_name = row_m
+                                                                ),
+                                                                dbc.Row(
+                                                                    [
+                                                                        dbc.Col(
+                                                                            dbc.Label(
+                                                                                [
+                                                                                    "Tuig", #html.Br(),
+                                                                                    html.Small(" (Year)", className = 'text-muted')
+                                                                                ],
+                                                                                id = 'dat_bar_label_calcyear',
+                                                                                class_name = label_m
+                                                                            ),
+                                                                            class_name = 'align-self-center mb-2 mb-lg-0 col-5 col-md-3'
+                                                                        ),
+                                                                        dbc.Col(
+                                                                            dbc.Input(
+                                                                                type = 'number',
+                                                                                id = 'dat_bar_input_calcyear',
+                                                                                #min = 2021,
+                                                                                #placeholder = 'Example: Mr., Mrs., Ms., Dr.'
+                                                                            ),
+                                                                            class_name = 'align-self-center mb-2 mb-lg-0 col-7 col-md-9'
+                                                                        ),
+                                                                    ], class_name = row_m
+                                                                ),
+                                                                dbc.Row(
+                                                                    [
+                                                                        dbc.Col(
+                                                                            dbc.Label(
+                                                                                [
+                                                                                    "Populasyon", #html.Br(),
+                                                                                    html.Small(" (Population)", className = 'text-muted')
+                                                                                ],
+                                                                                id = 'dat_bar_label_calcpop',
+                                                                                class_name = label_m
+                                                                            ),
+                                                                            class_name = 'align-self-center mb-2 mb-lg-0 col-5 col-md-3'
+                                                                        ),
+                                                                        dbc.Col(
+                                                                            dbc.Input(
+                                                                                type = 'number',
+                                                                                id = 'dat_bar_input_calcpop',
+                                                                                disabled = True,
+                                                                                #placeholder = 'Example: Mr., Mrs., Ms., Dr.'
+                                                                            ),
+                                                                            class_name = 'align-self-center mb-2 mb-lg-0 col-7 col-md-9'
+                                                                        ),
+                                                                    ], class_name = row_m
+                                                                ),
+                                                                dbc.Row(
+                                                                    [
+                                                                        dbc.Col(
+                                                                            [
+                                                                                html.P(
+                                                                                    [
+                                                                                        """Gamita ini nga population calculator para matigo nimo an posible nga kadamo san tawo nga
+                                                                                        maukoy sini nga barangay sa tiarabot nga mga tuig. Alayon paghinumdom nga angay la ini
+                                                                                        gamiton komo tigo, ug diri ini pwede sumaliwan sa mga sakto nga ihap nga hatag san
+                                                                                        Philippine Statistics Authority (PSA) o City Planning and Development Office (CPDO).""",
+                                                                                        html.Br(),
+                                                                                        html.Small(
+                                                                                            """(Feel free to use this population calculator to predict the population of this
+                                                                                            barangay in the coming years. Please note that the population generated here is only
+                                                                                            speculative, and is not meant to replace any authoritative data provided by
+                                                                                            the Philippine Statistics Authority (PSA) or City Planning and Development Office
+                                                                                            (CPDO).)""",
+                                                                                            className = 'text-muted'
+                                                                                        )
+                                                                                    ], className = p_m
+                                                                                ),
+                                                                            ]
+                                                                        )
+                                                                    ], class_name = row_m
+                                                                )
                                                             ]
                                                         )
                                                     ],
@@ -140,7 +257,7 @@ layout = html.Div(
                                                     class_name = 'w-md-100'
                                                 )
                                             ],
-                                            class_name = 'align-self-center mb-3 mb-lg-0 col-12 col-lg-7'
+                                            class_name = 'mb-3 mb-lg-0 col-12 col-lg-7'
                                         ),
                                         dbc.Col(
                                             [
@@ -215,26 +332,66 @@ layout = html.Div(
                                                                                     [
                                                                                         dbc.Col(
                                                                                             [
-                                                                                                "Sumala san datos san ",
-                                                                                                html.B(html.A("UP National Operational Assessment of Hazards", href = 'https://noah.up.edu.ph/', style = hyperlink_style)),
-                                                                                                ":",
-                                                                                                html.Br(),
+                                                                                                html.P(
+                                                                                                    [
+                                                                                                        "Sumala san datos san ",
+                                                                                                        html.B(html.A("UP National Operational Assessment of Hazards", href = 'https://noah.up.edu.ph/', style = hyperlink_style)),
+                                                                                                        #":",
+                                                                                                        html.Br(),
+                                                                                                        html.Small(
+                                                                                                            [
+                                                                                                                "(According to data from the ",
+                                                                                                                html.B(html.A("UP National Operational Assessment of Hazards", href = 'https://noah.up.edu.ph/', style = hyperlink_style)),
+                                                                                                                "):",
+                                                                                                            ],
+                                                                                                            className = 'text-muted'
+                                                                                                        )
+                                                                                                    ],
+                                                                                                    className = 'mb-0'
+                                                                                                ),
                                                                                                 html.Li(
                                                                                                     [
                                                                                                         html.B(id = 'dat_bar_spa_vul_flood_label_war'),
-                                                                                                        " an posibilidad nga matabo an pagbaha dinhi."
+                                                                                                        " an posibilidad nga matabo an pagbaha dinhi.",
+                                                                                                        html.Br(),
+                                                                                                        html.Small(
+                                                                                                            [
+                                                                                                                "(The likelihood of flooding to occur here is ",
+                                                                                                                html.B(id = 'dat_bar_spa_vul_flood_label_en'),
+                                                                                                                ".)"
+                                                                                                            ],
+                                                                                                            className = 'text-muted'
+                                                                                                        )
                                                                                                     ]
                                                                                                 ),
                                                                                                 html.Li(
                                                                                                     [
                                                                                                         html.B(id = 'dat_bar_spa_vul_landslide_label_war'),
-                                                                                                        " an posibilidad nga matabo an pagtimpag san tuna dinhi."
+                                                                                                        " an posibilidad nga matabo an pagtimpag san tuna dinhi.",
+                                                                                                        html.Br(),
+                                                                                                        html.Small(
+                                                                                                            [
+                                                                                                                "(The likelihood of landslides occuring here is ",
+                                                                                                                html.B(id = 'dat_bar_spa_vul_landslide_label_en'),
+                                                                                                                ".)"
+                                                                                                            ],
+                                                                                                            className = 'text-muted'
+                                                                                                        )
                                                                                                     ]
                                                                                                 ),
                                                                                                 html.Li(
                                                                                                     [
                                                                                                         html.B(id = 'dat_bar_spa_vul_stormsurge_label_war'),
-                                                                                                        " an posibilidad nga matabo an daluyong san bagyo dinhi."
+                                                                                                        " an posibilidad nga matabo an daluyong san bagyo dinhi.",
+                                                                                                        html.Br(),
+                                                                                                        html.Small(
+                                                                                                            [
+                                                                                                                "(The likelihood of storm surges occuring here is ",
+                                                                                                                html.B(id = 'dat_bar_spa_vul_stormsurge_label_en'),
+                                                                                                                ".)"
+                                                                                                            ],
+                                                                                                            className = 'text-muted'
+                                                                                                        )
                                                                                                     ]
                                                                                                 ),
                                                                                             ]
@@ -326,28 +483,12 @@ layout = html.Div(
     ]
 )
 
-# Callback for showing barangay-specific information
+# Callback for populating dropdowns
 @app.callback(
     [
-        # Header
-        Output('dat_bar_h1_header', 'children'),
-        # Flood vulnerability
-        Output('dat_bar_spa_vul_flood', 'children'),
-        Output('dat_bar_h1_vul_flood', 'style'),
-        Output('dat_bar_spa_vul_flood_label_war', 'children'),
-        # Landslide vulnerability
-        Output('dat_bar_spa_vul_landslide', 'children'),
-        Output('dat_bar_h1_vul_landslide', 'style'),
-        Output('dat_bar_spa_vul_landslide_label_war', 'children'),
-        # Storm surge vulnerability
-        Output('dat_bar_spa_vul_stormsurge', 'children'),
-        Output('dat_bar_h1_vul_stormsurge', 'style'),
-        Output('dat_bar_spa_vul_stormsurge_label_war', 'children'),
-        # Figures and other data
-        Output('dat_bar_gra_brgypop', 'figure'),
-        Output('dat_bar_spa_currentpop', 'children'),
-        Output('dat_bar_spa_pctchange', 'children'),
-        Output('dat_bar_spa_possibpop', 'children')
+        # Selected barangay
+        Output('dat_bar_input_brgy_id', 'options'),
+        Output('dat_bar_input_brgy_id', 'value'),
     ],
     [
         Input('url', 'pathname')
@@ -357,91 +498,187 @@ layout = html.Div(
         State('app_province_id', 'data'),
         State('app_citymun_id', 'data'),
         State('app_brgy_id', 'data'),
-        State('app_brgyinfo_cols', 'data')
     ]
 )
 
-def dat_bar_setbrgyinfo(pathname, region, province, citymun, brgy, info_cols):
+def dat_bar_populatedropdowns(pathname, region, province, citymun, brgy):
     if pathname == '/data/barangays':
-        if region and province and citymun and brgy:
-            toreturn = []
-            header = None
+        dropdowns = []
 
-            # Header
-            sql = """SELECT addressbrgy.name, addressbrgy.pop_2000, addressbrgy.pop_2007, addressbrgy.pop_2010, addressbrgy.pop_2015, addressbrgy.pop_2020,
-                addressbrgy.vul_flood, addressbrgy.vul_landslide, addressbrgy.vul_stormsurge,
-                vultype_flood.label_war, vultype_landslide.label_war, vultype_stormsurge.label_war,
-                vultype_flood.label_en, vultype_landslide.label_en, vultype_stormsurge.label_en,
-                vultype_flood.color, vultype_landslide.color, vultype_stormsurge.color,
-                vultype_flood.score, vultype_landslide.score, vultype_stormsurge.score
-                FROM utilities.addressbrgy
-                LEFT JOIN utilities.vultype AS vultype_flood ON addressbrgy.vul_flood = vultype_flood.id
-                LEFT JOIN utilities.vultype AS vultype_landslide ON addressbrgy.vul_landslide = vultype_landslide.id
-                LEFT JOIN utilities.vultype AS vultype_stormsurge ON addressbrgy.vul_stormsurge = vultype_stormsurge.id
-                WHERE addressbrgy.region_id = %s AND addressbrgy.province_id = %s AND addressbrgy.citymun_id = %s AND addressbrgy.id = %s;"""
-            values = [region, province, citymun, brgy]
-            cols = info_cols + [
-                'vul_flood', 'vul_landslide', 'vul_stormsurge',
-                'label_war_flood', 'label_war_landslide', 'label_war_stormsurge',
-                'label_en_flood', 'label_en_landslide', 'label_en_stormsurge',
-                'color_flood', 'color_landslide', 'color_stormsurge',
-                'score_flood', 'score_landslide', 'score_stormsurge'
-                ]
-            df = db.querydatafromdatabase(sql, values, cols)
-            header = df['name'][0]
-            toreturn.append(header)
-            
-            # Flood vulnerability
-            toreturn.append(df['vul_flood'][0])
-            toreturn.append({'color' : df['color_flood'][0]})
-            toreturn.append(df['label_war_flood'][0])
-            # Landslide vulnerability
-            toreturn.append(df['vul_landslide'][0])
-            toreturn.append({'color' : df['color_landslide'][0]})
-            toreturn.append(df['label_war_landslide'][0])
-            # Storm surge vulnerability
-            toreturn.append(df['vul_stormsurge'][0])
-            toreturn.append({'color' : df['color_stormsurge'][0]})
-            toreturn.append(df['label_war_stormsurge'][0])
+        # Barangays
+        sql = """SELECT name AS label, id AS value
+        FROM utilities.addressbrgy WHERE region_id = %s AND province_id = %s AND citymun_id = %s;
+        """
+        values = [region, province, citymun]
+        cols = ['label', 'value']
+        df = db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        brgys = df.to_dict('records')
+        dropdowns.append(brgys)
+        dropdowns.append(brgy)
 
-            # Graph
-            pop_df = df[info_cols]
-            pop_df = pop_df.set_index('name').T
-            fig = px.scatter(
-                pop_df,
-                x = pop_df.index,
-                y = pop_df.columns,
-                #markers = True,
-                template = 'plotly_white',
-                trendline = 'ols',
-                height = 200
-            )
-            fig.update_traces(
-                mode = 'lines'
-            )
-            fig.data[-1].line.dash = 'dot'
-            fig.data[-1].line.color = 'lightgray'
-            fig.update_layout(
-                {
-                    'plot_bgcolor' : 'rgba(0, 0, 0, 0)',
-                    'paper_bgcolor' : 'rgba(0, 0, 0, 0)'
-                },
-                font_family = "DM Sans",
-                showlegend = False,
-                margin = dict(l = 0, r = 0, t = 0, b = 0),
-                xaxis_title = "Tuig (year)",
-                yaxis_title = None
-            )
-            toreturn.append(fig)
-
-            # Current pop
-            currentpop = int(pop_df.tail(1).values[0])
-            pctchange = pop_df.pct_change().mean().values[0]
-            possibpop = currentpop * (1 + pctchange)
-            toreturn.append(currentpop)
-            toreturn.append(str(round(pctchange * 100, 2)) + "%")
-            toreturn.append(round(possibpop, 0))
-
-            return toreturn
-        else: raise PreventUpdate
+        return dropdowns
     else: raise PreventUpdate
+
+# Callback for showing barangay-specific information
+@app.callback(
+    [
+        # Header
+        Output('dat_bar_h1_header', 'children'),
+        # Flood vulnerability
+        Output('dat_bar_spa_vul_flood', 'children'),
+        Output('dat_bar_h1_vul_flood', 'style'),
+        Output('dat_bar_spa_vul_flood_label_war', 'children'),
+        Output('dat_bar_spa_vul_flood_label_en', 'children'),
+        # Landslide vulnerability
+        Output('dat_bar_spa_vul_landslide', 'children'),
+        Output('dat_bar_h1_vul_landslide', 'style'),
+        Output('dat_bar_spa_vul_landslide_label_war', 'children'),
+        Output('dat_bar_spa_vul_landslide_label_en', 'children'),
+        # Storm surge vulnerability
+        Output('dat_bar_spa_vul_stormsurge', 'children'),
+        Output('dat_bar_h1_vul_stormsurge', 'style'),
+        Output('dat_bar_spa_vul_stormsurge_label_war', 'children'),
+        Output('dat_bar_spa_vul_stormsurge_label_en', 'children'),
+        # Minimum population calculator year
+        Output('dat_bar_input_calcyear', 'min'),
+        Output('dat_bar_input_calcyear', 'value'),
+        # Figures and other data
+        Output('dat_bar_gra_brgypop', 'figure'),
+        Output('dat_bar_spa_currentpop', 'children'),
+        Output('dat_bar_sto_brgycurrentpop', 'data'),
+        Output('dat_bar_spa_pctchange', 'children'),
+        Output('dat_bar_sto_brgypctchange', 'data'),
+        Output('dat_bar_spa_possibpop', 'children')
+    ],
+    [
+        #Input('url', 'pathname'),
+        Input('dat_bar_input_brgy_id', 'value')
+    ],
+    [
+        State('app_region_id', 'data'),
+        State('app_province_id', 'data'),
+        State('app_citymun_id', 'data'),
+        State('app_brgyinfo_cols', 'data'),
+        State('app_latestcensusyear', 'data')
+    ]
+)
+
+def dat_bar_setbrgyinfo(brgy, region, province, citymun, info_cols, censusyear):
+    if brgy:
+        toreturn = []
+
+        # Header
+        header = None
+        sql = """SELECT addressbrgy.name, addressbrgy.pop_2000, addressbrgy.pop_2007, addressbrgy.pop_2010, addressbrgy.pop_2015, addressbrgy.pop_2020,
+            addressbrgy.vul_flood, addressbrgy.vul_landslide, addressbrgy.vul_stormsurge,
+            vultype_flood.label_war, vultype_landslide.label_war, vultype_stormsurge.label_war,
+            vultype_flood.label_en, vultype_landslide.label_en, vultype_stormsurge.label_en,
+            vultype_flood.color, vultype_landslide.color, vultype_stormsurge.color,
+            vultype_flood.score, vultype_landslide.score, vultype_stormsurge.score
+            FROM utilities.addressbrgy
+            LEFT JOIN utilities.vultype AS vultype_flood ON addressbrgy.vul_flood = vultype_flood.id
+            LEFT JOIN utilities.vultype AS vultype_landslide ON addressbrgy.vul_landslide = vultype_landslide.id
+            LEFT JOIN utilities.vultype AS vultype_stormsurge ON addressbrgy.vul_stormsurge = vultype_stormsurge.id
+            WHERE addressbrgy.region_id = %s AND addressbrgy.province_id = %s AND addressbrgy.citymun_id = %s AND addressbrgy.id = %s;"""
+        values = [region, province, citymun, brgy]
+        cols = info_cols + [
+            'vul_flood', 'vul_landslide', 'vul_stormsurge',
+            'label_war_flood', 'label_war_landslide', 'label_war_stormsurge',
+            'label_en_flood', 'label_en_landslide', 'label_en_stormsurge',
+            'color_flood', 'color_landslide', 'color_stormsurge',
+            'score_flood', 'score_landslide', 'score_stormsurge'
+            ]
+        df = db.querydatafromdatabase(sql, values, cols)
+        header = df['name'][0]
+        toreturn.append(header)
+            
+        # Flood vulnerability
+        toreturn.append(df['vul_flood'][0])
+        toreturn.append({'color' : df['color_flood'][0]})
+        toreturn.append(df['label_war_flood'][0])
+        toreturn.append(df['label_en_flood'][0])
+        # Landslide vulnerability
+        toreturn.append(df['vul_landslide'][0])
+        toreturn.append({'color' : df['color_landslide'][0]})
+        toreturn.append(df['label_war_landslide'][0])
+        toreturn.append(df['label_en_landslide'][0])
+        # Storm surge vulnerability
+        toreturn.append(df['vul_stormsurge'][0])
+        toreturn.append({'color' : df['color_stormsurge'][0]})
+        toreturn.append(df['label_war_stormsurge'][0])
+        toreturn.append(df['label_en_stormsurge'][0])
+
+        # Minimum population calculator year
+        toreturn.append(censusyear + 1)
+        toreturn.append(None)
+
+        # Graph
+        pop_df = df[info_cols]
+        pop_df = pop_df.set_index('name').T
+        fig = px.scatter(
+            pop_df,
+            x = pop_df.index,
+            y = pop_df.columns,
+            #markers = True,
+            template = 'plotly_white',
+            trendline = 'ols',
+            height = 500
+        )
+        fig.update_traces(
+            mode = 'lines'
+        )
+        fig.data[-1].line.dash = 'dot'
+        fig.data[-1].line.color = 'lightgray'
+        fig.update_layout(
+            {
+                'plot_bgcolor' : 'rgba(0, 0, 0, 0)',
+                'paper_bgcolor' : 'rgba(0, 0, 0, 0)'
+            },
+            font_family = "DM Sans",
+            showlegend = False,
+            margin = dict(l = 0, r = 0, t = 0, b = 0),
+            xaxis_title = "Tuig (year)",
+            yaxis_title = None,
+            yaxis_range=[0, 10000]
+        )
+        #fig.update_yaxes(
+        #    autorangeoptions_minallowed = 0
+        #)
+        toreturn.append(fig)
+
+        # Current pop
+        currentpop = int(pop_df.tail(1).values[0])
+        pctchange = pop_df.pct_change().mean().values[0]
+        possibpop = currentpop * (1 + pctchange)
+        toreturn.append(currentpop)
+        toreturn.append(currentpop)
+        # Percent change
+        toreturn.append(str(round(pctchange * 100, 2)) + "%")
+        toreturn.append(pctchange)
+        # Possible population
+        toreturn.append(round(possibpop, 0))
+
+        return toreturn
+    else: raise PreventUpdate
+
+# Callback for calculating projected population
+@app.callback(
+    [
+        Output('dat_bar_input_calcpop', 'value')
+    ],
+    [
+        Input('dat_bar_input_calcyear', 'value')
+    ],
+    [
+        State('app_latestcensusyear', 'data'),
+        State('dat_bar_sto_brgycurrentpop', 'data'),
+        State('dat_bar_sto_brgypctchange', 'data')
+    ]
+)
+
+def dat_bar_calcyear(year, censusyear, currentpop, pctchange):
+    projpop = None
+    if year and year > censusyear:
+        projpop = round(currentpop * (1 + pctchange)**(year - censusyear), 0)
+    return [projpop]

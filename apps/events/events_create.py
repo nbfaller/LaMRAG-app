@@ -413,9 +413,6 @@ def eve_cre_populatedropdowns(pathname, region, province, citymun):
         dropdowns.append(types)
 
         # Barangays
-        region = 8
-        province = 60
-        citymun = 3
         sql = """SELECT name AS label, id AS value
         FROM utilities.addressbrgy WHERE region_id = %s AND province_id = %s AND citymun_id = %s;
         """

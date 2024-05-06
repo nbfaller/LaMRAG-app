@@ -38,8 +38,9 @@ app.layout = html.Div(
         dcc.Store(id = 'app_region_id', data = 8, storage_type = 'session'),
         dcc.Store(id = 'app_province_id', data = 60, storage_type = 'session'),
         dcc.Store(id = 'app_citymun_id', data = 3, storage_type = 'session'),
-        dcc.Store(id = 'app_brgy_id', data = 1, storage_type = 'memory'), # CHANGE
+        dcc.Store(id = 'app_brgy_id', data = 138, storage_type = 'memory'), # CHANGE
         dcc.Store(id = 'app_brgyinfo_cols', data = ['name', 2000, 2007, 2010, 2015, 2020], storage_type = 'memory'),
+        dcc.Store(id = 'app_latestcensusyear', data = 2020, storage_type = 'session'),
         # Navbar
         cm.navbar,
         # Sidebar

@@ -28,7 +28,7 @@ footer_m = 'mt-3'
 
 layout = html.Div(
     [
-        #dcc.Store(id = 'usr_reg_store_regsuccess', data = False, storage_type = 'memory'),
+        dcc.Store(id = 'usr_reg_store_regsuccess', data = False, storage_type = 'session'),
         dbc.Row(
             [
                 dbc.Col(
@@ -56,7 +56,8 @@ layout = html.Div(
                                                     ], className = p_m
                                                 )
                                             ],
-                                            id = 'usr_reg_row_header'
+                                            id = 'usr_reg_row_header',
+                                            class_name = row_m
                                         ),
                                         dbc.Row(
                                             [
@@ -1863,10 +1864,10 @@ def usr_reg_confirmregistration(
 # Callback for creating new user
 @app.callback(
     [
+        #Output('url', 'pathname'),
         # Success modal
-        Output('usr_reg_modal_regsuccess', 'is_open'),
-        # Confirmation modal
-        #Output('usr_reg_modal_confirm', 'is_open'),
+        #Output('usr_reg_modal_regsuccess', 'is_open'),
+        Output('usr_reg_store_regsuccess', 'data'),
         # Alert
         Output('usr_reg_alert_passwordvalidation', 'is_open'),
         Output('usr_reg_alert_passwordvalidation', 'class_name'),
@@ -1943,6 +1944,7 @@ def usr_reg_submitregistration(
         eventid = ctx.triggered[0]['prop_id'].split('.')[0]
         if eventid == 'usr_reg_btn_confirm' and btn:
             success_modal = False
+            reg_success = False
             #confirm_modal = True
             # Alert
             alert_open = False
@@ -2002,6 +2004,7 @@ def usr_reg_submitregistration(
                 ]
             else:
                 success_modal = True
+                reg_success = True
                 #confirm_modal = False
                 alert_open = True
                 alert_class_name = 'mb-3'
@@ -2047,7 +2050,8 @@ def usr_reg_submitregistration(
                 ]
                 db.modifydatabase(sql, values)
             return [
-                success_modal, #confirm_modal,
+                #success_modal,
+                reg_success, #confirm_modal,
                 alert_open, alert_class_name, alert_color, alert_col_text,
                 password_initial_invalid, password_confirm_invalid
             ]

@@ -884,7 +884,7 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Ginkuhaan sini nga impormasyon", html.Br(),
+                                                    "Ginkuhaan san impormasyon", html.Br(),
                                                     html.Small(" (Source of data)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_casualty_source',
@@ -910,8 +910,8 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Naprubaran na?", tag_required, html.Br(),
-                                                    html.Small(" (Validated)", className = 'text-muted')
+                                                    "Estado san pagprubar", tag_required, html.Br(),
+                                                    html.Small(" (Validation status)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_cre_label_casualtystatus_id',
                                                 class_name = label_m
@@ -1299,6 +1299,13 @@ layout = html.Div(
                                     ], class_name = row_m
                                 ),
                                 dbc.Row(
+                                    dbc.Col(
+                                        id = 'rep_cre_col_dmgdhousetype_desc',
+                                        class_name = 'align-self-center mb-2 mb-lg-0 col-12'
+                                    ),
+                                    class_name = label_m,
+                                ),
+                                dbc.Row(
                                     [
                                         dbc.Col(
                                             dbc.Label(
@@ -1627,7 +1634,9 @@ def rep_cre_geolocset(pos, date):
         Output('rep_cre_input_casualtystatus_id', 'options'),
         Output('rep_cre_input_pubutiltype_id', 'options'),
         Output('rep_cre_input_pubutilinttype_id', 'options'),
-        Output('rep_cre_col_pubutilinttype_desc', 'children')
+        Output('rep_cre_col_pubutilinttype_desc', 'children'),
+        Output('rep_cre_input_dmgdhousetype_id', 'options'),
+        Output('rep_cre_col_dmgdhousetype_desc', 'children'),
     ],
     [
         Input('url', 'pathname')
@@ -1773,6 +1782,72 @@ def rep_cre_populatedropdowns(pathname, region):
             dismissable = True
         )
         dropdowns.append(pubutilinttype_desc)
+
+        # Damaged house types
+        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') as label, id as value, desc_war, desc_en
+        FROM utilities.dmgdhousetype;
+        """
+        values = []
+        cols = ['label', 'value', 'desc_war', 'desc_en']
+        df = db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        dmgdhousetypes = df[['label', 'value']].to_dict('records')
+        dropdowns.append(dmgdhousetypes)
+
+        dmgdhousetype_list = []
+        dmgdhousetypes = df.to_dict('records')
+        for i in dmgdhousetypes:
+            dmgdhousetype_list.append(
+                html.Li(
+                    [
+                        html.B(i['label']), html.Br(),
+                        html.Div(
+                            [
+                                i['desc_war'], html.Br(),
+                                html.Small(i['desc_en'], className = 'text-muted')
+                            ],
+                            className = 'ms-3'
+                        )
+                    ],
+                    className = 'mb-1'
+                )
+            )
+
+        dmgdhousetype_desc = dbc.Alert(
+            [
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            html.I(className = 'bi bi-exclamation-circle-fill me-2'),
+                            class_name = alert_i_m
+                        ),
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    [
+                                        "Maupay hinumduman an karuyag signgon sini nga mga klase san pagkarubat san balay", html.Br(),
+                                        html.Small("(It would be helpful to remember the following definitions for damaged house types):", className = 'text-muted')
+                                    ],
+                                    className = 'mb-2'
+                                ),
+                                html.Div(dmgdhousetype_list),
+                                html.Div(
+                                    [
+                                        "Ginkuhaan sini nga mga depinisyon: ", html.A("Memorandum Circular No. 6, s. 2019 san DSWD", href = 'https://www.dswd.gov.ph/issuances/MCs/MC_2019-006.pdf', style = hyperlink_style), html.Br(),
+                                        html.Small(["(Source of definitions: ", html.A("Memorandum Circular No. 6, s. 2019 san DSWD", href = 'https://www.dswd.gov.ph/issuances/MCs/MC_2019-006.pdf', style = hyperlink_style), ")"], className = 'text-muted')
+                                    ],
+                                    className = 'mb-2'
+                                ),
+                            ]
+                        )
+                    ]
+                ),
+            ],
+            color = 'info',
+            class_name = row_m,
+            dismissable = True
+        )
+        dropdowns.append(dmgdhousetype_desc)
 
         return dropdowns
     else: raise PreventUpdate
