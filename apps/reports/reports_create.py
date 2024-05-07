@@ -110,6 +110,38 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
+                                                    "Barangay", tag_required, #html.Br(),
+                                                    #html.Small(" (Event)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_brgy_id',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dcc.Dropdown(
+                                                    id = 'rep_cre_input_brgy_id',
+                                                    clearable = True,
+                                                    disabled = True,
+                                                ),
+                                                dbc.FormText(
+                                                    "Kun opisyal ka san barangay, awtomatiko nga pipilion dinhi an imo barangay. (If you are a barangay official, your barangay will be automatically selected.)",
+                                                    color = 'secondary',
+                                                    class_name = ftext_m
+                                                ),
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
+                                        )
+                                    ],
+                                    id = 'rep_cre_row_brgy_id',
+                                    class_name = row_m,
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
                                                     "Panhitabó", tag_required, html.Br(),
                                                     html.Small(" (Event)", className = 'text-muted')
                                                 ],
@@ -1532,6 +1564,259 @@ layout = html.Div(
                             className = div_m,
                             style = {'display' : 'none'}
                         ),
+                        # Infrastructure
+                        html.Div(
+                            [
+                                html.Hr(),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.H4(
+                                                    [
+                                                        html.I(className = 'bi bi-building-fill-slash me-2'),
+                                                        "Narubat nga imprastruktura",
+                                                        #html.Br(),
+                                                        html.Small(" (Damaged infrastructure)", className = 'text-muted')
+                                                    ]
+                                                ),
+                                            ]
+                                        )
+                                    ], class_name = row_m
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Klase san imprastruktura", tag_required, html.Br(),
+                                                    html.Small(" (Infrastructure type)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_infratype_id',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dbc.Select(
+                                                #dcc.Dropdown(
+                                                    id = 'rep_cre_input_infratype_id',
+                                                    #clearable = True,
+                                                ),
+                                                #dbc.FormText(
+                                                #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
+                                                #    color = 'secondary',
+                                                #    class_name = ftext_m
+                                                #),
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
+                                        ),
+                                    ], class_name = row_m,
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Klase", tag_required, html.Br(),
+                                                    html.Small(" (Classification)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_infraclass_id',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dbc.Select(
+                                                #dcc.Dropdown(
+                                                    id = 'rep_cre_input_infraclass_id',
+                                                    #clearable = True,
+                                                    #disabled = True
+                                                ),
+                                                #dbc.FormText(
+                                                #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
+                                                #    color = 'secondary',
+                                                #    class_name = ftext_m
+                                                #),
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
+                                        ),
+                                    ], class_name = row_m,
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Ngaran/deskripsiyon", tag_required, html.Br(),
+                                                    html.Small(" (Name/description)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_dmgdinfra_desc',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dbc.Input(
+                                                    id = 'rep_cre_input_dmgdinfra_desc',
+                                                    placeholder = 'Example: Road name, bridge name, name of building/structure/equipment',
+                                                    invalid = False,
+                                                    #disabled = True
+                                                ),
+                                                #dbc.FormText(
+                                                #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
+                                                #    color = 'secondary',
+                                                #    class_name = ftext_m
+                                                #),
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
+                                        ),
+                                    ], class_name = row_m,
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Kantidad san narubat", tag_required, html.Br(),
+                                                    html.Small(" (Quantity of damage)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_dmgdinfra_qty',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dbc.InputGroup(
+                                                    [
+                                                        dbc.Input(
+                                                            id = 'rep_cre_input_dmgdinfra_qty',
+                                                            #placeholder = 'Example: Road name, bridge name, name of building/structure/equipment',
+                                                            type = 'number',
+                                                            min = 1,
+                                                            value = 1,
+                                                            invalid = False,
+                                                            #disabled = True
+                                                        ),
+                                                        dbc.Select(
+                                                            id = 'rep_cre_input_dmgdinfra_qtyunit',
+                                                        )
+                                                    ]
+                                                ),
+                                                #dbc.FormText(
+                                                #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
+                                                #    color = 'secondary',
+                                                #    class_name = ftext_m
+                                                #),
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Presyo san narubat", tag_required, html.Br(),
+                                                    html.Small(" (Cost of damage)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_dmgdinfra_cost',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-2'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dbc.InputGroup(
+                                                    [
+                                                        dbc.InputGroupText("₱"),
+                                                        dbc.Input(
+                                                            id = 'rep_cre_input_dmgdinfra_cost',
+                                                            #placeholder = 'Example: Road name, bridge name, name of building/structure/equipment',
+                                                            type = 'number',
+                                                            min = 0,
+                                                            #value = 1,
+                                                            invalid = False,
+                                                            #disabled = True
+                                                        ),
+                                                    ]
+                                                ),
+                                                #dbc.FormText(
+                                                #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
+                                                #    color = 'secondary',
+                                                #    class_name = ftext_m
+                                                #),
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-4'
+                                        ),
+                                    ], class_name = row_m,
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Kabutangan", tag_required, html.Br(),
+                                                    html.Small(" (Status)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_dmgdinfrastatus_id',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dbc.Select(
+                                                #dcc.Dropdown(
+                                                    id = 'rep_cre_label_dmgdinfrastatus_id',
+                                                    #clearable = True,
+                                                    #disabled = True
+                                                ),
+                                                #dbc.FormText(
+                                                #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
+                                                #    color = 'secondary',
+                                                #    class_name = ftext_m
+                                                #),
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
+                                        ),
+                                    ], class_name = row_m,
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Iba pa nga komento", html.Br(),
+                                                    html.Small(" (Remarks)", className = 'text-muted')
+                                                ],
+                                                id = 'rep_cre_label_dmgdinfra_remarks',
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dcc.Textarea(
+                                                    id = 'rep_cre_input_dmgdinfra_remarks',
+                                                    #clearable = True,
+                                                    wrap = True,
+                                                    style = {
+                                                        'height' : '5em',
+                                                        'width' : '100%',
+                                                    },
+                                                )
+                                            ],
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
+                                        )
+                                    ], class_name = row_m
+                                ),
+                            ],
+                            id = 'rep_cre_div_dmgdinfra',
+                            className = div_m,
+                            style = {'display' : 'none'}
+                        ),
                         # Submit button
                         html.Div(
                             [
@@ -1626,6 +1911,9 @@ def rep_cre_geolocset(pos, date):
 @app.callback(
     [
         Output('rep_cre_input_reporttype_id', 'options'),
+        Output('rep_cre_input_brgy_id', 'options'),
+        Output('rep_cre_input_brgy_id', 'disabled'),
+        Output('rep_cre_input_brgy_id', 'value'),
         Output('rep_cre_input_relinctype_id', 'options'),
         Output('rep_cre_input_casualty_assignedsex_id', 'options'),
         Output('rep_cre_input_casualty_region_id', 'options'),
@@ -1637,16 +1925,23 @@ def rep_cre_geolocset(pos, date):
         Output('rep_cre_col_pubutilinttype_desc', 'children'),
         Output('rep_cre_input_dmgdhousetype_id', 'options'),
         Output('rep_cre_col_dmgdhousetype_desc', 'children'),
+        Output('rep_cre_input_infratype_id', 'options'),
+        Output('rep_cre_input_infraclass_id', 'options'),
+        Output('rep_cre_input_dmgdinfra_qtyunit', 'options'),
+        Output('rep_cre_input_dmgdinfra_qtyunit', 'value')
     ],
     [
         Input('url', 'pathname')
     ],
     [
-        State('app_region_id', 'data')
+        State('app_region_id', 'data'),
+        State('app_province_id', 'data'),
+        State('app_citymun_id', 'data'),
+        State('app_brgy_id', 'data')
     ]
 )
 
-def rep_cre_populatedropdowns(pathname, region):
+def rep_cre_populatedropdowns(pathname, region, province, citymun, brgy):
     if pathname == rep_cre_url_pathname:
         dropdowns = []
 
@@ -1661,10 +1956,29 @@ def rep_cre_populatedropdowns(pathname, region):
         reporttypes = df.to_dict('records')
         dropdowns.append(reporttypes)
 
+        # Barangays
+        sql = """SELECT name AS label, id AS value
+        FROM utilities.addressbrgy
+        WHERE region_id = %s AND province_id = %s AND citymun_id = %s;
+        """
+        values = [region, province, citymun]
+        df = db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        brgys = df.to_dict('records')
+        dropdowns.append(brgys)
+
+        if brgy:
+            dropdowns.append(True)
+            dropdowns.append(brgy)
+        else:
+            dropdowns.append(False)
+            dropdowns.append(None)
+
         # Related incident types
         sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
         FROM utilities.relinctype;
         """
+        values = []
         df = db.querydatafromdatabase(sql, values, cols)
         df = df.sort_values('value')
         relinctypes = df.to_dict('records')
@@ -1849,6 +2163,40 @@ def rep_cre_populatedropdowns(pathname, region):
         )
         dropdowns.append(dmgdhousetype_desc)
 
+        # Infrastructure types
+        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') as label, id as value, desc_war, desc_en
+        FROM utilities.infratype;
+        """
+        values = []
+        cols = ['label', 'value', 'desc_war', 'desc_en']
+        df = db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        infratypes = df[['label', 'value']].to_dict('records')
+        dropdowns.append(infratypes)
+
+        # Infrastructure classes
+        sql = """SELECT CONCAT(label_war, ' (', label_en, ')') as label, id as value
+        FROM utilities.infraclass;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        infraclasses = df.to_dict('records')
+        dropdowns.append(infraclasses)
+
+        # Infrastructure quantity units
+        sql = """SELECT CONCAT(label_war, ' (', label_en, ')') as label, id as value
+        FROM utilities.qtyunit;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        infraclasses = df.to_dict('records')
+        dropdowns.append(infraclasses)
+        dropdowns.append(1)
+
         return dropdowns
     else: raise PreventUpdate
 
@@ -1859,7 +2207,8 @@ def rep_cre_populatedropdowns(pathname, region):
         Output('rep_cre_div_relinc', 'style'),
         Output('rep_cre_div_casualty', 'style'),
         Output('rep_cre_div_pubutil', 'style'),
-        Output('rep_cre_div_dmgdhouse', 'style')
+        Output('rep_cre_div_dmgdhouse', 'style'),
+        Output('rep_cre_div_dmgdinfra', 'style')
     ],
     [
         Input('rep_cre_input_reporttype_id', 'value')
@@ -1874,13 +2223,15 @@ def rep_cre_showreportform(type):
     style_casualty = disp_none
     style_pubutil = disp_none
     style_dmgdhouse = disp_none
+    style_dmgdinfra = disp_none
     if type:
         style_submit = disp_show
         if type == 1: style_relinc = disp_show
         elif type == 2: style_casualty = disp_show
         elif type == 3: style_pubutil = disp_show
         elif type == 4: style_dmgdhouse = disp_show
-    return [style_submit, style_relinc, style_casualty, style_pubutil, style_dmgdhouse]
+        elif type == 5: style_dmgdinfra = disp_show
+    return [style_submit, style_relinc, style_casualty, style_pubutil, style_dmgdhouse, style_dmgdinfra]
 
 # Callback for populating present provinces once present region is selected
 @app.callback(
