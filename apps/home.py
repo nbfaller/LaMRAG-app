@@ -10,6 +10,17 @@ import hashlib
 from app import app
 from apps import dbconnect as db
 
+# Default margins and spacing settings
+header_m = 'mb-3'
+div_m = 'mt-3 mb-3'
+row_m = 'mb-2'
+subhead_m = 'mt-3'
+p_m = 'mb-0'
+label_m = 'mb-0'
+ftext_m = 'mt-1'
+alert_i_m = 'pe-0 me-0 col-12 col-md-auto mb-2 mb-md-0'
+footer_m = 'mt-3'
+
 layout = html.Div(
     [
         dbc.Row(
@@ -61,6 +72,35 @@ layout = html.Div(
                                                 dbc.Form(
                                                     [
                                                         dbc.Row(
+                                                            [
+                                                                dbc.Col(
+                                                                    [
+                                                                        dbc.Alert(
+                                                                            dbc.Row(
+                                                                                [
+                                                                                    dbc.Col(
+                                                                                        html.I(className = 'bi bi-exclamation-circle-fill me-2'),
+                                                                                        width = 'auto',
+                                                                                        class_name = alert_i_m
+                                                                                    ),
+                                                                                    dbc.Col(
+                                                                                        id = 'com_hom_alert_passwordvalidation_col_text'
+                                                                                    )
+                                                                                ]
+                                                                            ),
+                                                                            id = 'com_hom_alert_passwordvalidation',
+                                                                            is_open = False,
+                                                                            color = 'warning',
+                                                                            class_name = label_m,
+                                                                            dismissable = True,
+                                                                            #fade = True,
+                                                                            className = 'mt-0 mb-3'
+                                                                        )
+                                                                    ]
+                                                                )
+                                                            ],
+                                                        ),
+                                                        dbc.Row(
                                                             dbc.Col(
                                                                 [
                                                                     dbc.Input(
@@ -69,8 +109,8 @@ layout = html.Div(
                                                                         id = 'com_hom_input_username'
                                                                     )
                                                                 ],
-                                                                class_name = 'mb-3'
-                                                            )
+                                                                #class_name = 'mb-3'
+                                                            ), class_name = 'mt-0 mb-3'
                                                         ),
                                                         dbc.Row(
                                                             [
@@ -99,7 +139,10 @@ layout = html.Div(
                                                     ]
                                                 ),
                                                 html.Hr(),
-                                                html.P("Forgot password?")
+                                                html.P(
+                                                    "Forgot password?",
+                                                    className = p_m
+                                                )
                                             ]
                                         )
                                     ],
@@ -120,3 +163,122 @@ layout = html.Div(
     ],
     className = 'mt-2 mb-2 ms-md-5 me-md-5'
 )
+
+# Callback for logging in
+@app.callback(
+    [
+        Output('com_hom_alert_passwordvalidation', 'is_open'),
+        Output('com_hom_alert_passwordvalidation_col_text', 'children'),
+        Output('app_currentuser_id', 'data'),
+        Output('app_usertype_id', 'data'),
+    ],
+    [
+        Input('com_hom_btn_login', 'n_clicks'), # Begin login query via button click
+        Input('app_sessionlogout', 'modified_timestamp') # Reset session userid to -1 if logged out
+    ],
+    [
+        State('com_hom_input_username', 'value'),
+        State('com_hom_input_password', 'value'),
+        State('app_sessionlogout', 'data'),
+        State('app_currentuser_id', 'data'),
+        State('app_usertype_id', 'data'),
+        State('url', 'pathname'),
+    ],
+    prevent_initial_call = True
+)
+
+def com_home_loginprocess(btn, sessionlogout_time,
+    username, password, sessionlogout, user_id,
+    usertype_id, pathname):
+    
+    ctx = dash.callback_context
+
+    if ctx.triggered:
+        alert_open = False
+        alert_col_text = None
+        eventid = ctx.triggered[0]['prop_id'].split('.')[0]
+    else: raise PreventUpdate
+
+    if eventid == 'com_hom_btn_login': # Trigger for login process
+        if btn:
+            if username and password:
+                sql = """SELECT id, usertype_id FROM users.user
+                    WHERE username = %s AND password = %s AND is_active;"""
+                # We match the encrypted input to the encrypted password in the database
+                encrypt_string = lambda string: hashlib.sha256(string.encode('utf-8')).hexdigest()
+                values = [username, encrypt_string(password)]
+                cols = ['id', 'usertype_id']
+                df = db.querydatafromdatabase(sql, values, cols)
+                if df.shape[0]: # If the query returns rows
+                    user_id = df['id'][0]
+                    usertype_id = df['usertype_id'][0]
+                else:
+                    user_id = -1
+                    usertype_id = -1
+                    alert_open = True
+                    alert_col_text = [
+                        "Diri sakto nga password an imo ginbutang.",
+                        html.Br(),
+                        html.Small(
+                            "(Incorrect password.)",
+                            className = 'text-muted'
+                        ),
+                    ]
+            elif not(username) or not(password):
+                alert_open = True
+                if not(username) and not(password):
+                    alert_col_text = [
+                        "Alayon pagbutang san imo username ug password.",
+                        html.Br(),
+                        html.Small(
+                            "(Please input your username and password.)",
+                            className = 'text-muted'
+                        ),
+                    ]
+                elif not(username) and password:
+                    alert_col_text = [
+                        "Alayon pagbutang san imo username.",
+                        html.Br(),
+                        html.Small(
+                            "(Please input your username.)",
+                            className = 'text-muted'
+                        ),
+                    ]
+                else:
+                    alert_col_text = [
+                        "Alayon pagbutang san imo password.",
+                        html.Br(),
+                        html.Small(
+                            "(Please input your password.)",
+                            className = 'text-muted'
+                        ),
+                    ]
+    elif eventid == 'app_sessionlogout' and pathname == '/logout': # Reset the user_id and usertype_id if logged out
+        user_id = -1
+        usertype_id = -1
+    else:
+        raise PreventUpdate
+    return [alert_open, alert_col_text, user_id, usertype_id]
+
+# Callback for routing login
+@app.callback(
+    [
+        Output('url', 'pathname')
+    ],
+    [
+        Input('app_currentuser_id', 'modified_timestamp')
+    ],
+    [
+        State('app_currentuser_id', 'data'),
+        State('url', 'pathname')
+    ],
+    prevent_initial_call = True
+)
+
+def com_home_routelogin(logintime, user_id, pathname):
+    ctx = dash.callback_context
+    if ctx.triggered and (pathname == '/' or pathname == '/home'): # Fix this part
+        if user_id > 0: url = '/dashboard'
+        else: url = '/'
+    else: raise PreventUpdate
+    return [url]

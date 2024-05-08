@@ -41,7 +41,7 @@ app.layout = html.Div(
         dcc.Store(id = 'app_brgy_id', data = 138, storage_type = 'memory'), # CHANGE
         # Auxiliary store variables for data retrieval
         dcc.Store(id = 'app_brgyinfo_cols', data = ['name', 2000, 2007, 2010, 2015, 2020], storage_type = 'memory'),
-        dcc.Store(id = 'app_latestcensusyear', data = 2020, storage_type = 'session'),
+        dcc.Store(id = 'app_latestcensusyear', data = 2020, storage_type = 'memory'),
         # Navbar
         cm.navbar,
         # Sidebar
@@ -60,7 +60,7 @@ app.layout = html.Div(
         Output('app_sessionlogout', 'data')
     ],
     [
-        # Callback is triggered when path changes
+        # Callback is triggered when the path changes
         Input('url', 'pathname')
     ],
     [
@@ -75,24 +75,41 @@ def displaypage(pathname, sessionlogout, user_id, usertype_id):
     if ctx.triggered:
         eventid = ctx.triggered[0]['prop_id'].split('.')[0]
         if eventid == 'url':
-            if pathname == '/' or pathname == '/home':
-                returnlayout = home.layout
-            elif pathname == '/dashboard':
-                returnlayout = dashboard.layout
-            elif pathname == '/users/register':
-                returnlayout = users_register.layout
-            elif pathname == '/reports/create':
-                returnlayout = reports_create.layout
-            elif pathname == '/events/create':
-                returnlayout = events_create.layout
-            elif pathname == '/data/barangays':
-                returnlayout = data_barangays.layout
-            # SANDBOX PAGE
-            elif pathname == '/sandbox':
-                returnlayout = sandbox.layout
+            if user_id < 0: # If logged out
+                if pathname == '/' or pathname == '/home':
+                    returnlayout = home.layout
+                else:
+                    returnlayout = error.layout
             else:
-                returnlayout = error.layout
+                if pathname == '/logout':
+                    returnlayout = home.layout
+                    sessionlogout = True
+                elif pathname == '/dashboard':
+                    returnlayout = dashboard.layout
+                elif pathname == '/users/register':
+                    returnlayout = users_register.layout
+                elif pathname == '/reports/create':
+                    returnlayout = reports_create.layout
+                elif pathname == '/events/create':
+                    returnlayout = events_create.layout
+                elif pathname == '/data/barangays':
+                    returnlayout = data_barangays.layout
+                # SANDBOX PAGE
+                elif pathname == '/sandbox':
+                    returnlayout = sandbox.layout
+                else:
+                    returnlayout = error.layout
+            
+            # Decide sessionlogout value
+            logout_conditions = [
+                pathname in ['/', '/logout'],
+                user_id == -1,
+                not user_id
+            ]
+            sessionlogout = any(logout_conditions)
+
         else: raise PreventUpdate
+        print(sessionlogout, user_id, usertype_id)
         return [returnlayout, sessionlogout]
     else: raise PreventUpdate
 

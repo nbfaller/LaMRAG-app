@@ -4,8 +4,22 @@ from dash import dcc, html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
+from datetime import datetime
+import pytz
 # App definition
 from app import app
+from apps import dbconnect as db
+
+# Default margins and spacing settings
+header_m = 'mb-3'
+div_m = 'mt-3 mb-3'
+row_m = 'mb-2'
+subhead_m = 'mt-3'
+p_m = 'mb-0'
+label_m = 'mb-0'
+ftext_m = 'mt-1'
+alert_i_m = 'pe-0 me-0 col-12 col-md-auto mb-2 mb-md-0'
+footer_m = 'mt-3'
 
 # Navbar
 @app.callback(
@@ -26,7 +40,8 @@ def cm_opensidebar(btn):
         else: raise PreventUpdate
     else: raise PreventUpdate
 
-navlink_style = {'color' : '#FFF'}
+nav_external_link = True
+
 navbar = dbc.Navbar(
     [
         dbc.Col(
@@ -72,37 +87,60 @@ navbar = dbc.Navbar(
             class_name = 'ms-md-2 me-md-2 ms-0 me-0'
         ),
         dbc.Col(
-            dbc.Button(
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            html.I(className = 'bi bi-person-fill'),
-                            sm = 'auto',
-                            class_name = 'p-auto pe-md-1'
-                        ),
-                        dbc.Col(
-                            "Log-in",
-                            sm = 'auto',
-                            class_name = 'p-auto ps-md-1 d-none d-md-block'
-                        )
-                    ],
-                    align = 'center',
-                    class_name = 'pad-row',
+            [
+                dbc.Button(
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                html.I(className = 'bi bi-person-fill'),
+                                sm = 'auto',
+                                class_name = 'p-auto pe-md-1'
+                            ),
+                            dbc.Col(
+                                "Log-in",
+                                sm = 'auto',
+                                class_name = 'p-auto ps-md-1 d-none d-md-block'
+                            )
+                        ],
+                        align = 'center',
+                        class_name = 'pad-row',
+                        style = {
+                            'height' : '100%',
+                            'margin-left' : 'auto',
+                            'margin-right' : 'auto'
+                        }
+                    ),
+                    id = 'cm_navbar_btn_login',
+                    href = '/login',
+                    color = 'secondary',
+                    outline = True,
                     style = {
-                        'height' : '100%',
-                        'margin-left' : 'auto',
-                        'margin-right' : 'auto'
-                    }
+                        'height' : '2em',
+                        'padding' : '0px',
+                        'display' : 'none'
+                    },
                 ),
-                id = 'cm_navbar_btn_login',
-                href = '/login',
-                color = 'secondary',
-                outline = True,
-                style = {
-                    'height' : '2em',
-                    'padding' : '0px'
-                },
-            ),
+                dbc.DropdownMenu(
+                    [
+                        dbc.DropdownMenuItem("Dashboard", href = '/dashboard', external_link = nav_external_link),
+                        dbc.DropdownMenuItem("Profile", href = '/users/profile', external_link = nav_external_link),
+                        dbc.DropdownMenuItem("Change password", href = '', external_link = nav_external_link),
+                        dbc.DropdownMenuItem("Log-out", href = '/logout', external_link = nav_external_link, id = 'com_mod_dmi_logout'),
+                    ],
+                    id = 'com_mod_ddm_navbarmenu',
+                    label = [
+                            html.I(id = 'com_mod_hti_icon'),
+                            "Maupay nga ",
+                            html.Span(id = 'com_mod_spa_timegreeting'),
+                            ", ",
+                            html.B(id = 'com_mod_htb_name')
+                    ],
+                    align_end = True,
+                    in_navbar = True,
+                    nav = True,
+                    class_name = 'd-none'
+                ),
+            ],
             width = 'auto',
             class_name = 'ms-md-2 me-4'
         ),
@@ -521,7 +559,7 @@ footer = html.Footer(
                         html.P(
                             html.Small(
                                 """The City of Calbayog is a first-class component city at the northwestern corner of Samar Province.
-                                Founded as a Spanish settlement on the mouth of the Jibatang River, it has since grown into the province's foremost
+                                Founded as a Spanish settlement along the Jibatang River, it has since grown into the province's foremost
                                 commercial center. It was constituted as a city in 1948 through the merger of the municipalities of Calbayog, Tinambacan,
                                 and Oquendo, which now define its three geographical districts."""
                             )
@@ -614,3 +652,51 @@ footer = html.Footer(
     },
     className = 'text-muted'
 )
+
+# Callback for setting navbar greeting if logged in
+@app.callback(
+    [
+        Output('com_mod_hti_icon', 'className'),
+        Output('com_mod_ddm_navbarmenu', 'class_name'),
+        Output('com_mod_spa_timegreeting', 'children'),
+        Output('com_mod_htb_name', 'children')
+    ],
+    [
+        Input('app_currentuser_id', 'data')
+    ],
+)
+
+def com_mod_setgreeting(user_id):
+    class_name = 'd-none'
+    icon_className = None
+    timegreeting = 'adlaw'
+    name = None
+    if user_id > 0:
+        class_name = 'd-block'
+        time = datetime.now(pytz.timezone('Asia/Manila')).hour
+        if time >= 0 and time < 12:
+            if time >= 0 and time < 5: icon_className = 'bi bi-moon-fill me-2'
+            elif time >= 5 and time < 7: icon_className = 'bi bi-sunrise-fill me-2'
+            else: icon_className = 'bi bi-brightness-low-fill me-2'
+            timegreeting = "aga"
+        elif time >= 12 and time < 13:
+            icon_className = 'bi bi-brightness-high-fill me-2'
+            timegreeting = "udto"
+        elif time >= 13 and time < 18:
+            if time >= 13 and time < 16: icon_className = 'bi bi-brightness-high-fill me-2'
+            elif time >= 16 and time < 17: icon_className = 'bi bi-brightness-low-fill me-2'
+            else: icon_className = 'bi bi-sunset-fill me-2'
+            timegreeting = "kulop"
+        else:
+            icon_className = 'bi bi-moon-fill me-2'
+            timegreeting = "gab-i"
+        sql = """SELECT fname, livedname FROM users.user
+            WHERE id = %s;"""
+        values = [user_id]
+        cols = ['fname', 'livedname']
+        df = db.querydatafromdatabase(sql, values, cols)
+        if df.shape[0]:
+            if df['livedname'][0]: name = df['livedname'][0]
+            else: name = df['fname'][0]
+    else: raise PreventUpdate
+    return [icon_className, class_name, timegreeting, name]
