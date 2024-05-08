@@ -375,7 +375,113 @@ layout = html.Div(
                 )
             ],
             class_name = 'justify-content-center'
-        )
+        ),
+        dbc.Modal(
+            [
+                dbc.Form(
+                    [
+                        dbc.ModalBody(
+                            [
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.H4("Confirm event creation"),
+                                                html.P(
+                                                    [
+                                                        """Alayon pagbutang san imo password para makumpirma an paghimo sini nga panhitabó.
+                                                        Alayon liwat pagseguro nga sakto an ngatanan nga impormasyon nga imo ginhatag.""",
+                                                        html.Br(),
+                                                        html.Small(
+                                                            """(Please enter your password to confirm the creation of this event.
+                                                            Also, please ensure that all information to be submitted is correct.)
+                                                            """,
+                                                            className = 'text-muted'
+                                                        )
+                                                    ], className = p_m
+                                                ),
+                                            ]
+                                        )
+                                    ], class_name = 'mb-3'
+                                ),
+                                #html.Hr(),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                dbc.Alert(
+                                                    dbc.Row(
+                                                        [
+                                                            dbc.Col(
+                                                                html.I(className = 'bi bi-exclamation-circle-fill me-2'),
+                                                                width = 'auto',
+                                                                class_name = alert_i_m
+                                                            ),
+                                                            dbc.Col(
+                                                                id = 'usr_reg_alert_passwordvalidation_col_text'
+                                                            )
+                                                        ]
+                                                    ),
+                                                    id = 'eve_cre_alert_passwordvalidation',
+                                                    is_open = False,
+                                                    color = 'warning',
+                                                    class_name = label_m,
+                                                    dismissable = True,
+                                                    #fade = True,
+                                                )
+                                            ]
+                                        )
+                                    ]
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                dbc.Input(
+                                                    type = 'password',
+                                                    id = 'eve_cre_input_password',
+                                                    placeholder = ['Enter password'],
+                                                    invalid = False
+                                                ),
+                                            ]
+                                        )
+                                    ], class_name = row_m
+                                ),
+                            ],
+                            id = 'eve_cre_modal_confirm_body'
+                        ),
+                        dbc.ModalFooter(
+                            [
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
+                                                    html.I(className = 'bi bi-check-circle-fill me-2'),
+                                                    "I-kumpirma (Confirm)"
+                                                ],
+                                                id = 'eve_cre_btn_confirm',
+                                                style = {'width': ' 100%'},
+                                                type = 'submit'
+                                            ),
+                                            class_name = 'align-self-center col-12 col-md-auto'
+                                        )
+                                    ],
+                                    class_name = 'justify-content-end'
+                                )
+                            ],
+                            id = 'eve_cre_modal_confirm_footer'
+                        )
+                    ]
+                )
+            ],
+            id = 'usr_reg_modal_confirm',
+            is_open = False,
+            centered = True,
+            scrollable = True,
+            backdrop = True,
+            #size = 'lg',
+        ),
     ]
 )
 
@@ -403,7 +509,8 @@ def eve_cre_populatedropdowns(pathname, region, province, citymun):
 
         # Event types
         sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
-        FROM utilities.eventtype;
+        FROM utilities.eventtype
+        ORDER BY id ASC;
         """
         values = []
         cols = ['label', 'value']

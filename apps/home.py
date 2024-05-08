@@ -65,10 +65,13 @@ layout = html.Div(
                                         dbc.CardBody(
                                             [
                                                 dbc.Row(
-                                                    html.H4("Local Management Platform for Risk Analytics & Governance"),
-                                                    class_name = 'mb-3'
+                                                    html.H4(
+                                                        "Local Management Platform for Risk Analytics & Governance",
+                                                        className = 'mb-0'
+                                                    ),
+                                                    class_name = 'mt-0 mb-3'
                                                 ),
-                                                html.Hr(),
+                                                html.Hr(className = 'mb-0'),
                                                 dbc.Form(
                                                     [
                                                         dbc.Row(
@@ -94,11 +97,12 @@ layout = html.Div(
                                                                             class_name = label_m,
                                                                             dismissable = True,
                                                                             #fade = True,
-                                                                            className = 'mt-0 mb-3'
                                                                         )
                                                                     ]
                                                                 )
                                                             ],
+                                                            id = 'com_hom_row_passwordvalidation',
+                                                            class_name = 'mt-0 mb-0'
                                                         ),
                                                         dbc.Row(
                                                             dbc.Col(
@@ -110,7 +114,7 @@ layout = html.Div(
                                                                     )
                                                                 ],
                                                                 #class_name = 'mb-3'
-                                                            ), class_name = 'mt-0 mb-3'
+                                                            ), class_name = 'mt-3 mb-3'
                                                         ),
                                                         dbc.Row(
                                                             [
@@ -121,7 +125,7 @@ layout = html.Div(
                                                                         id = 'com_hom_input_password'
                                                                     )
                                                                 )
-                                                            ], class_name = 'mb-3'
+                                                            ], class_name = 'mt-3 mb-3'
                                                         ),
                                                         dbc.Row(
                                                             [
@@ -134,14 +138,14 @@ layout = html.Div(
                                                                         #color = 'secondary'
                                                                     )
                                                                 )
-                                                            ], class_name = 'mb-0'
+                                                            ], class_name = 'mt-3 mb-3'
                                                         )
                                                     ]
                                                 ),
                                                 html.Hr(),
                                                 html.P(
                                                     "Forgot password?",
-                                                    className = p_m
+                                                    className = 'mt-3 mb-0'
                                                 )
                                             ]
                                         )
@@ -168,6 +172,7 @@ layout = html.Div(
 @app.callback(
     [
         Output('com_hom_alert_passwordvalidation', 'is_open'),
+        Output('com_hom_row_passwordvalidation', 'class_name'),
         Output('com_hom_alert_passwordvalidation_col_text', 'children'),
         Output('app_currentuser_id', 'data'),
         Output('app_usertype_id', 'data'),
@@ -195,6 +200,7 @@ def com_home_loginprocess(btn, sessionlogout_time,
 
     if ctx.triggered:
         alert_open = False
+        alert_row_class = 'mt-0 mb-0'
         alert_col_text = None
         eventid = ctx.triggered[0]['prop_id'].split('.')[0]
     else: raise PreventUpdate
@@ -216,6 +222,7 @@ def com_home_loginprocess(btn, sessionlogout_time,
                     user_id = -1
                     usertype_id = -1
                     alert_open = True
+                    alert_row_class = 'mt-3 mb-3'
                     alert_col_text = [
                         "Diri sakto nga password an imo ginbutang.",
                         html.Br(),
@@ -226,6 +233,7 @@ def com_home_loginprocess(btn, sessionlogout_time,
                     ]
             elif not(username) or not(password):
                 alert_open = True
+                alert_row_class = 'mt-3 mb-3'
                 if not(username) and not(password):
                     alert_col_text = [
                         "Alayon pagbutang san imo username ug password.",
@@ -258,7 +266,7 @@ def com_home_loginprocess(btn, sessionlogout_time,
         usertype_id = -1
     else:
         raise PreventUpdate
-    return [alert_open, alert_col_text, user_id, usertype_id]
+    return [alert_open, alert_row_class, alert_col_text, user_id, usertype_id]
 
 # Callback for routing login
 @app.callback(

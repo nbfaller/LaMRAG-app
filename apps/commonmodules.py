@@ -40,6 +40,59 @@ def cm_opensidebar(btn):
         else: raise PreventUpdate
     else: raise PreventUpdate
 
+# Callback for setting navbar greeting and showing buttons if logged in
+@app.callback(
+    [
+        # Navbar
+        Output('com_mod_hti_icon', 'className'),
+        Output('com_mod_ddm_navbarmenu', 'class_name'),
+        Output('com_mod_spa_timegreeting', 'children'),
+        Output('com_mod_htb_name', 'children'),
+        # Burger button
+        Output('cm_navbar_col_burger', 'class_name')
+    ],
+    [
+        Input('app_currentuser_id', 'data')
+    ],
+)
+
+def com_mod_setgreeting(user_id):
+    class_name = 'd-none'
+    icon_className = None
+    timegreeting = 'adlaw'
+    name = None
+    burger = 'd-none ms-4'
+    if user_id > 0:
+        class_name = 'd-block'
+        burger = 'd-block ms-4'
+        time = datetime.now(pytz.timezone('Asia/Manila')).hour
+        if time >= 0 and time < 12:
+            if time >= 0 and time < 5: icon_className = 'bi bi-moon-fill me-2'
+            elif time >= 5 and time < 7: icon_className = 'bi bi-sunrise-fill me-2'
+            else: icon_className = 'bi bi-brightness-low-fill me-2'
+            timegreeting = "aga"
+        elif time >= 12 and time < 13:
+            icon_className = 'bi bi-brightness-high-fill me-2'
+            timegreeting = "udto"
+        elif time >= 13 and time < 18:
+            if time >= 13 and time < 16: icon_className = 'bi bi-brightness-high-fill me-2'
+            elif time >= 16 and time < 17: icon_className = 'bi bi-brightness-low-fill me-2'
+            else: icon_className = 'bi bi-sunset-fill me-2'
+            timegreeting = "kulop"
+        else:
+            icon_className = 'bi bi-moon-fill me-2'
+            timegreeting = "gab-i"
+        sql = """SELECT fname, livedname FROM users.user
+            WHERE id = %s;"""
+        values = [user_id]
+        cols = ['fname', 'livedname']
+        df = db.querydatafromdatabase(sql, values, cols)
+        if df.shape[0]:
+            if df['livedname'][0]: name = df['livedname'][0]
+            else: name = df['fname'][0]
+    else: raise PreventUpdate
+    return [icon_className, class_name, timegreeting, name, burger]
+
 nav_external_link = True
 
 navbar = dbc.Navbar(
@@ -56,8 +109,9 @@ navbar = dbc.Navbar(
                     'padding' : '0px',
                 },
             ),
+            id = 'cm_navbar_col_burger',
             width = 'auto',
-            class_name = 'ms-4 me-md-2'
+            class_name = 'd-none ms-4'
         ),
         dbc.Col(
             html.A(
@@ -84,7 +138,7 @@ navbar = dbc.Navbar(
                 ),
                 href = '/'
             ),
-            class_name = 'ms-md-2 me-md-2 ms-0 me-0'
+            class_name = 'ms-md-4 me-md-2 ms-0 me-0'
         ),
         dbc.Col(
             [
@@ -652,51 +706,3 @@ footer = html.Footer(
     },
     className = 'text-muted'
 )
-
-# Callback for setting navbar greeting if logged in
-@app.callback(
-    [
-        Output('com_mod_hti_icon', 'className'),
-        Output('com_mod_ddm_navbarmenu', 'class_name'),
-        Output('com_mod_spa_timegreeting', 'children'),
-        Output('com_mod_htb_name', 'children')
-    ],
-    [
-        Input('app_currentuser_id', 'data')
-    ],
-)
-
-def com_mod_setgreeting(user_id):
-    class_name = 'd-none'
-    icon_className = None
-    timegreeting = 'adlaw'
-    name = None
-    if user_id > 0:
-        class_name = 'd-block'
-        time = datetime.now(pytz.timezone('Asia/Manila')).hour
-        if time >= 0 and time < 12:
-            if time >= 0 and time < 5: icon_className = 'bi bi-moon-fill me-2'
-            elif time >= 5 and time < 7: icon_className = 'bi bi-sunrise-fill me-2'
-            else: icon_className = 'bi bi-brightness-low-fill me-2'
-            timegreeting = "aga"
-        elif time >= 12 and time < 13:
-            icon_className = 'bi bi-brightness-high-fill me-2'
-            timegreeting = "udto"
-        elif time >= 13 and time < 18:
-            if time >= 13 and time < 16: icon_className = 'bi bi-brightness-high-fill me-2'
-            elif time >= 16 and time < 17: icon_className = 'bi bi-brightness-low-fill me-2'
-            else: icon_className = 'bi bi-sunset-fill me-2'
-            timegreeting = "kulop"
-        else:
-            icon_className = 'bi bi-moon-fill me-2'
-            timegreeting = "gab-i"
-        sql = """SELECT fname, livedname FROM users.user
-            WHERE id = %s;"""
-        values = [user_id]
-        cols = ['fname', 'livedname']
-        df = db.querydatafromdatabase(sql, values, cols)
-        if df.shape[0]:
-            if df['livedname'][0]: name = df['livedname'][0]
-            else: name = df['fname'][0]
-    else: raise PreventUpdate
-    return [icon_className, class_name, timegreeting, name]
