@@ -49,7 +49,12 @@ def cm_opensidebar(btn):
         Output('com_mod_spa_timegreeting', 'children'),
         Output('com_mod_htb_name', 'children'),
         # Burger button
-        Output('cm_navbar_col_burger', 'class_name')
+        Output('com_mod_col_burger', 'class_name'),
+        # Dropdown header
+        Output('com_mod_bdg_loggedinusertype', 'children'),
+        Output('com_mod_hh4_loggedinname', 'children'),
+        Output('com_mod_hh4_loggedindesig', 'children'),
+        Output('com_mod_hh4_loggedinoffice', 'children')
     ],
     [
         Input('app_sessionlogout', 'data')
@@ -60,11 +65,18 @@ def cm_opensidebar(btn):
 )
 
 def com_mod_setgreeting(sessionlogout, user_id):
+    # Navbar
     class_name = 'd-none'
     icon_className = None
     timegreeting = 'adlaw'
     name = None
+    # Burger button
     burger = 'd-none ms-4'
+    # Dropdown header
+    usertype = None
+    fullname = None
+    desig = None
+    office = None
     if not(sessionlogout):
         class_name = 'd-block'
         burger = 'd-block ms-4'
@@ -85,16 +97,26 @@ def com_mod_setgreeting(sessionlogout, user_id):
         else:
             icon_className = 'bi bi-moon-fill me-2'
             timegreeting = "gab-i"
-        sql = """SELECT fname, livedname FROM users.user
-            WHERE id = %s;"""
+        sql = """SELECT u.fname, u.livedname, u.mname, u.lname, ut.label AS usertype, u.designation AS desig, o.name AS office FROM users.user AS u
+            INNER JOIN utilities.usertype AS ut ON u.usertype_id = ut.id
+            INNER JOIN utilities.office AS o ON u.office_id = o.id
+            WHERE u.id = %s;"""
         values = [user_id]
-        cols = ['fname', 'livedname']
+        cols = ['fname', 'livedname', 'mname', 'lname', 'usertype', 'desig', 'office']
         df = db.querydatafromdatabase(sql, values, cols)
         if df.shape[0]:
+            # Name in navbar
             if df['livedname'][0]: name = df['livedname'][0]
             else: name = df['fname'][0]
+            # Fullname in dropdown header
+            if df['mname'][0]: fullname = "%s %s. %s" % (name, df['mname'][0][0], df['lname'][0])
+            else: fullname = "%s %s" % (name, df['lname'][0])
+            # Other details in dropdown header
+            usertype = df['usertype'][0]
+            desig = df['desig'][0]
+            office = df['office'][0]
     else: raise PreventUpdate
-    return [icon_className, class_name, timegreeting, name, burger]
+    return [icon_className, class_name, timegreeting, name, burger, usertype, fullname, desig, office]
 
 nav_external_link = True
 
@@ -112,7 +134,7 @@ navbar = dbc.Navbar(
                     'padding' : '0px',
                 },
             ),
-            id = 'cm_navbar_col_burger',
+            id = 'com_mod_col_burger',
             width = 'auto',
             class_name = 'd-none ms-4'
         ),
@@ -179,6 +201,29 @@ navbar = dbc.Navbar(
                 ),
                 dbc.DropdownMenu(
                     [
+                        dbc.DropdownMenuItem(
+                            [
+                                dbc.Badge(
+                                    id = 'com_mod_bdg_loggedinusertype',
+                                    class_name = 'mb-1'
+                                ),
+                                html.H4(
+                                    id = 'com_mod_hh4_loggedinname',
+                                    className = 'text-body mb-0'
+                                ),
+                                html.Small(
+                                    id = 'com_mod_hh4_loggedindesig',
+                                    className = 'text-body mb-0'
+                                ),
+                                html.Br(),
+                                html.Small(
+                                    id = 'com_mod_hh4_loggedinoffice',
+                                    className = 'text-body mb-0'
+                                )
+                            ],
+                            header = True
+                        ),
+                        dbc.DropdownMenuItem(divider = True),
                         dbc.DropdownMenuItem("Dashboard", href = '/dashboard', external_link = nav_external_link),
                         dbc.DropdownMenuItem("Profile", href = '/users/profile', external_link = nav_external_link),
                         dbc.DropdownMenuItem("Change password", href = '', external_link = nav_external_link),

@@ -4309,7 +4309,7 @@ fieldset:disabled .btn {
   padding: 0.25rem 1rem;
   clear: both;
   font-weight: 400;
-  color: #212529;
+  color: #403e3c;
   text-align: inherit;
   text-decoration: none;
   white-space: nowrap;
@@ -4353,7 +4353,7 @@ fieldset:disabled .btn {
 .dropdown-item-text {
   display: block;
   padding: 0.25rem 1rem;
-  color: #212529;
+  color: #403e3c;
 }
 
 .dropdown-menu-dark {
@@ -8514,7 +8514,7 @@ fieldset:disabled .btn {
 }
 
 .text-dark {
-  color: #212529 !important;
+  color: #403e3c !important;
 }
 
 .text-white {
@@ -8522,7 +8522,7 @@ fieldset:disabled .btn {
 }
 
 .text-body {
-  color: #212529 !important;
+  color: #403e3c !important;
 }
 
 .text-muted {
