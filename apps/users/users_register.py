@@ -73,7 +73,7 @@ layout = html.Div(
                                                                     ),
                                                                     dbc.Col(
                                                                         [
-                                                                            "Kulang an ginbutang nga impormasyon. Alayon pag-hatag san:",
+                                                                            "Kulang an nabutang nga impormasyon. Alayon pag-hatag san:",
                                                                             html.Br(),
                                                                             html.Small(
                                                                                 "(The information supplied is incomplete. Please enter the following:)",

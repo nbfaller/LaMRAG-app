@@ -1910,25 +1910,34 @@ def rep_cre_geolocset(pos, date):
 # Callback for populating basic dropdown menus and descriptions
 @app.callback(
     [
+        # Report type
         Output('rep_cre_input_reporttype_id', 'options'),
+        # Event
+        Output('rep_cre_input_event_id', 'options'),
+        # Barangay
         Output('rep_cre_input_brgy_id', 'options'),
         Output('rep_cre_input_brgy_id', 'disabled'),
         Output('rep_cre_input_brgy_id', 'value'),
+        # Related incident
         Output('rep_cre_input_relinctype_id', 'options'),
+        # Casualty
         Output('rep_cre_input_casualty_assignedsex_id', 'options'),
         Output('rep_cre_input_casualty_region_id', 'options'),
         Output('rep_cre_input_casualty_region_id', 'value'),
         Output('rep_cre_input_casualtytype_id', 'options'),
         Output('rep_cre_input_casualtystatus_id', 'options'),
+        # Public utility status
         Output('rep_cre_input_pubutiltype_id', 'options'),
         Output('rep_cre_input_pubutilinttype_id', 'options'),
         Output('rep_cre_col_pubutilinttype_desc', 'children'),
+        # Damaged house
         Output('rep_cre_input_dmgdhousetype_id', 'options'),
         Output('rep_cre_col_dmgdhousetype_desc', 'children'),
+        # Infrastructure
         Output('rep_cre_input_infratype_id', 'options'),
         Output('rep_cre_input_infraclass_id', 'options'),
         Output('rep_cre_input_dmgdinfra_qtyunit', 'options'),
-        Output('rep_cre_input_dmgdinfra_qtyunit', 'value')
+        Output('rep_cre_input_dmgdinfra_qtyunit', 'value'),
     ],
     [
         Input('url', 'pathname')
@@ -1955,6 +1964,18 @@ def rep_cre_populatedropdowns(pathname, region, province, citymun, brgy):
         df = df.sort_values('value')
         reporttypes = df.to_dict('records')
         dropdowns.append(reporttypes)
+
+        # Events
+        sql = """SELECT event.name AS label, event.id AS value
+        FROM events.event
+        INNER JOIN events.eventbrgy ON event.id = eventbrgy.event_id
+        WHERE eventbrgy.region_id = %s AND eventbrgy.province_id = %s AND eventbrgy.citymun_id = %s AND eventbrgy.brgy_id = %s;
+        """
+        values = [region, province, citymun, brgy]
+        df = db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        events = df.to_dict('records')
+        dropdowns.append(events)
 
         # Barangays
         sql = """SELECT name AS label, id AS value

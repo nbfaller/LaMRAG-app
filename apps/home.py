@@ -224,7 +224,7 @@ def com_home_loginprocess(btn, sessionlogout_time,
                     alert_open = True
                     alert_row_class = 'mt-3 mb-3'
                     alert_col_text = [
-                        "Diri sakto nga password an imo ginbutang.",
+                        "Diri sakto an nabutang nga password.",
                         html.Br(),
                         html.Small(
                             "(Incorrect password.)",
