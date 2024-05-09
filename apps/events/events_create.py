@@ -183,10 +183,31 @@ layout = html.Div(
                                         ),
                                         dbc.Col(
                                             [
-                                                dcc.Dropdown(
-                                                    id = 'eve_cre_input_brgy_id',
-                                                    clearable = True,
-                                                    multi = True,
+                                                dbc.Row(
+                                                    [
+                                                        dbc.Col(
+                                                            dcc.Dropdown(
+                                                                id = 'eve_cre_input_brgy_id',
+                                                                clearable = True,
+                                                                multi = True,
+                                                            ),
+                                                            class_name = 'align-self-center col-12 col-md-6 col-lg-8 mb-2 mb-md-0'
+                                                        ),
+                                                        dbc.Col(
+                                                            dbc.Switch(
+                                                                id = 'eve_cre_input_selectallbrgys',
+                                                                label = html.Span(
+                                                                    [
+                                                                        "Pili-a ngatanan. ",
+                                                                        html.Small("(Select all.)", className = 'text-muted')
+                                                                    ]
+                                                                ),
+                                                                value = False,
+                                                                class_name = 'mb-0'
+                                                            ),
+                                                            class_name = 'align-self-center col-12 col-md-6 col-lg-4 mb-2 mb-md-0'
+                                                        )
+                                                    ]
                                                 ),
                                                 dbc.FormText(
                                                     """Alayon pagpili san ngatanan nga mga barangay
@@ -198,7 +219,7 @@ layout = html.Div(
                                                 ),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
-                                        )
+                                        ),
                                     ], class_name = row_m,
                                     id = 'eve_cre_row_brgy'
                                 ),
@@ -258,7 +279,7 @@ layout = html.Div(
                                                     placeholder = 'MM/DD/YYYY',
                                                     #month_format = 'MMM Do, YYYY',
                                                     clearable = True,
-                                                    disabled = True,
+                                                    #disabled = True,
                                                     #style = {'width' : '100%'}
                                                     className = 'w-100'
                                                 ),
@@ -271,7 +292,9 @@ layout = html.Div(
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         ),
-                                    ], class_name = row_m
+                                    ],
+                                    id = 'eve_cre_row_enddate',
+                                    class_name = row_m
                                 ),
                                 # Event escription
                                 dbc.Row(
@@ -535,7 +558,7 @@ def eve_cre_populatedropdowns(pathname, region, province, citymun):
 # Callback for setting min_date_allowed end date field
 @app.callback(
     [
-        Output('eve_cre_input_enddate', 'disabled'),
+        Output('eve_cre_row_enddate', 'class_name'),
         Output('eve_cre_input_enddate', 'min_date_allowed')
     ],
     [
@@ -544,9 +567,25 @@ def eve_cre_populatedropdowns(pathname, region, province, citymun):
 )
 
 def eve_cre_setminenddate(startdate):
-    disabled = True
+    retclass = 'mb-2 d-none'
     min_date = None
     if startdate:
-        disabled = False
+        retclass = 'mb-2'
         min_date = startdate
-    return [disabled, min_date]
+    return [retclass, min_date]
+
+# Callback for disabling barangay selection when "select all" is selected
+@app.callback(
+    [
+        Output('eve_cre_input_brgy_id', 'value'),
+        Output('eve_cre_input_brgy_id', 'disabled')
+    ],
+    [
+        Input('eve_cre_input_selectallbrgys', 'value')
+    ]
+)
+
+def eve_cre_selectallbrgys(switch):
+    disabled = False
+    if switch: disabled = True
+    return [None, disabled]

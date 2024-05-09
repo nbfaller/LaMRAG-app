@@ -183,11 +183,16 @@ navbar = dbc.Navbar(
                     ],
                     id = 'com_mod_ddm_navbarmenu',
                     label = [
-                            html.I(id = 'com_mod_hti_icon'),
-                            "Maupay nga ",
-                            html.Span(id = 'com_mod_spa_timegreeting'),
-                            ", ",
-                            html.B(id = 'com_mod_htb_name')
+                        html.Span(
+                            [
+                                html.I(id = 'com_mod_hti_icon'),
+                                "Maupay nga ",
+                                html.Span(id = 'com_mod_spa_timegreeting'),
+                                ", ",
+                                html.B(id = 'com_mod_htb_name')
+                            ],
+                            className = 'd-none d-md-inline'
+                        )
                     ],
                     align_end = True,
                     in_navbar = True,
@@ -593,7 +598,7 @@ footer = html.Footer(
                         html.P(html.Small("All content is in the public domain unless otherwise stated."), className = 'mb-0')
                     ],
                     md = 6,
-                    class_name = 'md-6 p-4'
+                    class_name = 'md-6 pt-4 ps-4 pe-4 pb-3 pb-md-4'
                 ),
                 # City information
                 dbc.Col(
@@ -680,7 +685,7 @@ footer = html.Footer(
                     ],
                     md = 6,
                     style = {'font-size' : '0.75rem'},
-                    class_name = 'md-6 p-4'
+                    class_name = 'md-6 pt-3 ps-4 pe-4 pb-4 pt-md-4'
                 )
             ],
             class_name = 'g-0'
