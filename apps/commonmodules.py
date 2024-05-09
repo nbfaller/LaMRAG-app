@@ -52,17 +52,20 @@ def cm_opensidebar(btn):
         Output('cm_navbar_col_burger', 'class_name')
     ],
     [
-        Input('app_currentuser_id', 'data')
+        Input('app_sessionlogout', 'data')
+    ],
+    [
+        State('app_currentuser_id', 'data')
     ],
 )
 
-def com_mod_setgreeting(user_id):
+def com_mod_setgreeting(sessionlogout, user_id):
     class_name = 'd-none'
     icon_className = None
     timegreeting = 'adlaw'
     name = None
     burger = 'd-none ms-4'
-    if user_id > 0:
+    if not(sessionlogout):
         class_name = 'd-block'
         burger = 'd-block ms-4'
         time = datetime.now(pytz.timezone('Asia/Manila')).hour
