@@ -1352,9 +1352,9 @@ layout = html.Div(
                                         ),
                                         dbc.Col(
                                             [
-                                                dcc.Dropdown(
+                                                dbc.Select(
                                                     id = 'rep_cre_input_dmgdhousetype_id',
-                                                    clearable = True,
+                                                    #clearable = True,
                                                 ),
                                                 #dbc.FormText(
                                                 #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
@@ -1503,11 +1503,32 @@ layout = html.Div(
                                         ),
                                         dbc.Col(
                                             [
-                                                dbc.Input(
-                                                    id = 'rep_cre_input_dmgdhouse_geoloc',
-                                                    disabled = True,
-                                                    #placeholder = "Pili (select)...",
-                                                    #value = 8
+                                                dbc.Row(
+                                                    [
+                                                        dbc.Col(
+                                                            dbc.Input(
+                                                                id = 'rep_cre_input_dmgdhouse_geoloc',
+                                                                #disabled = True,
+                                                                #placeholder = "Pili (select)...",
+                                                                #value = 8
+                                                            ),
+                                                            class_name = 'align-self-center col-12 col-md-6 col-lg-8 mb-2 mb-md-0'
+                                                        ),
+                                                        dbc.Col(
+                                                            dbc.Switch(
+                                                                id = 'rep_cre_input_selectgps',
+                                                                label = html.Span(
+                                                                    [
+                                                                        "Kuha-a sa GPS. ",
+                                                                        html.Small("(Use GPS.)", className = 'text-muted')
+                                                                    ]
+                                                                ),
+                                                                value = False,
+                                                                class_name = 'mb-0'
+                                                            ),
+                                                            class_name = 'align-self-center col-12 col-md-6 col-lg-4 mb-2 mb-md-0'
+                                                        )
+                                                    ]
                                                 )
                                             ],
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
@@ -1861,51 +1882,39 @@ rep_cre_url_pathname = '/reports/create'
         Output('rep_cre_geoloc', 'update_now'),
     ],
     [
-        Input('url', 'pathname'),
+        Input('rep_cre_input_selectgps', 'value'),
     ]
 )
 
-def rep_cre_geolocrefresh(pathname):
-    if pathname == '/reports/create': return [True]
+def rep_cre_geolocrefresh(selectgps):
+    if selectgps: return [True]
     else: return [False]
 
 # Callback for setting URL links of hyperlinks for GPS location
 @app.callback(
     [
-        Output('rep_cre_geoloc_loc_war', 'href'),
-        Output('rep_cre_geoloc_loc_en', 'href'),
         Output('rep_cre_input_dmgdhouse_geoloc', 'value'),
-        #Output('rep_cre_input_time_hh', 'value'),
-        #Output('rep_cre_input_time_mm', 'value'),
-        #Output('rep_cre_input_time_ss', 'value'),
-        #Output('rep_cre_input_time_ampm', 'value')
+        Output('rep_cre_input_dmgdhouse_geoloc', 'disabled'),
     ],
     [
-        Input('rep_cre_geoloc', 'position'),
-        Input('rep_cre_geoloc', 'local_date')
-    ]
+        Input('rep_cre_input_selectgps', 'value'),
+    ],
+    [
+        State('rep_cre_geoloc', 'position'),
+        State('rep_cre_geoloc', 'local_date')
+    ],
+    prevent_initial_call = True
 )
 
-def rep_cre_geolocset(pos, date):
-    href = None
-    #hh = None
-    #mm = None
-    #ss = None
-    #ampm = None
+def rep_cre_geolocset(selectgps, pos, date):
     geoloc = None
-    if pos:
+    disabled = False
+    if selectgps:
         lat = pos['lat']
         lon = pos ['lon']
         geoloc = '%s, %s' % (lat, lon)
-        href = 'https://www.google.com/maps/place/%s,%s' % (lat, lon)
-    #if date:
-    #    ampm = date.split(', ')[1].split(' ')[1]
-    #    hh = date.split(', ')[1].split(' ')[0].split(':')[0]
-    #    mm = date.split(', ')[1].split(' ')[0].split(':')[1]
-    #    ss = date.split(', ')[1].split(' ')[0].split(':')[2]
-    return [href, href, geoloc,
-        #curdate, hh, mm, ss, ampm
-    ]
+        disabled = True
+    return [geoloc, disabled]
 
 # Callback for populating basic dropdown menus and descriptions
 @app.callback(
