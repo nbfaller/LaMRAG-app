@@ -266,6 +266,9 @@ def com_home_loginprocess(btn, sessionlogout_time,
         usertype_id = -1
     else:
         raise PreventUpdate
+    # Maybe move this inside the if statement to
+    # avoid updating app_currentuser_id every time
+    # this callback is triggered?
     return [alert_open, alert_row_class, alert_col_text, user_id, usertype_id]
 
 # Callback for routing login

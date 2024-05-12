@@ -673,7 +673,7 @@ def eve_cre_confirmcreation(btn, type_id, brgy, selectallbrgys, startdate):
     ],
     [
         # Password
-        Input('eve_cre_input_password', 'value'),
+        State('eve_cre_input_password', 'value'),
         # Event details
         State('eve_cre_input_type_id', 'value'),
         State('eve_cre_input_name', 'value'),

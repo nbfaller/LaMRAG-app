@@ -99,7 +99,6 @@ def displaypage(pathname, sessionlogout, user_id, usertype_id):
                     returnlayout = sandbox.layout
                 else:
                     returnlayout = error.layout
-            
             # Decide sessionlogout value
             logout_conditions = [
                 pathname in ['/', '/logout'],

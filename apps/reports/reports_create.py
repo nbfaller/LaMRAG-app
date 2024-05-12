@@ -4,6 +4,7 @@ from dash import dcc, html, dash_table, callback
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
+import hashlib
 # App definition
 from app import app
 from apps import dbconnect as db
@@ -28,6 +29,10 @@ footer_m = 'mt-3'
 layout = html.Div(
     [
         dcc.Geolocation(id = 'rep_cre_geoloc'),
+        # Use this dcc.Store to facilitate URL redirection
+        # once a new report is made, similar to logging in
+        dcc.Store(id = 'rep_cre_newreport_id', data = 1),
+        dcc.Store(id = 'rep_cre_newversion_id', data = 1),
         dbc.Row(
             [
                 dbc.Col(
@@ -209,6 +214,7 @@ layout = html.Div(
                                                     [
                                                         dcc.Dropdown(
                                                             id = 'rep_cre_input_reporttype_id',
+                                                            #required = True,
                                                             clearable = True,
                                                         ),
                                                         dbc.FormText(
@@ -243,6 +249,7 @@ layout = html.Div(
                                                             type = 'number',
                                                             min = '1',
                                                             invalid = False,
+                                                            required = True
                                                         ),
                                                         #dbc.FormText(
                                                         #    "Alayon pagbutang san numero san purok kun diin ini natabó. (Please input the purok number where this incident occurred.)",
@@ -3041,6 +3048,326 @@ def rep_cre_confirmcreation(
                 # Report type 5 (Damaged infrastructure) input validation
                 infratype_invalid, infraclass_invalid, dmgdinfra_description_invalid,
                 dmgdinfra_qty_invalid, dmgdinfra_qtyunit_invalid, dmgdinfra_type_invalid,
+            ]
+        else: raise PreventUpdate
+    else: raise PreventUpdate
+
+# Callback for creating a new report
+@app.callback(
+    [
+        # Alert
+        Output('rep_cre_alert_passwordvalidation', 'is_open'),
+        Output('rep_cre_alert_passwordvalidation', 'class_name'),
+        Output('rep_cre_alert_passwordvalidation', 'color'),
+        Output('rep_cre_alert_passwordvalidation_col_text', 'children'),
+        # Input validation
+        Output('rep_cre_input_password', 'invalid'),
+        Output('rep_cre_input_password', 'valid'),
+        # New report and version id
+        Output('rep_cre_newreport_id', 'data'),
+        Output('rep_cre_newversion_id', 'data')
+    ],
+    [
+        Input('rep_cre_btn_confirm', 'n_clicks')
+    ],
+    [
+        # Password
+        State('rep_cre_input_password', 'value'),
+        # User details
+        State('app_currentuser_id', 'data'),
+        # App geolock details
+        State('app_region_id', 'data'),
+        State('app_province_id', 'data'),
+        State('app_citymun_id', 'data'),
+        # Common information
+        State('rep_cre_input_brgy_id', 'value'),
+        State('rep_cre_input_event_id', 'value'),
+        State('rep_cre_input_reporttype_id', 'value'),
+        State('rep_cre_input_purok', 'value'),
+        State('rep_cre_input_date', 'date'),
+            # OPTIONAL
+            State('rep_cre_input_time_hh', 'value'),
+            State('rep_cre_input_time_mm', 'value'),
+            State('rep_cre_input_time_ss', 'value'),
+            State('rep_cre_input_time_ampm', 'value'),
+            State('rep_cre_input_remarks', 'value'),
+        # Report type 1: Related incidents
+        State('rep_cre_input_relinctype_id', 'value'),
+        State('rep_cre_input_relinc_qty', 'value'),
+        State('rep_cre_input_relincstatus_id', 'value'),
+            # OPTIONAL
+            State('rep_cre_input_relinc_description', 'value'),
+            State('rep_cre_input_relinc_actions', 'value'),
+        # Report type 2: Casualty
+        State('rep_cre_input_casualtytype_id', 'value'),
+        State('rep_cre_input_casualty_fname', 'value'),
+        State('rep_cre_input_casualty_lname', 'value'),
+        State('rep_cre_input_casualty_age', 'value'),
+        State('rep_cre_input_casualty_assignedsex_id', 'value'),
+        State('rep_cre_input_casualty_infosource', 'value'),
+        State('rep_cre_input_casualtystatus_id', 'value'),
+            # OPTIONAL
+            State('rep_cre_input_casualty_mname', 'value'),
+            State('rep_cre_input_casualty_region_id', 'value'),
+            State('rep_cre_input_casualty_province_id', 'value'),
+            State('rep_cre_input_casualty_citymun_id', 'value'),
+            State('rep_cre_input_casualty_brgy_id', 'value'),
+            State('rep_cre_input_casualty_street', 'value'),
+            State('rep_cre_input_casualty_cause', 'value'),
+        # Report type 3: Public utility status
+        #State('rep_cre_input_pubutiltype_id', 'value'), # Not needed in database
+        State('rep_cre_input_pubutil_id', 'value'),
+        State('rep_cre_input_pubutilinttype_id', 'value'),
+            # OPTIONAL
+            State('rep_cre_input_pubutilint_res_date', 'date'),
+            State('rep_cre_input_pubutilint_res_time_hh', 'value'),
+            State('rep_cre_input_pubutilint_res_time_mm', 'value'),
+            State('rep_cre_input_pubutilint_res_time_ss', 'value'),
+            State('rep_cre_input_pubutilint_res_time_ampm', 'value'),
+        # Report type 4: Damaged house
+        State('rep_cre_input_dmgdhousetype_id', 'value'),
+        State('rep_cre_input_dmgdhouse_fname', 'value'),
+        State('rep_cre_input_dmgdhouse_lname', 'value'),
+        State('rep_cre_input_dmgdhouse_age', 'value'),
+        State('rep_cre_input_dmgdhouse_assignedsex_id', 'value'),
+        State('rep_cre_input_dmgdhouse_loc', 'value'),
+            # OPTIONAL
+            State('rep_cre_input_dmgdhouse_mname', 'value'),
+            State('rep_cre_input_selectgps', 'value'),
+            State('rep_cre_geoloc', 'position'),
+        # Report type 5: Damaged infrastructure
+        State('rep_cre_input_infratype_id', 'value'),
+        State('rep_cre_input_infraclass_id', 'value'),
+        State('rep_cre_input_dmgdinfra_description', 'value'),
+        State('rep_cre_input_dmgdinfra_qty', 'value'),
+        State('rep_cre_input_dmgdinfra_qtyunit_id', 'value'),
+        State('rep_cre_label_dmgdinfratype_id', 'value'),
+            # OPTIONAL
+            State('rep_cre_input_dmgdinfra_cost', 'value'),
+    ]
+)
+
+def rep_cre_submitcreation(
+    btn, password,
+    user_id, region_id, province_id, citymun_id,
+
+    # Common information
+    brgy_id, event, type, purok, date,
+        # OPTIONAL
+        hh, mm, ss, ampm, remarks,
+    
+    # Report type 1: Related incidents
+    relinc_type, relinc_qty, relinc_status,
+        # OPTIONAL
+        relinc_description, relinc_actions,
+    
+    # Report type 2: Casualty
+    casualty_type, casualty_fname, casualty_lname,
+    casualty_age, casualty_assignedsex,
+    casualty_infosource, casualty_status,
+        # OPTIONAL, no need for input validation
+        casualty_mname, casualty_region, casualty_province, casualty_citymun, casualty_brgy, casualty_street,
+        casualty_cause,
+    
+    # Report type 3: Public utility status
+    #pubutiltype, # Not needed
+    pubutil_id, pubutilint_type,
+        # OPTIONAL
+        pubutilres_date, pubutilres_time_hh, pubutilres_time_mm, pubutilres_time_ss, pubutilres_time_ampm,
+    
+    # Report type 4: Damaged house
+    dmgdhouse_type, dmgdhouse_fname, dmgdhouse_lname,
+    dmgdhouse_age, dmgdhouse_assignedsex,
+    dmgdhouse_loc,
+        # OPTIONAL
+        dmgdhouse_mname, dmgdhouse_selectgps, geoloc_pos,
+    
+    # Report type 5: Damaged infrastructure
+    infratype, infraclass, dmgdinfra_description, dmgdinfra_qty, dmgdinfra_qtyunit,
+    dmgdinfra_type,
+        # OPTIONAL
+        dmgdinfra_cost,
+):
+    ctx = dash.callback_context
+    if ctx.triggered:
+        eventid = ctx.triggered[0]['prop_id'].split('.')[0]
+        if eventid == 'rep_cre_btn_confirm' and btn:
+            # Alert
+            alert_open = False
+            alert_class_name = None
+            alert_color = None
+            alert_col_text = None
+            # Password validation
+            password_invalid = False
+            password_valid = False
+            # New report id
+            newreport_id = 1
+            newversion_id = 1
+
+            if not(password):
+                alert_open = True
+                alert_class_name = 'mb-3'
+                alert_color = 'warning'
+                password_invalid = True
+                alert_col_text = [
+                    "Alayon pagbutang san imo password.",
+                    html.Br(),
+                    html.Small(
+                        "(Please enter your password.)",
+                        className = 'text-muted'
+                    ),
+                ]
+            else:
+                sql = """SELECT username FROM users.user
+                WHERE id = %s AND password = %s;"""
+                encrypt_string = lambda string: hashlib.sha256(string.encode('utf-8')).hexdigest()
+                values = [user_id, encrypt_string(password)]
+                cols = ['username']
+                df = db.querydatafromdatabase(sql, values, cols)
+                if df.shape[0]:
+                    # Get index of latest report for this event (not overall index or report serial number)
+                    event_report_id = 1
+                    sql = """SELECT event_report_id FROM reports.report WHERE event_id = %s ORDER BY id DESC LIMIT 1;"""
+                    values = [event]
+                    cols = ['event_report_id']
+                    df = db.querydatafromdatabase(sql, values, cols)
+                    if df.shape[0] > 0: event_report_id = int(df['event_report_id'][0]) + 1
+
+                    # Actual report creation
+                    sql = """INSERT INTO reports.report(event_id, event_report_id,
+                    region_id, province_id, citymun_id, brgy_id,
+                    type_id, purok)
+                    VALUES(%s, %s,
+                    %s, %s, %s, %s,
+                    %s, %s);"""
+                    values = [event, event_report_id, region_id, province_id, citymun_id, brgy_id, type, purok]
+                    db.modifydatabase(sql, values)
+
+                    # Get index of latest report
+                    sql = """SELECT id FROM reports.report ORDER BY id DESC LIMIT 1;"""
+                    values = []
+                    cols = ['id']
+                    newreport_id = int(db.querydatafromdatabase(sql, values, cols)['id'][0])
+
+                    # Setting up time
+                    time = None
+                    if hh and mm and ss and ampm:
+                        if hh == 12:
+                            hh = 0
+                        if ampm == 'PM':
+                            hh += 12
+                        time = '{:02d}'.format(hh) + '{:02d}'.format(mm) + '{:02d}'.format(ss) + '+08'
+
+                    # Get index of latest report version
+                    sql = """SELECT id FROM reports.reportversion WHERE report_id = %s ORDER BY id DESC LIMIT 1;"""
+                    values = [newreport_id]
+                    cols = ['id']
+                    df = db.querydatafromdatabase(sql, values, cols)
+                    if df.shape[0] > 0: newversion_id = int(df['id'][0]) + 1
+
+                    # New version creation
+                    sql = """INSERT INTO reports.reportversion(id, report_id, occurrence_date, occurrence_time,
+                    remarks, creator_id) VALUES(%s, %s, %s, %s, %s, %s)"""
+                    values = [newversion_id, newreport_id, date, time, remarks, user_id]
+                    db.modifydatabase(sql, values)
+
+                    # Creation of report-type specific table rows
+                    if type == 1:
+                        sql = """INSERT INTO reports.relinc(report_id, version_id,
+                        type_id, qty, description, actions_taken, status_id)
+                        VALUES(%s, %s, %s, %s, %s, %s, %s);"""
+                        values = [
+                            newreport_id, newversion_id,
+                            relinc_type, relinc_qty, relinc_description, relinc_actions, relinc_status
+                        ]
+                        db.modifydatabase(sql, values)
+                    elif type == 2:
+                        sql = """INSERT INTO reports.casualty(report_id, version_id,
+                        type_id, fname, mname, lname, age, assignedsex_id,
+                        region_id, province_id, citymun_id, brgy_id, street,
+                        cause, infosource, status_id)
+                        VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"""
+                        values = [
+                            newreport_id, newversion_id,
+                            casualty_type, encrypt_string(casualty_fname), encrypt_string(casualty_mname), encrypt_string(casualty_lname), casualty_age, casualty_assignedsex,
+                            casualty_region, casualty_province, casualty_citymun, casualty_brgy, encrypt_string(casualty_street),
+                            casualty_cause, casualty_infosource, casualty_status
+                        ]
+                        db.modifydatabase(sql, values)
+                    elif type == 3:
+                        # Setting up restoration time
+                        pubutilres_time = None
+                        if pubutilres_time_hh and pubutilres_time_mm and pubutilres_time_ss and pubutilres_time_ampm:
+                            if pubutilres_time_hh == 12:
+                                pubutilres_time_hh = 0
+                            if pubutilres_time_ampm == 'PM':
+                                pubutilres_time_hh += 12
+                            pubutilres_time = '{:02d}'.format(pubutilres_time_hh) + '{:02d}'.format(pubutilres_time_mm) + '{:02d}'.format(pubutilres_time_ss) + '+08'
+                        sql = """INSERT INTO reports.pubutilint(report_id, version_id,
+                        pubutil_id, inttype_id, int_date, int_time, res_date, res_time)
+                        VALUES(%s, %s, %s, %s, %s, %s, %s, %s);"""
+                        values = [
+                            newreport_id, newversion_id,
+                            pubutil_id, pubutilint_type, date, time, pubutilres_date, pubutilres_time
+                        ]
+                        db.modifydatabase(sql, values)
+                    elif type == 4:
+                        dmgdhouse_loc_gps = None
+                        if dmgdhouse_selectgps:
+                            dmgdhouse_loc_gps = (geoloc_pos['lat'], geoloc_pos['lon'])
+                        sql = """INSERT INTO reports.dmgdhouse(report_id, version_id,
+                        type_id, fname, mname, lname, age, assignedsex_id,
+                        loc_text, loc_gps)
+                        VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"""
+                        values = [
+                            newreport_id, newversion_id,
+                            dmgdhouse_type, encrypt_string(dmgdhouse_fname), encrypt_string(dmgdhouse_mname), encrypt_string(dmgdhouse_lname), dmgdhouse_age, dmgdhouse_assignedsex,
+                            dmgdhouse_loc, dmgdhouse_loc_gps
+                        ]
+                        db.modifydatabase(sql, values)
+                    elif type == 5:
+                        sql = """INSERT INTO reports.dmgdinfra(report_id, version_id,
+                        infatype_id, infraclass_id, infraname,
+                        qty, qtyunit_id, infracost,
+                        dmgtype_id)
+                        VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s);"""
+                        values = [
+                            newreport_id, newversion_id,
+                            infratype, infraclass, dmgdinfra_description,
+                            dmgdinfra_qty, dmgdinfra_qtyunit, dmgdinfra_cost,
+                            dmgdinfra_type
+                        ]
+                        db.modifydatabase(sql, values)
+
+                    alert_open = True
+                    alert_class_name = 'mb-3'
+                    alert_color = 'success'
+                    password_valid = True
+                    alert_col_text = [
+                        "Nahimo na an report.",
+                        html.Br(),
+                        html.Small(
+                            "(Report submitted.)",
+                            className = 'text-muted'
+                        ),
+                    ]
+                else:
+                    alert_open = True
+                    alert_class_name = 'mb-3'
+                    alert_color = 'warning'
+                    password_invalid = True
+                    alert_col_text = [
+                        "Diri sakto an nabutang nga password.",
+                        html.Br(),
+                        html.Small(
+                            "(Incorrect password.)",
+                            className = 'text-muted'
+                        ),
+                    ]
+            return [
+                alert_open, alert_class_name, alert_color, alert_col_text,
+                password_invalid, password_valid,
+                newreport_id, newversion_id
             ]
         else: raise PreventUpdate
     else: raise PreventUpdate
