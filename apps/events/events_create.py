@@ -6,7 +6,7 @@ from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import hashlib
 # App definition
-from application import application as app
+from app import application as app
 from apps import dbconnect as db
 
 tag_required = html.Sup("*", className = 'text-danger')

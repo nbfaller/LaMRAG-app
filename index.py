@@ -7,7 +7,7 @@ from dash.exceptions import PreventUpdate
 # For opening browser
 import webbrowser
 # App definition
-from application import application as app
+from app import application as app
 from apps import dashboard, home, commonmodules as cm, error, sandbox
 from apps.users import users_register
 from apps.reports import reports_create

@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 # App definition
-from application import application as app
+from app import application as app
 
 error_width = 'auto'
 error_justify = 'left'
