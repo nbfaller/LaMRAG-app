@@ -7,7 +7,7 @@ from dash.exceptions import PreventUpdate
 # Other libraries
 import hashlib
 # App definition
-from app import app
+from application import app
 from apps import dbconnect as db
 
 # Default margins and spacing settings

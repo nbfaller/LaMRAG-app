@@ -7,7 +7,7 @@ from dash.exceptions import PreventUpdate
 from datetime import datetime
 import pytz
 # App definition
-from app import app
+from application import app
 from apps import dbconnect as db
 
 # Default margins and spacing settings

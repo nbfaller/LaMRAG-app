@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 # App definition
-from app import app
+from application import app
 from apps import dbconnect as db
 
 tag_required = html.Sup("*", className = 'text-danger')

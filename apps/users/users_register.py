@@ -10,7 +10,7 @@ from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import hashlib
 # App definition
-from app import app
+from application import app
 from apps import dbconnect as db
 
 usr_reg_tag_required = html.Sup("*", className = 'text-danger')
