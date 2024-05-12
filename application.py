@@ -18,6 +18,8 @@ application = dash.Dash(
     ]
 )
 
+app = application
+
 # Make sure that the allbacks are not activated when input elements enter the layout
 application.config.suppress_callback_exceptions = True
 # Get CSS from a local folder
