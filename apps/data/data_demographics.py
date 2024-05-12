@@ -8,7 +8,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio
 # App definition
-from app import application as app
+from application import application as app
 from apps import dbconnect as db
 
 tag_required = html.Sup("*", className = 'text-danger')
