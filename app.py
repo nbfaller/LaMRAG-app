@@ -6,9 +6,12 @@ import logging
 # Create the application object (stored in app variable) along with CSS stylesheets
 app = dash.Dash(
     __name__,
+    assets_folder = 'static',
+    assets_url_path = 'static',
+    include_assets_files = True,
     external_stylesheets = [
-        "assets/bootstrap.css",
-        "assets/dcc.css",
+        "static/bootstrap.css",
+        "static/dcc.css",
         dbc.themes.BOOTSTRAP,
         dbc.icons.BOOTSTRAP,
         dbc.icons.FONT_AWESOME
