@@ -3,7 +3,7 @@ from dash import dcc, html
 import dash_bootstrap_components as dbc
 import logging
 
-# Create the application object (stored in app variable) along with CSS stylesheets
+# Create the app object (stored in app variable) along with CSS stylesheets
 app = dash.Dash(
     __name__,
     assets_folder = 'static',
@@ -18,16 +18,14 @@ app = dash.Dash(
     ]
 )
 
-application = app
-
 # Make sure that the allbacks are not activated when input elements enter the layout
-application.config.suppress_callback_exceptions = True
+app.config.suppress_callback_exceptions = True
 # Get CSS from a local folder
-application.css.config.serve_locally = True
+app.css.config.serve_locally = True
 # Enables your app to run offline
-application.scripts.config.serve_locally = True
+app.scripts.config.serve_locally = True
 # Set app title that appears in your browser tab
-application.title = "LáMRAG • Local Management Platform for Risk Analytics & Governance"
+app.title = "LáMRAG • Local Management Platform for Risk Analytics & Governance"
 # These two lines reduce the logs on your terminal so you
 # could debug better when you encounter errors in the app.
 log = logging.getLogger('werkzeug')
