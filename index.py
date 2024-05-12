@@ -7,7 +7,7 @@ from dash.exceptions import PreventUpdate
 # For opening browser
 import webbrowser
 # App definition
-from application import app as application
+from application import application as app
 from apps import dashboard, home, commonmodules as cm, error, sandbox
 from apps.users import users_register
 from apps.reports import reports_create
@@ -20,7 +20,7 @@ CONTENT_STYLE = {
     'padding' : '1em 1em'
 }
 
-application.layout = html.Div(
+app.layout = html.Div(
     [
         html.Meta(
             name = "theme-color",
@@ -54,7 +54,7 @@ application.layout = html.Div(
 )
 
 # Callback for displaying page
-@application.callback(
+@app.callback(
     [
         Output('page-content', 'children'),
         Output('app_sessionlogout', 'data')
@@ -114,4 +114,4 @@ def displaypage(pathname, sessionlogout, user_id, usertype_id):
 
 if __name__ == '__main__':
     webbrowser.open('http://127.0.0.1:8050', new = 0, autoraise = True)
-    application.run_server(debug = False)
+    app.run_server(debug = False)
