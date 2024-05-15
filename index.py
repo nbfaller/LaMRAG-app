@@ -12,7 +12,7 @@ from apps import dashboard, home, commonmodules as cm, error, sandbox
 from apps.users import users_register
 from apps.reports import reports_create
 from apps.events import events_create
-from apps.data import data_barangays
+from apps.data import data_barangays, data_enable
 
 # Layout definition
 CONTENT_STYLE = {
@@ -94,6 +94,8 @@ def displaypage(pathname, sessionlogout, user_id, usertype_id):
                     returnlayout = events_create.layout
                 elif pathname == '/data/barangays':
                     returnlayout = data_barangays.layout
+                elif pathname == '/data/enable':
+                    returnlayout = data_enable.layout
                 # SANDBOX PAGE
                 elif pathname == '/sandbox':
                     returnlayout = sandbox.layout
@@ -113,5 +115,5 @@ def displaypage(pathname, sessionlogout, user_id, usertype_id):
     else: raise PreventUpdate
 
 if __name__ == '__main__':
-    #webbrowser.open('http://127.0.0.1:8050', new = 0, autoraise = True)
+    webbrowser.open('http://127.0.0.1:8050', new = 0, autoraise = True)
     app.run(debug = False)

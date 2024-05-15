@@ -212,7 +212,7 @@ def com_home_loginprocess(btn, sessionlogout_time,
                     WHERE username = %s AND password = %s AND is_active;"""
                 # We match the encrypted input to the encrypted password in the database
                 encrypt_string = lambda string: hashlib.sha256(string.encode('utf-8')).hexdigest()
-                values = [username, encrypt_string(password)]
+                values = [encrypt_string(username), encrypt_string(password)]
                 cols = ['id', 'usertype_id']
                 df = db.querydatafromdatabase(sql, values, cols)
                 if df.shape[0]: # If the query returns rows

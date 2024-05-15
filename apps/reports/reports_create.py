@@ -496,7 +496,7 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Kabutangan san insidente", tag_required, html.Br(),
+                                                            "Kamutangan san insidente", tag_required, html.Br(),
                                                             html.Small(" (Status)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_relincstatus_id',
@@ -915,7 +915,7 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Kabutangan san pagprubar", tag_required, html.Br(),
+                                                            "Kamutangan san pagprubar", tag_required, html.Br(),
                                                             html.Small(" (Validation status)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_casualtystatus_id',
@@ -955,7 +955,7 @@ layout = html.Div(
                                                         html.H4(
                                                             [
                                                                 html.I(className = 'bi bi-gear-wide-connected me-2'),
-                                                                "Kabutangan san panpubliko nga utilidad",
+                                                                "Kamutangan san panpubliko nga utilidad",
                                                                 #html.Br(),
                                                                 html.Small(" (Status of public utilities)", className = 'text-muted')
                                                             ]
@@ -1601,7 +1601,7 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Kantidad san narubat", tag_required, html.Br(),
+                                                            "Kadamo san narubat", tag_required, html.Br(),
                                                             html.Small(" (Quantity of damage)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_dmgdinfra_qty',
@@ -1638,7 +1638,7 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Presyo san narubat", #tag_required,
+                                                            "Kantidad san narubat", #tag_required,
                                                             html.Br(),
                                                             html.Small(" (Cost of damage)", className = 'text-muted')
                                                         ],
@@ -1678,7 +1678,7 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Kabutangan", tag_required, html.Br(),
+                                                            "Kamutangan", tag_required, html.Br(),
                                                             html.Small(" (Status)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_dmgdinfratype_id',
@@ -1990,6 +1990,7 @@ def rep_cre_populatedropdowns(pathname, region, province, citymun, brgy):
         sql = """SELECT event.name AS label, event.id AS value
         FROM events.event
         INNER JOIN events.eventbrgy ON event.id = eventbrgy.event_id
+        LEFT JOIN utilities.eventtype ON event.type_id = eventtype.id
         WHERE eventbrgy.region_id = %s AND eventbrgy.province_id = %s AND eventbrgy.citymun_id = %s AND eventbrgy.brgy_id = %s;
         """
         values = [region, province, citymun, brgy]
@@ -2767,7 +2768,7 @@ def rep_cre_confirmcreation(
                             alert_span.append(
                                 html.Li(
                                     [
-                                        "Kabutangan san insidente", html.Br(),
+                                        "Kamutangan san insidente", html.Br(),
                                         html.Small(" (Status)", className = 'ms-3 text-muted'),
                                     ]
                                 )
@@ -2847,7 +2848,7 @@ def rep_cre_confirmcreation(
                             alert_span.append(
                                 html.Li(
                                     [
-                                        "Kabutangan san pagprubar", html.Br(),
+                                        "Kamutangan san pagprubar", html.Br(),
                                         html.Small(" (Validation status)", className = 'ms-3 text-muted'),
                                     ]
                                 )
@@ -3023,7 +3024,7 @@ def rep_cre_confirmcreation(
                             alert_span.append(
                                 html.Li(
                                     [
-                                        "Kabutangan", html.Br(),
+                                        "Kamutangan", html.Br(),
                                         html.Small(" (Status)", className = 'ms-3 text-muted'),
                                     ]
                                 )
@@ -3289,8 +3290,8 @@ def rep_cre_submitcreation(
                         VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"""
                         values = [
                             newreport_id, newversion_id,
-                            casualty_type, encrypt_string(casualty_fname), encrypt_string(casualty_mname), encrypt_string(casualty_lname), casualty_age, casualty_assignedsex,
-                            casualty_region, casualty_province, casualty_citymun, casualty_brgy, encrypt_string(casualty_street),
+                            casualty_type, casualty_fname, casualty_mname, casualty_lname, casualty_age, casualty_assignedsex,
+                            casualty_region, casualty_province, casualty_citymun, casualty_brgy, casualty_street,
                             casualty_cause, casualty_infosource, casualty_status
                         ]
                         db.modifydatabase(sql, values)
@@ -3321,7 +3322,7 @@ def rep_cre_submitcreation(
                         VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"""
                         values = [
                             newreport_id, newversion_id,
-                            dmgdhouse_type, encrypt_string(dmgdhouse_fname), encrypt_string(dmgdhouse_mname), encrypt_string(dmgdhouse_lname), dmgdhouse_age, dmgdhouse_assignedsex,
+                            dmgdhouse_type, dmgdhouse_fname, dmgdhouse_mname, dmgdhouse_lname, dmgdhouse_age, dmgdhouse_assignedsex,
                             dmgdhouse_loc, dmgdhouse_loc_gps
                         ]
                         db.modifydatabase(sql, values)
