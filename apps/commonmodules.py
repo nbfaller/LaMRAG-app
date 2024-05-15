@@ -6,7 +6,6 @@ from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 from datetime import datetime
 import pytz
-import hashlib
 # App definition
 from app import app
 from apps import dbconnect as db
@@ -98,7 +97,6 @@ def com_mod_setgreeting(sessionlogout, user_id):
         else:
             icon_className = 'bi bi-moon-fill me-2'
             timegreeting = "gab-i"
-        encrypt_string = lambda string: hashlib.sha256(string.encode('utf-8')).hexdigest()
         sql = """SELECT u.fname, u.livedname, u.mname, u.lname, ut.label AS usertype, u.designation AS desig, o.name AS office FROM users.user AS u
             INNER JOIN utilities.usertype AS ut ON u.usertype_id = ut.id
             INNER JOIN utilities.office AS o ON u.office_id = o.id
@@ -108,14 +106,14 @@ def com_mod_setgreeting(sessionlogout, user_id):
         df = db.querydatafromdatabase(sql, values, cols)
         if df.shape[0]:
             # Name in navbar
-            if df['livedname'][0]: name = encrypt_string(df['livedname'][0])
-            else: name = encrypt_string(df['fname'][0])
+            if df['livedname'][0]: name = df['livedname'][0]
+            else: name = df['fname'][0]
             # Fullname in dropdown header
-            if df['mname'][0]: fullname = "%s %s. %s" % (name, encrypt_string(df['mname'][0][0]), encrypt_string(df['lname'][0]))
-            else: fullname = "%s %s" % (name, encrypt_string(df['lname'][0]))
+            if df['mname'][0]: fullname = "%s %s. %s" % (name, df['mname'][0][0], df['lname'][0])
+            else: fullname = "%s %s" % (name, df['lname'][0])
             # Other details in dropdown header
             usertype = df['usertype'][0]
-            desig = encrypt_string(df['desig'][0])
+            desig = df['desig'][0]
             office = df['office'][0]
     else: raise PreventUpdate
     return [icon_className, class_name, timegreeting, name, burger, usertype, fullname, desig, office]
