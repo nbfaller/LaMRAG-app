@@ -530,7 +530,7 @@ sidebar = dbc.Offcanvas(
                     dbc.Row(
                         dbc.Col(
                             [
-                                html.I(className = 'bi bi-people me-2'),
+                                html.I(className = 'bi bi-toggle-on me-2'),
                                 "Enable community profiling"
                             ],
                             width = sidebar_btn_col_width
@@ -544,15 +544,34 @@ sidebar = dbc.Offcanvas(
                     dbc.Row(
                         dbc.Col(
                             [
-                                html.I(className = 'bi bi-people me-2'),
+                                html.I(className = 'bi bi-map me-2'),
+                                "Submit barangay profile"
+                            ],
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
+                    href = '/data/barangay/upload',
+                    external_link = True,
+                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
+                ),
+                dbc.Button(
+                    dbc.Row(
+                        dbc.Col(
+                            [
+                                html.I(className = 'bi bi-house-add me-2'),
                                 "Submit household profile"
                             ],
                             width = sidebar_btn_col_width
                         ), class_name = sidebar_btn_row_class_name
                     ),
-                    href = '/data/upload',
+                    href = '/data/household/upload',
                     external_link = True,
-                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
+                    color = 'warning', outline = True, #sidebar_btn_color,
+                    size = sidebar_btn_size,
+                    style = {
+                        'width' : '100%',
+                        'border-width' : '0px'
+                    }
                 ),
             ], className = 'mb-3',
         ),
@@ -664,9 +683,10 @@ footer = html.Footer(
                             [
                                 html.P(
                                     [
-                                        html.Small([html.I(className = 'bi bi-question-circle me-2'), "Frequently asked questions"]), html.Br(),
-                                        html.Small([html.I(className = 'bi bi-shield-lock me-2'), "Privacy policy"]), html.Br(),
-                                        html.Small([html.I(className = 'bi bi-megaphone me-2'), "Feedback form"])
+                                        html.A(html.Small([html.I(className = 'bi bi-patch-question me-2'), "Mga pirmi ginpapakiana (Frequently asked questions)"]), href = '/faq', style = hyperlink_style, target = '_blank'), html.Br(),
+                                        html.A(html.Small([html.I(className = 'bi bi-shield-lock me-2'), "Polisiya hiúnong san pribasidad (Privacy policy)"]), href = '/privacy', style = hyperlink_style, target = '_blank'), html.Br(),
+                                        html.A(html.Small([html.I(className = 'bi bi-megaphone me-2'), "Pagpaabot komento/suhestiyon (Feedback form)"]), href = '/feedback', style = hyperlink_style, target = '_blank'), html.Br(),
+                                        html.A(html.Small([html.I(className = 'bi bi-info-circle me-2'), "Hiúnong san LáMRAG (About LáMRAG)"]), href = '/about-us', style = hyperlink_style, target = '_blank')
                                     ],
                                 className = 'mb-0')
                             ], className = 'mb-3'

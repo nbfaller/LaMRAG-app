@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import hashlib
-import datetime
+from datetime import datetime, timedelta
 # App definition
 from app import app
 from apps import dbconnect as db
@@ -128,14 +128,8 @@ layout = html.Div(
                                                         #    class_name = ftext_m
                                                         #),
                                                     ],
-                                                    class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
-                                                )
-                                            ], class_name = row_m,
-                                            id = 'dat_ena_row_startdate'
-                                        ),
-                                        # End date
-                                        dbc.Row(
-                                            [
+                                                    class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
+                                                ),
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
@@ -166,10 +160,10 @@ layout = html.Div(
                                                         #    class_name = ftext_m
                                                         #),
                                                     ],
-                                                    class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
+                                                    class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 )
                                             ], class_name = row_m,
-                                            id = 'dat_ena_row_enddate'
+                                            id = 'dat_ena_row_date'
                                         ),
                                         # Participating barangays
                                         dbc.Row(
@@ -481,8 +475,8 @@ def dat_ena_populatedropdowns(pathname, region, province, citymun):
         dropdowns.append(brgys)
 
         # Minimum date
-        dropdowns.append(datetime.date.today())
-        dropdowns.append(datetime.date.today()) # Date tomorrow
+        dropdowns.append(datetime.today())
+        dropdowns.append(datetime.today() + timedelta(1)) # Date tomorrow
 
         return dropdowns
     else: raise PreventUpdate
