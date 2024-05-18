@@ -29,7 +29,8 @@ footer_m = 'mt-3'
 
 layout = html.Div(
     [
-        dcc.Store(id = 'dat_bar_hou_sto_rescount', data = 0),
+        dcc.Geolocation(id = 'dat_hou_upl_geoloc'),
+        dcc.Store(id = 'dat_hou_upl_sto_rescount', data = 0),
         dbc.Row(
             [
                 dbc.Col(
@@ -139,7 +140,7 @@ layout = html.Div(
                                                             "Purok", tag_required, html.Br(),
                                                             #html.Small(" (Purok)", className = 'text-muted')
                                                         ],
-                                                        id = 'dat_bar_label_purok',
+                                                        id = 'dat_hou_upl_label_purok',
                                                         class_name = label_m
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
@@ -147,7 +148,7 @@ layout = html.Div(
                                                 dbc.Col(
                                                     [
                                                         dbc.Input(
-                                                            id = 'dat_bar_input_purok',
+                                                            id = 'dat_hou_upl_input_purok',
                                                             type = 'number',
                                                             min = 1,
                                                             invalid = False,
@@ -219,7 +220,7 @@ layout = html.Div(
                                                             "Kadamo san mga na-istar", tag_required, html.Br(),
                                                             html.Small(" (Number of household residents)", className = 'text-muted')
                                                         ],
-                                                        id = 'dat_bar_label_rescount',
+                                                        id = 'dat_hou_upl_label_rescount',
                                                         class_name = label_m
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
@@ -227,7 +228,7 @@ layout = html.Div(
                                                 dbc.Col(
                                                     [
                                                         dbc.Input(
-                                                            id = 'dat_bar_input_rescount',
+                                                            id = 'dat_hou_upl_input_rescount',
                                                             type = 'number',
                                                             #value = 1,
                                                             min = 1,
@@ -256,7 +257,7 @@ layout = html.Div(
                                                     [
                                                         html.H4(
                                                             [
-                                                                html.I(className = 'bi bi-person-vcard me-2'),
+                                                                html.I(className = 'bi bi-person-fill me-2'),
                                                                 "Mga na-istar sini nga balay",
                                                                 #html.Br(),
                                                                 html.Small(" (Household residents)", className = 'text-muted')
@@ -271,8 +272,32 @@ layout = html.Div(
                                         ),
                                     ],
                                     id = 'dat_hou_upl_div_residents',
-                                    className = row_m + ' d-none',
+                                    className = div_m + ' d-none',
                                     #style = {'display' : 'none'}
+                                ),
+                                # Submit button
+                                html.Div(
+                                    [
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Button(
+                                                        [
+                                                            html.I(className = 'bi bi-cloud-upload-fill me-2'),
+                                                            "Submit profile"
+                                                        ],
+                                                        id = 'dat_hou_upl_btn_submit',
+                                                        style = {'width': ' 100%'},
+                                                        type = 'submit'
+                                                    ),
+                                                    class_name = 'align-self-center col-md-3 mb-2'
+                                                )
+                                            ],
+                                            class_name = 'justify-content-end'
+                                        )
+                                    ],
+                                    id = 'dat_hou_upl_div_submit',
+                                    className = footer_m + 'd-none'
                                 )
                             ]
                         )
@@ -281,7 +306,113 @@ layout = html.Div(
                 )
             ],
             class_name = 'justify-content-center'
-        )
+        ),
+        dbc.Modal(
+            [
+                dbc.Form(
+                    [
+                        dbc.ModalBody(
+                            [
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.H4("Confirm profile submission"),
+                                                html.P(
+                                                    [
+                                                        """Alayon pagbutang san imo password para makumpirma an pagsumite sini nga profile.
+                                                        Alayon liwat pagseguro nga sakto an ngatanan nga impormasyon nga ginbutang.""",
+                                                        html.Br(),
+                                                        html.Small(
+                                                            """(Please enter your password to confirm the submission of this profile.
+                                                            Also, please ensure that all information to be submitted is correct.)
+                                                            """,
+                                                            className = 'text-muted'
+                                                        )
+                                                    ], className = p_m
+                                                ),
+                                            ]
+                                        )
+                                    ], class_name = 'mb-3'
+                                ),
+                                #html.Hr(),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                dbc.Alert(
+                                                    dbc.Row(
+                                                        [
+                                                            dbc.Col(
+                                                                html.I(className = 'bi bi-exclamation-circle-fill me-2'),
+                                                                width = 'auto',
+                                                                class_name = alert_i_m
+                                                            ),
+                                                            dbc.Col(
+                                                                id = 'dat_hou_upl_alert_passwordvalidation_col_text'
+                                                            )
+                                                        ]
+                                                    ),
+                                                    id = 'dat_hou_upl_alert_passwordvalidation',
+                                                    is_open = False,
+                                                    color = 'warning',
+                                                    class_name = label_m,
+                                                    dismissable = True,
+                                                    #fade = True,
+                                                )
+                                            ]
+                                        )
+                                    ]
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                dbc.Input(
+                                                    type = 'password',
+                                                    id = 'dat_hou_upl_input_password',
+                                                    placeholder = ['Enter password'],
+                                                    invalid = False
+                                                ),
+                                            ]
+                                        )
+                                    ], class_name = row_m
+                                ),
+                            ],
+                            id = 'dat_hou_upl_modal_confirm_body'
+                        ),
+                        dbc.ModalFooter(
+                            [
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
+                                                    html.I(className = 'bi bi-check-circle-fill me-2'),
+                                                    "I-kumpirma (Confirm)"
+                                                ],
+                                                id = 'dat_hou_upl_btn_confirm',
+                                                style = {'width': ' 100%'},
+                                                type = 'submit'
+                                            ),
+                                            class_name = 'align-self-center col-12 col-md-auto'
+                                        )
+                                    ],
+                                    class_name = 'justify-content-end'
+                                )
+                            ],
+                            id = 'dat_hou_upl_modal_confirm_footer'
+                        )
+                    ]
+                )
+            ],
+            id = 'dat_hou_upl_modal_confirm',
+            is_open = False,
+            centered = True,
+            scrollable = True,
+            backdrop = True,
+            #size = 'lg',
+        ),
     ]
 )
 
@@ -290,17 +421,57 @@ dat_hou_upl_pathname = '/data/household/upload'
 # Callback for changing number of household residents
 @app.callback(
     [
-        Output('dat_bar_hou_sto_rescount', 'data')
+        Output('dat_hou_upl_sto_rescount', 'data')
     ],
     [
-        Input('dat_bar_input_rescount', 'value')
+        Input('dat_hou_upl_input_rescount', 'value')
     ]
 )
 
 def dat_hou_upl_setrescount(count):
     return [count]
 
-# # Callback for populating basic dropdown menus
+# Callback for recording GPS location
+@app.callback(
+    [
+        Output('dat_hou_upl_geoloc', 'update_now'),
+    ],
+    [
+        Input('dat_hou_upl_input_selectgps', 'value'),
+    ]
+)
+
+def dat_hou_upl_geolocrefresh(selectgps):
+    if selectgps: return [True]
+    else: return [False]
+
+# Callback for setting the current GPS location
+@app.callback(
+    [
+        Output('dat_hou_upl_input_loc', 'value'),
+        Output('dat_hou_upl_input_loc', 'disabled'),
+    ],
+    [
+        Input('dat_hou_upl_input_selectgps', 'value'),
+    ],
+    [
+        State('dat_hou_upl_geoloc', 'position'),
+        State('dat_hou_upl_geoloc', 'local_date')
+    ],
+    prevent_initial_call = True
+)
+
+def dat_hou_upl_geolocset(selectgps, pos, date):
+    geoloc = None
+    disabled = False
+    if selectgps and pos:
+        lat = pos['lat']
+        lon = pos ['lon']
+        geoloc = '%s, %s' % (lat, lon)
+        disabled = True
+    return [geoloc, disabled]
+
+# Callback for populating basic dropdown menus
 @app.callback(
     [
         # Dropdowns
@@ -355,16 +526,23 @@ def dat_hou_upl_populatedropdowns(pathname, region, province, citymun, brgy):
         # Residents div
         Output('dat_hou_upl_row_residents', 'children'),
         Output('dat_hou_upl_div_residents', 'className'),
+        Output('dat_hou_upl_div_submit', 'className')
         #Output({'type' : 'dat_hou_upl_input_assignedsex_id', 'index' : ALL}, 'options'),
     ],
     [
-        Input('dat_bar_hou_sto_rescount', 'data'),
+        Input('dat_hou_upl_sto_rescount', 'data'),
+    ],
+    [
+        State('dat_hou_upl_input_brgy_id', 'value'),
+        State('dat_hou_upl_input_purok', 'value'),
+        State('dat_hou_upl_input_loc', 'value'),
     ]
 )
 
-def dat_hou_upl_populatedropdowns(count):
+def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
     to_return = []
-    className = 'mb-2 d-none',
+    residents_className = 'mt-3 mb-3 d-none'
+    submit_className = 'mt-3 d-none'
 
     # Populating dropdowns
     # Assgined sex
@@ -376,9 +554,44 @@ def dat_hou_upl_populatedropdowns(count):
     df = db.querydatafromdatabase(sql, values, cols)
     df = df.sort_values('value')
     sexes = df.to_dict('records')
+
+    # Populating checklists
+    # Sectors
+    sql = """SELECT CONCAT(symbol, ';', desc_war, ';', desc_en) AS label, id AS value
+    FROM utilities.demographicsectors;
+    """
+    df = db.querydatafromdatabase(sql, values, cols)
+    df = df.sort_values('value')
+    for i in range (len(df.index)):
+        df.at[i, 'label'] = [
+            str(df['label'][i]).split(";")[0] + " " + str(df['label'][i]).split(";")[1],
+            html.Br(),
+            html.Small(
+                str(df['label'][i]).split(";")[2],
+                className = 'text-muted'
+            )
+        ]
+    sectors = df.to_dict('records')
+    # Needs
+    sql = """SELECT CONCAT(symbol, ';', desc_war, ';', desc_en) AS label, id AS value
+    FROM utilities.demographicneeds;
+    """
+    df = db.querydatafromdatabase(sql, values, cols)
+    df = df.sort_values('value')
+    for i in range (len(df.index)):
+        df.at[i, 'label'] = [
+            str(df['label'][i]).split(";")[0] + " " + str(df['label'][i]).split(";")[1],
+            html.Br(),
+            html.Small(
+                str(df['label'][i]).split(";")[2],
+                className = 'text-muted'
+            )
+        ]
+    needs = df.to_dict('records')
     
-    if count and count >= 1:
-        className = 'mb-2 d-block',
+    if count and count >= 1 and (brgy and purok and loc):
+        residents_className = 'mt-3 mb-3 d-block',
+        submit_className = 'mt-3 d-block',
         for i in range(1, 1 + count):
             resident = [
                 dbc.Col(
@@ -386,7 +599,7 @@ def dat_hou_upl_populatedropdowns(count):
                         html.H4(
                             [
                                 html.Span("Residente numero ", className = 'd-inline d-lg-none'),
-                                html.Span("No. ", className = 'd-none d-lg-inline'),
+                                #html.Span("No. ", className = 'd-none d-lg-inline'),
                                 i
                             ]
                         )
@@ -557,41 +770,7 @@ def dat_hou_upl_populatedropdowns(count):
                                 dbc.Col(
                                     [
                                         dbc.Checklist(
-                                            options = [
-                                                {
-                                                    'label' : [
-                                                        """🧑‍🍼 Usa ako nga solo parent.""",
-                                                        html.Br(),
-                                                        html.Small(
-                                                            """I am a solo parent.""",
-                                                            className = 'text-muted'
-                                                        )
-                                                    ],
-                                                    'value' : 1
-                                                },
-                                                {
-                                                    'label' : [
-                                                        """🏳️‍🌈 Ginkikilala ko an akon kalugaringon nga queer, non-binary, o LGBTQIA+.""",
-                                                        html.Br(),
-                                                        html.Small(
-                                                            """I identify as queer, non-binary or LGBTQIA+.""",
-                                                            className = 'text-muted'
-                                                        )
-                                                    ],
-                                                    'value' : 2
-                                                },
-                                                {
-                                                    'label' : [
-                                                        """🛡️ Ginkikilala ko an akon kalugaringon nga indigenous person o miyembro san IP nga grupo.""",
-                                                        html.Br(),
-                                                        html.Small(
-                                                            """I identify as an indigenous person or member of an IP group.""",
-                                                            className = 'text-muted'
-                                                        )
-                                                    ],
-                                                    'value' : 3
-                                                },
-                                            ],
+                                            options = sectors,
                                             id = {
                                                 'type' : 'dat_hou_upl_input_checklist_demography',
                                                 'index' : i
@@ -603,30 +782,7 @@ def dat_hou_upl_populatedropdowns(count):
                                 dbc.Col(
                                     [
                                         dbc.Checklist(
-                                            options = [
-                                                {
-                                                    'label' : [
-                                                        """♿️ May ada ako dugang nga pangingihanlan o sinisiring nga disability.""",
-                                                        html.Br(),
-                                                        html.Small(
-                                                            """I have special needs (i.e., a disability).""",
-                                                            className = 'text-muted'
-                                                            )
-                                                        ],
-                                                    'value' : 1
-                                                },
-                                                {
-                                                    'label' : [
-                                                        """🩺 Mayda ako panmaiha (chronic) o seryoso nga sakit.""",
-                                                        html.Br(),
-                                                        html.Small(
-                                                            """I have a chronic or serious disease.""",
-                                                            className = 'text-muted'
-                                                        )
-                                                    ],
-                                                    'value' : 2
-                                                },
-                                            ],
+                                            options = needs,
                                             id = {
                                                 'type' : 'dat_hou_upl_input_checklist_needs',
                                                 'index' : i
@@ -643,4 +799,93 @@ def dat_hou_upl_populatedropdowns(count):
                 )
             ]
             to_return += resident
-    return [to_return, className]
+    return [to_return, residents_className, submit_className]
+
+# Callback for confirming profile creation
+@app.callback(
+    [
+        # Modal
+        Output('dat_hou_upl_modal_confirm', 'is_open'),
+        # Overall validation alert
+        Output('dat_hou_upl_alert_inputvalidation', 'is_open'),
+        Output('dat_hou_upl_alert_inputvalidation', 'class_name'),
+        Output('dat_hou_upl_alert_inputvalidation_span_missing', 'children'),
+    ],
+    [
+        Input('dat_hou_upl_btn_submit', 'n_clicks')
+    ],
+    [
+        State({'type' : 'dat_hou_upl_input_fname', 'index' : ALL}, 'value'),
+        State({'type' : 'dat_hou_upl_input_lname', 'index' : ALL}, 'value'),
+        State({'type' : 'dat_hou_upl_input_birthdate', 'index' : ALL}, 'date'),
+        State({'type' : 'dat_hou_upl_input_assignedsex_id', 'index' : ALL}, 'value'),
+    ]
+)
+
+def eve_cre_confirmcreation(btn, fnames, lnames, birthdates, assignedsexes):
+    print(fnames, lnames, birthdates, assignedsexes)
+    ctx = dash.callback_context
+    if ctx.triggered:
+        eventid = ctx.triggered[0]['prop_id'].split('.')[0]
+        if eventid == 'dat_hou_upl_btn_submit' and btn:
+            # Modal
+            modal_open = False
+            # Overall validation alert
+            alert_open = False
+            alert_class_name = None
+            alert_span = []
+
+            conditions = [
+                None in fnames,
+                None in lnames,
+                None in birthdates,
+                None in assignedsexes
+            ]
+
+            if any(conditions):
+                alert_open = True
+                alert_class_name = 'mb-3'
+                if None in fnames:
+                    # Add input validation here
+                    alert_span.append(
+                        html.Li(
+                            [
+                                "Mga primero nga ngaran", html.Br(),
+                                html.Small(" (First names)", className = 'ms-3 text-muted'),
+                            ]
+                        )
+                    )
+                if None in lnames:
+                    # Add input validation here
+                    alert_span.append(
+                        html.Li(
+                            [
+                                "Mga apelyido", html.Br(),
+                                html.Small(" (Last names)", className = 'ms-3 text-muted'),
+                            ]
+                        )
+                    )
+                if None in birthdates:
+                    # Add input validation here
+                    alert_span.append(
+                        html.Li(
+                            [
+                                "Mga petsa san pagkatawo", html.Br(),
+                                html.Small(" (Birthdates)", className = 'ms-3 text-muted'),
+                            ]
+                        )
+                    )
+                if None in assignedsexes:
+                    # Add input validation here
+                    alert_span.append(
+                        html.Li(
+                            [
+                                "Kun natawo nga babayi/lalaki", html.Br(),
+                                html.Small(" (Sexes assigned at birth)", className = 'ms-3 text-muted'),
+                            ]
+                        )
+                    )
+            else: modal_open = True
+            return [modal_open, alert_open, alert_class_name, alert_span]
+        else: raise PreventUpdate
+    else: raise PreventUpdate

@@ -1899,7 +1899,7 @@ def rep_cre_geolocrefresh(selectgps):
     if selectgps: return [True]
     else: return [False]
 
-# Callback for setting URL links of hyperlinks for GPS location
+# Callback for setting the current GPS location
 @app.callback(
     [
         Output('rep_cre_input_dmgdhouse_loc', 'value'),
@@ -1918,7 +1918,7 @@ def rep_cre_geolocrefresh(selectgps):
 def rep_cre_geolocset(selectgps, pos, date):
     geoloc = None
     disabled = False
-    if selectgps:
+    if selectgps and pos:
         lat = pos['lat']
         lon = pos ['lon']
         geoloc = '%s, %s' % (lat, lon)

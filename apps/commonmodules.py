@@ -676,7 +676,7 @@ footer = html.Footer(
                             [
                                 html.P(html.Small("Republic of the Philippines • City of Calbayog"), className = 'mb-0'),
                                 html.H4("City Disaster Risk Reduction and Management Office", className = 'mb-0 fw-bold'),
-                                html.A(html.P(html.Small([html.I(className = 'bi bi-pin-map-fill me-2'), "Government Center, Magsaysay Extension (Diversion Road), Brgy. Bagacay, Calbayog City, Samar 6710"]), className = 'mb-0'), href = 'https://maps.app.goo.gl/Sjw7n6DwXn5qvUfg9', style = hyperlink_style, target = '_blank')
+                                html.A(html.P(html.Small([html.I(className = 'bi bi-pin-map-fill me-2'), "Government Center, Magsaysay Ext. (Diversion Rd.), Brgy. Bagacay, Calbayog City, Samar 6710"]), className = 'mb-0'), href = 'https://maps.app.goo.gl/Sjw7n6DwXn5qvUfg9', style = hyperlink_style, target = '_blank')
                             ], className = 'mb-3'
                         ),
                         html.Div(
