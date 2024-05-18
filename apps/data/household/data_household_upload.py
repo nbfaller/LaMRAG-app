@@ -732,66 +732,182 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                 ),
                             ], className = div_m,
                         ),
-                        dbc.Row(
+                        # Affirmative identity
+                        html.Div(
                             [
-                                dbc.Col(
+                                dbc.Row(
                                     [
                                         html.H5(
                                             [
-                                                html.I(className = 'bi bi-person-plus me-2'),
-                                                "Dugang nga impormasiyon",
+                                                html.I(className = 'bi bi-rainbow me-2'),
+                                                "Apirmatibo nga identidad",
                                                 #html.Br(),
-                                                html.Small(" (Additional information)", className = 'text-muted')
+                                                html.Small(" (Affirmative identity)", className = 'text-muted')
                                             ]
                                         ),
                                         html.P(
                                             [
-                                                """Guintatalingúha san Siyudadnon nga Gobyerno an paghatag san tangkód
-                                                nga serbisyo sa iya mga sinasakupan. Upod sini an paghatag san espésiyal
-                                                nga atensiyon o pag-atáman sa mga minorya o bulnerable nga sektor san aton
-                                                katilíngban. Tungód sini, guin-aaghat an ngatanan nga mga residente nga magpahibaro kun
-                                                api sira sini nga mga sektor.""",
+                                                """Guin-aaghat ug guinpapanalipdan san Siyudadnon nga Gobyerno an katungod san iya mga
+                                                sinasakupan nga magpahayag san ira sexual orientation, gender identity, ug expression (SOGIE).
+                                                Guin-aaghat an ngatanan nga maghatag sini nga impormasyon kun sano man ini naangay.""",
                                                 html.Br(),
                                                 html.Small(
-                                                    """(The city government seeks to deliver equitable services to its constituents.
-                                                    This necessitates the provision of specific attention or care to minorities or
-                                                    vulnerable sectors of our society. Residents are thus encouraged to identify themselves
-                                                    as the following whenever applicable.)""",
+                                                    """(The City Government seeks to promote and protect the ability of its constituents to
+                                                    freely express their sexual orientation, gender identity, and expression (SOGIE).
+                                                    Everyone is enjoined to fill out these details whenever applicable.)""",
                                                     className = 'text-muted'
                                                 )
                                             ], className = p_m
                                         ),
-                                    ]
+                                    ], class_name = row_m
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                "Lived name",
+                                                id = {
+                                                    'type' : 'dat_hou_upl_label_livedname',
+                                                    'index' : i
+                                                },
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Input(
+                                                type = 'text',
+                                                id = {
+                                                    'type' : 'dat_hou_upl_input_livedname',
+                                                    'index' : i
+                                                },
+                                                placeholder = 'Lived name'
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
+                                        )
+                                    ], class_name = row_m
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Honoripiko",
+                                                    html.Br(), html.Small(" (Honorific)", className = 'text-muted')
+                                                ],
+                                                id = {
+                                                    'type' : 'dat_hou_upl_label_honorific',
+                                                    'index' : i
+                                                },
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Input(
+                                                type = 'text',
+                                                id = {
+                                                    'type' : 'dat_hou_upl_input_honorific',
+                                                    'index' : i
+                                                },
+                                                placeholder = 'Example: Mr., Mrs., Ms., Dr.'
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Label(
+                                                [
+                                                    "Mga pronoun",
+                                                    html.Br(), html.Small(" (Pronouns)", className = 'text-muted')
+                                                ],
+                                                id = {
+                                                    'type' : 'dat_hou_upl_label_pronouns',
+                                                    'index' : i
+                                                },
+                                                class_name = label_m
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Input(
+                                                type = 'text',
+                                                id = {
+                                                    'type' : 'dat_hou_upl_input_pronouns',
+                                                    'index' : i
+                                                },
+                                                placeholder = 'Example: she/her, he/him, they/them'
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
+                                        )
+                                    ], class_name = row_m
                                 )
-                            ], class_name = row_m
+                            ], className = div_m
                         ),
-                        dbc.Row(
+                        # Additional information
+                        html.Div(
                             [
-                                dbc.Col(
+                                dbc.Row(
                                     [
-                                        dbc.Checklist(
-                                            options = sectors,
-                                            id = {
-                                                'type' : 'dat_hou_upl_input_checklist_demography',
-                                                'index' : i
-                                            },
+                                        dbc.Col(
+                                            [
+                                                html.H5(
+                                                    [
+                                                        html.I(className = 'bi bi-person-plus me-2'),
+                                                        "Dugang nga impormasiyon",
+                                                        #html.Br(),
+                                                        html.Small(" (Additional information)", className = 'text-muted')
+                                                    ]
+                                                ),
+                                                html.P(
+                                                    [
+                                                        """Guintatalingúha san Siyudadnon nga Gobyerno an paghatag san tangkód
+                                                        nga serbisyo sa iya mga sinasakupan. Upod sini an paghatag san espésiyal
+                                                        nga atensiyon o pag-atáman sa mga minorya o bulnerable nga sektor san aton
+                                                        katilíngban. Tungód sini, guin-aaghat an ngatanan nga mga residente nga magpahibaro kun
+                                                        api sira sini nga mga sektor.""",
+                                                        html.Br(),
+                                                        html.Small(
+                                                            """(The city government seeks to deliver equitable services to its constituents.
+                                                            This necessitates the provision of specific attention or care to minorities or
+                                                            vulnerable sectors of our society. Residents are thus encouraged to identify themselves
+                                                            as the following whenever applicable.)""",
+                                                            className = 'text-muted'
+                                                        )
+                                                    ], className = p_m
+                                                ),
+                                            ]
                                         )
-                                    ],
-                                    class_name = 'mb-0 col-12 col-md-6'
+                                    ], class_name = row_m
                                 ),
-                                dbc.Col(
+                                dbc.Row(
                                     [
-                                        dbc.Checklist(
-                                            options = needs,
-                                            id = {
-                                                'type' : 'dat_hou_upl_input_checklist_needs',
-                                                'index' : i
-                                            },
-                                        )
-                                    ],
-                                    class_name = 'mb-0 col-12 col-md-6'
-                                ),
-                            ], class_name = row_m
+                                        dbc.Col(
+                                            [
+                                                dbc.Checklist(
+                                                    options = sectors,
+                                                    id = {
+                                                        'type' : 'dat_hou_upl_input_checklist_demography',
+                                                        'index' : i
+                                                    },
+                                                )
+                                            ],
+                                            class_name = 'mb-0 col-12 col-md-6'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dbc.Checklist(
+                                                    options = needs,
+                                                    id = {
+                                                        'type' : 'dat_hou_upl_input_checklist_needs',
+                                                        'index' : i
+                                                    },
+                                                )
+                                            ],
+                                            class_name = 'mb-0 col-12 col-md-6'
+                                        ),
+                                    ], class_name = row_m
+                                )
+                            ]
                         ),
                         html.Hr()
                     ],
