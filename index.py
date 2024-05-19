@@ -83,6 +83,10 @@ def displaypage(pathname, sessionlogout, user_id, usertype_id):
             if user_id < 0: # If logged out
                 if pathname == '/' or pathname == '/home':
                     returnlayout = home.layout
+                elif pathname == '/data/barangays':
+                    returnlayout = data_barangays.layout
+                elif pathname == '/data/demographics':
+                    returnlayout = data_demographics.layout
                 else:
                     returnlayout = error.layout
             else:
@@ -97,10 +101,6 @@ def displaypage(pathname, sessionlogout, user_id, usertype_id):
                     returnlayout = reports_create.layout
                 elif pathname == '/events/create':
                     returnlayout = events_create.layout
-                elif pathname == '/data/barangays':
-                    returnlayout = data_barangays.layout
-                elif pathname == '/data/demographics':
-                    returnlayout = data_demographics.layout
                 elif pathname == '/data/activate':
                     returnlayout = data_activate.layout
                 elif pathname == '/data/household/upload':
