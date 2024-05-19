@@ -109,7 +109,7 @@ def com_mod_setgreeting(sessionlogout, user_id):
             if df['livedname'][0]: name = df['livedname'][0]
             else: name = df['fname'][0]
             # Fullname in dropdown header
-            if df['mname'][0]: fullname = "%s %s. %s" % (name, df['mname'][0][0], df['lname'][0])
+            if df['mname'][0].isupper() or df['mname'][0].islower(): fullname = "%s %s. %s" % (name, df['mname'][0][0], df['lname'][0])
             else: fullname = "%s %s" % (name, df['lname'][0])
             # Other details in dropdown header
             usertype = df['usertype'][0]
@@ -531,7 +531,7 @@ sidebar = dbc.Offcanvas(
                         dbc.Col(
                             [
                                 html.I(className = 'bi bi-toggle-on me-2'),
-                                "Enable community profiling"
+                                "Activate community profiling"
                             ],
                             width = sidebar_btn_col_width
                         ), class_name = sidebar_btn_row_class_name

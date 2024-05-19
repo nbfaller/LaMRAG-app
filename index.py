@@ -12,7 +12,7 @@ from apps import dashboard, home, commonmodules as cm, error, sandbox
 from apps.users import users_register
 from apps.reports import reports_create
 from apps.events import events_create
-from apps.data import data_barangays, data_demographics, data_enable
+from apps.data import data_activate, data_barangays, data_demographics
 from apps.data.household import data_household_upload
 from apps.data.barangay import data_barangay_upload
 
@@ -98,8 +98,8 @@ def displaypage(pathname, sessionlogout, user_id, usertype_id):
                     returnlayout = data_barangays.layout
                 elif pathname == '/data/demographics':
                     returnlayout = data_demographics.layout
-                elif pathname == '/data/enable':
-                    returnlayout = data_enable.layout
+                elif pathname == '/data/activate':
+                    returnlayout = data_activate.layout
                 elif pathname == '/data/household/upload':
                     returnlayout = data_household_upload.layout
                 elif pathname == '/data/barangay/upload':

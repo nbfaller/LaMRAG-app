@@ -9,6 +9,7 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import hashlib
+from datetime import datetime, timedelta
 # App definition
 from app import app
 from apps import dbconnect as db
@@ -1161,7 +1162,8 @@ usr_reg_url_pathname = '/users/register'
         Output('usr_reg_input_permanent_region_id', 'options'),
         Output('usr_reg_input_assignedsex_id', 'options'),
         Output('usr_reg_input_office_id', 'options'),
-        Output('usr_reg_input_usertype_id', 'options')
+        Output('usr_reg_input_usertype_id', 'options'),
+        Output('usr_reg_input_birthdate', 'max_date_allowed')
     ],
     [
         Input('url', 'pathname')
@@ -1212,6 +1214,9 @@ def usr_reg_populatedropdowns(pathname):
         df = df.sort_values('value')
         usertypes = df.to_dict('records')
         dropdowns.append(usertypes)
+
+        # Maximum date of birth allowed
+        dropdowns.append(datetime.today())
 
         return dropdowns
     else:

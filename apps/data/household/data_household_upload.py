@@ -477,7 +477,6 @@ def dat_hou_upl_geolocset(selectgps, pos, date):
         # Dropdowns
         Output('dat_hou_upl_input_brgy_id', 'options'),
         Output('dat_hou_upl_input_brgy_id', 'value'),
-        #Output({'type' : 'dat_hou_upl_input_assignedsex_id', 'index' : ALL}, 'options'),
     ],
     [
         Input('url', 'pathname'),
@@ -527,7 +526,6 @@ def dat_hou_upl_populatedropdowns(pathname, region, province, citymun, brgy):
         Output('dat_hou_upl_row_residents', 'children'),
         Output('dat_hou_upl_div_residents', 'className'),
         Output('dat_hou_upl_div_submit', 'className')
-        #Output({'type' : 'dat_hou_upl_input_assignedsex_id', 'index' : ALL}, 'options'),
     ],
     [
         Input('dat_hou_upl_sto_rescount', 'data'),
@@ -536,7 +534,8 @@ def dat_hou_upl_populatedropdowns(pathname, region, province, citymun, brgy):
         State('dat_hou_upl_input_brgy_id', 'value'),
         State('dat_hou_upl_input_purok', 'value'),
         State('dat_hou_upl_input_loc', 'value'),
-    ]
+    ],
+    prevent_initial_call = True
 )
 
 def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
@@ -558,7 +557,7 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
     # Populating checklists
     # Sectors
     sql = """SELECT CONCAT(symbol, ';', desc_war, ';', desc_en) AS label, id AS value
-    FROM utilities.demographicsectors;
+    FROM utilities.demographicsector;
     """
     df = db.querydatafromdatabase(sql, values, cols)
     df = df.sort_values('value')
@@ -574,7 +573,7 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
     sectors = df.to_dict('records')
     # Needs
     sql = """SELECT CONCAT(symbol, ';', desc_war, ';', desc_en) AS label, id AS value
-    FROM utilities.demographicneeds;
+    FROM utilities.demographicneed;
     """
     df = db.querydatafromdatabase(sql, values, cols)
     df = df.sort_values('value')
@@ -588,7 +587,10 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
             )
         ]
     needs = df.to_dict('records')
-    
+
+    # Current date (for maximum date of birth)# Minimum date
+    today = datetime.today()
+
     if count and count >= 1 and (brgy and purok and loc):
         residents_className = 'mt-3 mb-3 d-block',
         submit_className = 'mt-3 d-block',
@@ -694,7 +696,8 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                         #month_format = 'MMM Do, YYYY',
                                         clearable = True,
                                         #style = {'width' : '100%'}
-                                        className = 'w-100'
+                                        className = 'w-100',
+                                        max_date_allowed = today
                                     ),
                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                 ),
@@ -714,9 +717,10 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                 ),
                                 dbc.Col(
                                     [
+                                        #dcc.Dropdown(
                                         dbc.Select(
                                             id = {
-                                                'type ': 'dat_hou_upl_input_assignedsex_id',
+                                                'type': 'dat_hou_upl_input_assignedsex_id',
                                                 'index' : i
                                             },
                                             options = sexes
@@ -886,7 +890,7 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                                 dbc.Checklist(
                                                     options = sectors,
                                                     id = {
-                                                        'type' : 'dat_hou_upl_input_checklist_demography',
+                                                        'type' : 'dat_hou_upl_input_demographicsector',
                                                         'index' : i
                                                     },
                                                 )
@@ -898,7 +902,7 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                                 dbc.Checklist(
                                                     options = needs,
                                                     id = {
-                                                        'type' : 'dat_hou_upl_input_checklist_needs',
+                                                        'type' : 'dat_hou_upl_input_demographicneed',
                                                         'index' : i
                                                     },
                                                 )
@@ -931,15 +935,17 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
         Input('dat_hou_upl_btn_submit', 'n_clicks')
     ],
     [
+        State('dat_hou_upl_sto_rescount', 'data'),
         State({'type' : 'dat_hou_upl_input_fname', 'index' : ALL}, 'value'),
         State({'type' : 'dat_hou_upl_input_lname', 'index' : ALL}, 'value'),
         State({'type' : 'dat_hou_upl_input_birthdate', 'index' : ALL}, 'date'),
         State({'type' : 'dat_hou_upl_input_assignedsex_id', 'index' : ALL}, 'value'),
-    ]
+    ],
+    prevent_initial_call = True
 )
 
-def eve_cre_confirmcreation(btn, fnames, lnames, birthdates, assignedsexes):
-    print(fnames, lnames, birthdates, assignedsexes)
+def dat_hou_upl_confirmcreation(btn, rescount, fnames, lnames, birthdates, assignedsexes):
+    #print(fnames, lnames, birthdates, assignedsexes)
     ctx = dash.callback_context
     if ctx.triggered:
         eventid = ctx.triggered[0]['prop_id'].split('.')[0]
@@ -955,7 +961,7 @@ def eve_cre_confirmcreation(btn, fnames, lnames, birthdates, assignedsexes):
                 None in fnames,
                 None in lnames,
                 None in birthdates,
-                None in assignedsexes
+                len(assignedsexes) < rescount
             ]
 
             if any(conditions):
@@ -991,7 +997,7 @@ def eve_cre_confirmcreation(btn, fnames, lnames, birthdates, assignedsexes):
                             ]
                         )
                     )
-                if None in assignedsexes:
+                if len(assignedsexes) < rescount:
                     # Add input validation here
                     alert_span.append(
                         html.Li(
@@ -1003,5 +1009,117 @@ def eve_cre_confirmcreation(btn, fnames, lnames, birthdates, assignedsexes):
                     )
             else: modal_open = True
             return [modal_open, alert_open, alert_class_name, alert_span]
+        else: raise PreventUpdate
+    else: raise PreventUpdate
+
+# Callback for creating new household
+@app.callback(
+    [
+        # In-modal alert
+        Output('dat_hou_upl_alert_passwordvalidation', 'is_open'),
+        Output('dat_hou_upl_alert_passwordvalidation', 'class_name'),
+        Output('dat_hou_upl_alert_passwordvalidation', 'color'),
+        Output('dat_hou_upl_alert_passwordvalidation_col_text', 'children'),
+        # Input validation
+        Output('dat_hou_upl_input_password', 'invalid')
+    ],
+    [
+        Input('dat_hou_upl_btn_confirm', 'n_clicks')
+    ],
+    [
+        # User details
+        State('app_currentuser_id', 'data'),
+        # Password
+        State('dat_hou_upl_input_password', 'value'),
+        # App geolock details
+        State('app_region_id', 'data'),
+        State('app_province_id', 'data'),
+        State('app_citymun_id', 'data'),
+        # Number of residents
+        State('dat_hou_upl_sto_rescount', 'data'),
+        # Basic information
+        State({'type' : 'dat_hou_upl_input_fname', 'index' : ALL}, 'value'),
+        State({'type' : 'dat_hou_upl_input_lname', 'index' : ALL}, 'value'),
+        State({'type' : 'dat_hou_upl_input_birthdate', 'index' : ALL}, 'date'),
+        State({'type' : 'dat_hou_upl_input_assignedsex_id', 'index' : ALL}, 'value'),
+        # Affirmative identity
+        State({'type' : 'dat_hou_upl_input_livedname', 'index' : ALL}, 'value'),
+        State({'type' : 'dat_hou_upl_input_honorific', 'index' : ALL}, 'value'),
+        State({'type' : 'dat_hou_upl_input_pronouns', 'index' : ALL}, 'value'),
+        # Sectors and needs
+        State({'type' : 'dat_hou_upl_input_demographicsector', 'index' : ALL}, 'value'),
+        State({'type' : 'dat_hou_upl_input_demographicneed', 'index' : ALL}, 'value'),
+    ],
+    prevent_initial_call = True
+)
+
+def dat_hou_upl_submitcreation(
+    btn, user_id, password, region, province, citymun, rescount,
+    fnames, lnames, birthdates, assignedsexes,
+    livednames, honorifics, pronouns,
+    sectors, needs
+):
+    ctx = dash.callback_context
+    if ctx.triggered:
+        eventid = ctx.triggered[0]['prop_id'].split('.')[0]
+        if eventid == 'eve_cre_btn_confirm' and btn:
+            # Alert
+            alert_open = False
+            alert_class_name = None
+            alert_color = None
+            alert_col_text = None
+            # Password validation
+            password_invalid = False
+            if not(password):
+                alert_open = True
+                alert_class_name = 'mb-3'
+                alert_color = 'warning'
+                password_invalid = True
+                alert_col_text = [
+                    "Alayon pagbutang san imo password.",
+                    html.Br(),
+                    html.Small(
+                        "(Please enter your password.)",
+                        className = 'text-muted'
+                    ),
+                ]
+            else:
+                sql = """SELECT username FROM users.user
+                WHERE id = %s AND password = %s;"""
+                encrypt_string = lambda string: hashlib.sha256(string.encode('utf-8')).hexdigest()
+                values = [user_id, encrypt_string(password)]
+                cols = ['username']
+                df = db.querydatafromdatabase(sql, values, cols)
+                if df.shape[0]:
+
+                    print(fnames, lnames, birthdates, assignedsexes, livednames, honorifics, pronouns, sectors, needs)
+                    
+                    # Open alert
+                    alert_open = True
+                    alert_class_name = 'mb-3'
+                    alert_color = 'success'
+                    password_invalid = False
+                    alert_col_text = [
+                        "Nasumite na an profile sini nga panimalay.",
+                        html.Br(),
+                        html.Small(
+                            "(Household profile submitted.)",
+                            className = 'text-muted'
+                        ),
+                    ]
+                else:
+                    alert_open = True
+                    alert_class_name = 'mb-3'
+                    alert_color = 'warning'
+                    password_invalid = True
+                    alert_col_text = [
+                        "Diri sakto an nabutang nga password.",
+                        html.Br(),
+                        html.Small(
+                            "(Incorrect password.)",
+                            className = 'text-muted'
+                        ),
+                    ]
+            return [alert_open, alert_class_name, alert_color, alert_col_text, password_invalid]
         else: raise PreventUpdate
     else: raise PreventUpdate

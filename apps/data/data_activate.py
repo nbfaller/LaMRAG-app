@@ -29,6 +29,7 @@ footer_m = 'mt-3'
 
 layout = html.Div(
     [
+        dcc.Store(id = 'dat_ena_sto_window_id'),
         dbc.Row(
             [
                 dbc.Col(
@@ -39,7 +40,7 @@ layout = html.Div(
                                     [
                                         dbc.Row(
                                             [
-                                                html.H1("Enable community profiling"),
+                                                html.H1("Activate community profiling"),
                                                 html.P(
                                                     [
                                                         "Kinihanglan pun-on an mga patlang nga may pula nga asterisk ", tag_required, ".",
@@ -341,14 +342,14 @@ layout = html.Div(
                                     [
                                         dbc.Col(
                                             [
-                                                html.H4("Confirm event creation"),
+                                                html.H4("Confirm community profiling activation"),
                                                 html.P(
                                                     [
-                                                        """Alayon pagbutang san imo password para makumpirma an paghimo sini nga panhitabó.
-                                                        Alayon liwat pagseguro nga sakto an ngatanan nga impormasyon nga imo ginhatag.""",
+                                                        """Alayon pagbutang san imo password para makumpirma an pag-aktibar san community profiling.
+                                                        Alayon liwat pagseguro nga sakto an ngatanan nga ginbutang nga impormasyon.""",
                                                         html.Br(),
                                                         html.Small(
-                                                            """(Please enter your password to confirm the creation of this event.
+                                                            """(Please enter your password to confirm community profiling activation.
                                                             Also, please ensure that all information to be submitted is correct.)
                                                             """,
                                                             className = 'text-muted'
@@ -501,3 +502,230 @@ def dat_ena_selectallbrgys(switch):
         disabled = True
         placeholder = "All barangays selected."
     return [None, disabled, placeholder]
+
+# Callback for confirming community profiling window
+@app.callback(
+    [
+        # Modal
+        Output('dat_ena_modal_confirm', 'is_open'),
+        # Overall validation alert
+        Output('dat_ena_alert_inputvalidation', 'is_open'),
+        Output('dat_ena_alert_inputvalidation', 'class_name'),
+        Output('dat_ena_alert_inputvalidation_span_missing', 'children'),
+    ],
+    [
+        Input('dat_ena_btn_submit', 'n_clicks')
+    ],
+    [
+        State('dat_ena_input_startdate', 'date'),
+        State('dat_ena_input_enddate', 'date'),
+        State('dat_ena_input_brgy_id', 'value'),
+        State('dat_ena_input_selectallbrgys', 'value'),
+    ]
+)
+
+def dat_ena_confirmcreation(btn, startdate, enddate, brgys, selectallbrgys):
+    ctx = dash.callback_context
+    if ctx.triggered:
+        eventid = ctx.triggered[0]['prop_id'].split('.')[0]
+        if eventid == 'dat_ena_btn_submit' and btn:
+            # Modal
+            modal_open = False
+            # Overall validation alert
+            alert_open = False
+            alert_class_name = None
+            alert_span = []
+
+            conditions = [
+                not(startdate),
+                not(enddate),
+                not(brgys or selectallbrgys)
+            ]
+
+            if any(conditions):
+                alert_open = True
+                alert_class_name = 'mb-3'
+                if conditions[0]:
+                    # Add input validation here
+                    alert_span.append(
+                        html.Li(
+                            [
+                                "Petsa san pagtikang", html.Br(),
+                                html.Small(" (Start date)", className = 'ms-3 text-muted'),
+                            ]
+                        )
+                    )
+                if conditions[1]:
+                    # Add input validation here
+                    alert_span.append(
+                        html.Li(
+                            [
+                                "Petsa san pagtapos", html.Br(),
+                                html.Small(" (End date)", className = 'ms-3 text-muted'),
+                            ]
+                        )
+                    )
+                if conditions[2]:
+                    # Add input validation here
+                    alert_span.append(html.Li(
+                        [
+                            "Mga api nga barangay", html.Br(),
+                            html.Small(" (Participating barangays)", className = 'ms-3 text-muted'),
+                        ]
+                    ))
+            else: modal_open = True
+            return [modal_open, alert_open, alert_class_name, alert_span]
+        else: raise PreventUpdate
+    else: raise PreventUpdate
+
+# Callback for activating community profiling
+@app.callback(
+    [
+        # In-modal alert
+        Output('dat_ena_alert_passwordvalidation', 'is_open'),
+        Output('dat_ena_alert_passwordvalidation', 'class_name'),
+        Output('dat_ena_alert_passwordvalidation', 'color'),
+        Output('dat_ena_alert_passwordvalidation_col_text', 'children'),
+        # Input validation
+        Output('dat_ena_input_password', 'invalid'),
+        # New window id
+        Output('dat_ena_sto_window_id', 'data')
+    ],
+    [
+        Input('dat_ena_btn_confirm', 'n_clicks')
+    ],
+    [
+        # User details
+        State('app_currentuser_id', 'data'),
+        # Password
+        State('dat_ena_input_password', 'value'),
+        # App geolock details
+        State('app_region_id', 'data'),
+        State('app_province_id', 'data'),
+        State('app_citymun_id', 'data'),
+        # Window details
+        State('dat_ena_input_startdate', 'date'),
+        State('dat_ena_input_enddate', 'date'),
+        State('dat_ena_input_brgy_id', 'value'),
+        State('dat_ena_input_selectallbrgys', 'value'),
+        State('dat_ena_input_remarks', 'value'),
+    ],
+    prevent_initial_call = True
+)
+
+def dat_ena_submitcreation(
+    btn, user_id, password,
+    region_id, province_id, citymun_id,
+    startdate, enddate, brgy_id, selectallbrgys, remarks
+):
+    ctx = dash.callback_context
+    if ctx.triggered:
+        eventid = ctx.triggered[0]['prop_id'].split('.')[0]
+        if eventid == 'dat_ena_btn_confirm' and btn:
+            # Alert
+            alert_open = False
+            alert_class_name = None
+            alert_color = None
+            alert_col_text = None
+            # Password validation
+            password_invalid = False
+            window_id = None
+            if not(password):
+                alert_open = True
+                alert_class_name = 'mb-3'
+                alert_color = 'warning'
+                password_invalid = True
+                alert_col_text = [
+                    "Alayon pagbutang san imo password.",
+                    html.Br(),
+                    html.Small(
+                        "(Please enter your password.)",
+                        className = 'text-muted'
+                    ),
+                ]
+            else:
+                sql = """SELECT username FROM users.user
+                WHERE id = %s AND password = %s;"""
+                encrypt_string = lambda string: hashlib.sha256(string.encode('utf-8')).hexdigest()
+                values = [user_id, encrypt_string(password)]
+                cols = ['username']
+                df = db.querydatafromdatabase(sql, values, cols)
+                if df.shape[0]:
+                    # Retrieves all barangays if "select all barangays" is selected
+                    if selectallbrgys:
+                        sql = """SELECT id FROM utilities.addressbrgy
+                        WHERE region_id = %s AND province_id = %s AND citymun_id = %s;"""
+                        values = [region_id, province_id, citymun_id]
+                        cols = ['id']
+                        brgy_id = db.querydatafromdatabase(sql, values, cols)['id'].to_list()
+
+                    # Actual window creation
+                    sql = """INSERT INTO data.profilingwindow(startdate, enddate, remarks, creator_id)
+                    VALUES(%s, %s, %s, %s);"""
+                    values = [startdate, enddate, remarks, user_id]
+                    db.modifydatabase(sql, values)
+
+                    # Get index of latest window
+                    sql = """SELECT id FROM data.profilingwindow ORDER BY id DESC LIMIT 1;"""
+                    values = []
+                    cols = ['id']
+                    window_id = int(db.querydatafromdatabase(sql, values, cols)['id'][0])
+
+                    # Add entries to eventbrgy table
+                    # AS MUCH AS POSSIBLE avoid loops
+                    for brgy in brgy_id:
+                        sql = """INSERT INTO data.windowbrgy(window_id, region_id,
+                        province_id, citymun_id, brgy_id) VALUES(%s, %s, %s, %s, %s)"""
+                        values = [window_id, region_id, province_id, citymun_id, brgy]
+                        db.modifydatabase(sql, values)
+                    
+                    # Open alert
+                    alert_open = True
+                    alert_class_name = 'mb-3'
+                    alert_color = 'success'
+                    password_invalid = False
+                    alert_col_text = [
+                        "Na-aktibar na an community profiling.",
+                        html.Br(),
+                        html.Small(
+                            "(Community profiling activated.)",
+                            className = 'text-muted'
+                        ),
+                    ]
+                else:
+                    alert_open = True
+                    alert_class_name = 'mb-3'
+                    alert_color = 'warning'
+                    password_invalid = True
+                    alert_col_text = [
+                        "Diri sakto an nabutang nga password.",
+                        html.Br(),
+                        html.Small(
+                            "(Incorrect password.)",
+                            className = 'text-muted'
+                        ),
+                    ]
+            return [alert_open, alert_class_name, alert_color, alert_col_text, password_invalid, window_id]
+        else: raise PreventUpdate
+    else: raise PreventUpdate
+
+# Callback for routing to new community profiling window page
+#@app.callback(
+#    [
+#        Output('url', 'pathname')
+#    ],
+#    [
+#        Input('dat_ena_sto_window_id', 'modified_timestamp')
+#    ],
+#    [
+#        State('app_currentuser_id', 'data'),
+#        State('url', 'pathname')
+#    ],
+#    prevent_initial_call = True
+#)
+
+#def com_home_routelogin(logintime, user_id, pathname):
+#    ctx = dash.callback_context
+#    if ctx.triggered and pathname == 'dat_ena_url_pathname': # Fix this part
+#        return ['/dashboard']
+#    else: raise PreventUpdate
