@@ -55,6 +55,9 @@ app.layout = html.Div(
     ]
 )
 
+# Server object
+server = app.server
+
 # Callback for displaying page
 @app.callback(
     [
