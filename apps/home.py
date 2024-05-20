@@ -48,6 +48,7 @@ layout = html.Div(
                                         html.Img(
                                             src=app.get_asset_url('banner.jpg'),
                                             style = {
+                                                'display' : 'block',
                                                 'height' : '30em',
                                                 'width' : '100%',
                                                 'object-fit' : 'cover',

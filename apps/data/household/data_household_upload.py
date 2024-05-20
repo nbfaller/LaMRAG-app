@@ -1035,6 +1035,12 @@ def dat_hou_upl_confirmcreation(btn, rescount, fnames, lnames, birthdates, assig
         State('app_region_id', 'data'),
         State('app_province_id', 'data'),
         State('app_citymun_id', 'data'),
+        # Household location
+        State('dat_hou_upl_input_brgy_id', 'value'),
+        State('dat_hou_upl_input_purok', 'value'),
+        State('dat_hou_upl_input_loc', 'value'),
+        State('dat_hou_upl_input_selectgps', 'value'),
+        State('dat_hou_upl_geoloc', 'position'),
         # Number of residents
         State('dat_hou_upl_sto_rescount', 'data'),
         # Basic information
@@ -1054,7 +1060,9 @@ def dat_hou_upl_confirmcreation(btn, rescount, fnames, lnames, birthdates, assig
 )
 
 def dat_hou_upl_submitcreation(
-    btn, user_id, password, region, province, citymun, rescount,
+    btn, user_id, password, region, province, citymun,
+    brgy, purok, loc_text, selectgps, geoloc,
+    rescount,
     fnames, lnames, birthdates, assignedsexes,
     livednames, honorifics, pronouns,
     sectors, needs
@@ -1062,7 +1070,7 @@ def dat_hou_upl_submitcreation(
     ctx = dash.callback_context
     if ctx.triggered:
         eventid = ctx.triggered[0]['prop_id'].split('.')[0]
-        if eventid == 'eve_cre_btn_confirm' and btn:
+        if eventid == 'dat_hou_upl_btn_confirm' and btn:
             # Alert
             alert_open = False
             alert_class_name = None
@@ -1091,8 +1099,20 @@ def dat_hou_upl_submitcreation(
                 cols = ['username']
                 df = db.querydatafromdatabase(sql, values, cols)
                 if df.shape[0]:
+                    print(region, province, citymun,
+                        brgy, purok, loc_text, selectgps, geoloc,
+                        rescount,
+                        fnames, lnames, birthdates, assignedsexes,
+                        livednames, honorifics, pronouns,
+                        sectors, needs
+                    )
 
-                    print(fnames, lnames, birthdates, assignedsexes, livednames, honorifics, pronouns, sectors, needs)
+                    # Household creation
+                    #sql = """INSERT INTO data.household(region_id, province_id, citymun_id,
+                    #brgy_id, purok, loc_text) VALUES(%s, %s,
+                    #%s, %s, %s, %s)"""
+                    #values = [region, province, citymun, brgy, purok, user_id]
+                    #db.modifydatabase(sql, values)
                     
                     # Open alert
                     alert_open = True
