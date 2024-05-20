@@ -93,6 +93,10 @@ def displaypage(pathname, sessionlogout, user_id, usertype_id):
                 if pathname == '/logout':
                     returnlayout = home.layout
                     sessionlogout = True
+                elif pathname == '/data/barangays':
+                    returnlayout = data_barangays.layout
+                elif pathname == '/data/demographics':
+                    returnlayout = data_demographics.layout
                 elif pathname == '/dashboard':
                     returnlayout = dashboard.layout
                 elif pathname == '/users/register':
