@@ -5,7 +5,7 @@ def getdblocation():
     # Define connection details
     db = psycopg2.connect(
         host = 'localhost',
-        database = 'LaMRAG-database',
+        database = 'lamrag-database',
         user = 'postgres',
         port = 5432,
         password = 'password'
