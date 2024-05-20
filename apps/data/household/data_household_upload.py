@@ -1045,6 +1045,7 @@ def dat_hou_upl_confirmcreation(btn, rescount, fnames, lnames, birthdates, assig
         State('dat_hou_upl_sto_rescount', 'data'),
         # Basic information
         State({'type' : 'dat_hou_upl_input_fname', 'index' : ALL}, 'value'),
+        State({'type' : 'dat_hou_upl_input_mname', 'index' : ALL}, 'value'),
         State({'type' : 'dat_hou_upl_input_lname', 'index' : ALL}, 'value'),
         State({'type' : 'dat_hou_upl_input_birthdate', 'index' : ALL}, 'date'),
         State({'type' : 'dat_hou_upl_input_assignedsex_id', 'index' : ALL}, 'value'),
@@ -1061,9 +1062,9 @@ def dat_hou_upl_confirmcreation(btn, rescount, fnames, lnames, birthdates, assig
 
 def dat_hou_upl_submitcreation(
     btn, user_id, password, region, province, citymun,
-    brgy, purok, loc_text, selectgps, geoloc,
+    brgy, purok, loc, selectgps, geoloc,
     rescount,
-    fnames, lnames, birthdates, assignedsexes,
+    fnames, mnames, lnames, birthdates, assignedsexes,
     livednames, honorifics, pronouns,
     sectors, needs
 ):
@@ -1099,20 +1100,62 @@ def dat_hou_upl_submitcreation(
                 cols = ['username']
                 df = db.querydatafromdatabase(sql, values, cols)
                 if df.shape[0]:
-                    print(region, province, citymun,
-                        brgy, purok, loc_text, selectgps, geoloc,
-                        rescount,
-                        fnames, lnames, birthdates, assignedsexes,
-                        livednames, honorifics, pronouns,
-                        sectors, needs
-                    )
+                    loc_gps = None
+                    if selectgps and geoloc:
+                        loc_gps = "(%s,%s)" % (geoloc['lat'], geoloc['lon'])
 
                     # Household creation
-                    #sql = """INSERT INTO data.household(region_id, province_id, citymun_id,
-                    #brgy_id, purok, loc_text) VALUES(%s, %s,
-                    #%s, %s, %s, %s)"""
-                    #values = [region, province, citymun, brgy, purok, user_id]
-                    #db.modifydatabase(sql, values)
+                    sql = """INSERT INTO data.household(region_id, province_id, citymun_id,
+                    brgy_id, purok, loc_text, loc_gps, creator_id)
+                    VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"""
+                    values = [region, province, citymun, brgy, purok, loc, loc_gps, user_id]
+                    db.modifydatabase(sql, values)
+
+                    # Get index of latest household
+                    sql = """SELECT id FROM data.household ORDER BY id DESC LIMIT 1;"""
+                    values = []
+                    cols = ['id']
+                    household_id = int(db.querydatafromdatabase(sql, values, cols)['id'][0])
+
+                    # Get index of latest resident, if any
+                    new_resident_id = 1
+                    sql = """SELECT id FROM data.resident ORDER BY id DESC LIMIT 1;"""
+                    values = []
+                    cols = ['id']
+                    df = db.querydatafromdatabase(sql, values, cols)
+                    if df.shape[0]: new_resident_id = int(df['id'][0]) + 1
+                    
+                    for i in range(0, rescount):
+                        # Resident creation
+                        sql = """INSERT INTO data.resident(household_id,
+                        fname, mname, lname, birthdate, assignedsex_id,
+                        livedname, honorific, pronouns)
+                        VALUES(%s,
+                        %s, %s, %s, %s, %s,
+                        %s, %s, %s);"""
+                        values = [
+                            household_id,
+                            fnames[i], mnames[i], lnames[i], birthdates[i], assignedsexes[i],
+                            livednames[i], honorifics[i], pronouns[i]
+                        ]
+                        db.modifydatabase(sql, values)
+                        
+                        if sectors[i]:
+                            for j in sectors[i]:
+                                # Attaching sectors per resident, if any
+                                sql = """INSERT INTO data.residentsector(resident_id, sector_id)
+                                VALUES(%s, %s);"""
+                                values = [new_resident_id, j]
+                                db.modifydatabase(sql, values)
+                        if needs[i]:
+                            for j in needs[i]:
+                                # Attaching needs per resident, if any
+                                sql = """INSERT INTO data.residentneed(resident_id, need_id)
+                                VALUES(%s, %s);"""
+                                values = [new_resident_id, j]
+                                db.modifydatabase(sql, values)
+                        
+                        new_resident_id += 1
                     
                     # Open alert
                     alert_open = True

@@ -3315,11 +3315,11 @@ def rep_cre_submitcreation(
                     elif type == 4:
                         dmgdhouse_loc_gps = None
                         if dmgdhouse_selectgps:
-                            dmgdhouse_loc_gps = (geoloc_pos['lat'], geoloc_pos['lon'])
+                            dmgdhouse_loc_gps = "(%s,%s)" % (geoloc_pos['lat'], geoloc_pos['lon'])
                         sql = """INSERT INTO reports.dmgdhouse(report_id, version_id,
                         type_id, fname, mname, lname, age, assignedsex_id,
                         loc_text, loc_gps)
-                        VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, (%s));"""
+                        VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"""
                         values = [
                             newreport_id, newversion_id,
                             dmgdhouse_type, dmgdhouse_fname, dmgdhouse_mname, dmgdhouse_lname, dmgdhouse_age, dmgdhouse_assignedsex,
