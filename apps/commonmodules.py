@@ -536,7 +536,7 @@ sidebar = dbc.Offcanvas(
                             width = sidebar_btn_col_width
                         ), class_name = sidebar_btn_row_class_name
                     ),
-                    href = '/data/enable',
+                    href = '/data/activate',
                     external_link = True,
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
