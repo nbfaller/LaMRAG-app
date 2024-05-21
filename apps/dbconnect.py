@@ -30,7 +30,7 @@ class dbcreds:
     #)
     
 def getdblocation():
-    local = False
+    local = True
     if local:
         # Define connection details
         creds = dbcreds.local

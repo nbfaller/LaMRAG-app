@@ -64,7 +64,6 @@ layout = html.Div(
                                 ),
                                 dbc.Row(
                                     [
-
                                         dbc.Col(
                                             dbc.Label(
                                                 [
