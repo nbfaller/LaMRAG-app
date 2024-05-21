@@ -39,15 +39,17 @@ class dbcreds:
     
 def getdblocation():
     # Define connection details
-    creds = dbcreds.local
-    db = psycopg2.connect(
-        host = creds['host'],
-        database = creds['database'],
-        user = creds['user'],
-        port = creds['port'],
-        password = creds['password']
-    )
+    #creds = dbcreds.local
+    #db = psycopg2.connect(
+    #    host = creds['host'],
+    #    database = creds['database'],
+    #    user = creds['user'],
+    #    port = creds['port'],
+    #    password = creds['password']
+    #)
     # return connection details
+    DATABASE_URL = os.environ['DATABASE_URL']
+    db = psycopg2.connect(DATABASE_URL, sslmode = 'require')
     return db
 
 def modifydatabase(sql, values):
