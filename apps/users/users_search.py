@@ -52,7 +52,7 @@ layout = html.Div(
                                             dbc.Input(
                                                 id = 'usr_src_input_search',
                                                 type = 'text',
-                                                placeholder = "Search by last name, first name, lived name, or middle name"
+                                                placeholder = "Search by last name, first name, lived name, middle name, office, or designation."
                                                 #value = 1
                                                ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12'
@@ -187,8 +187,8 @@ def usr_src_loadsearchresults(pathname, search):
         if search:
             sql += """ AND (u.lname ILIKE %s OR u.fname ILIKE %s
             OR u.livedname ILIKE %s OR u.mname ILIKE %s
-            OR u.designation ILIKE %s)"""
-            values += [f"%{search}%", f"%{search}%", f"%{search}%", f"%{search}%", f"%{search}%"]
+            OR o.name ILIKE %s OR u.designation ILIKE %s)"""
+            values += [f"%{search}%", f"%{search}%", f"%{search}%", f"%{search}%", f"%{search}%", f"%{search}%"]
 
         df = db.querydatafromdatabase(sql, values, cols)
         table = dbc.Table.from_dataframe(

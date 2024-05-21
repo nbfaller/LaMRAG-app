@@ -28,7 +28,7 @@ class dbcreds:
     #heroku = dict(
     #    DATABASE_URL = os.environ['database']
     #)
-    
+
 def getdblocation():
     local = False
     if local:
