@@ -49,7 +49,11 @@ app.layout = html.Div(
         # Sidebar
         cm.sidebar,
         # Page content: div that contains layout
-        html.Div(id = 'page-content', style = CONTENT_STYLE),
+        html.Div(
+            id = 'page-content',
+            #style = CONTENT_STYLE,
+            className = 'mt-6 mb-3 mx-3 mx-md-4pt5 p-1 p-md-3'
+        ),
         # Footer
         cm.footer
     ]

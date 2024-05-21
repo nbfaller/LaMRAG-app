@@ -387,7 +387,7 @@ layout = html.Div(
                                                                                                 ),
                                                                                                 html.Li(
                                                                                                     [
-                                                                                                        html.B(id = 'dat_bar_spa_vul_flood_label_war'),
+                                                                                                        html.B("-", id = 'dat_bar_spa_vul_flood_label_war'),
                                                                                                         " an posibilidad nga matabo an pagbaha dinhi.",
                                                                                                         #html.Br(),
                                                                                                         html.Small(
@@ -406,7 +406,7 @@ layout = html.Div(
                                                                                                 ),
                                                                                                 html.Li(
                                                                                                     [
-                                                                                                        html.B(id = 'dat_bar_spa_vul_landslide_label_war'),
+                                                                                                        html.B("-", id = 'dat_bar_spa_vul_landslide_label_war'),
                                                                                                         " an posibilidad nga matabo an pagtimpag san tuna dinhi.",
                                                                                                         #html.Br(),
                                                                                                         html.Small(
@@ -425,7 +425,7 @@ layout = html.Div(
                                                                                                 ),
                                                                                                 html.Li(
                                                                                                     [
-                                                                                                        html.B(id = 'dat_bar_spa_vul_stormsurge_label_war'),
+                                                                                                        html.B("-", id = 'dat_bar_spa_vul_stormsurge_label_war'),
                                                                                                         " an posibilidad nga matabo an daluyong san bagyo dinhi.",
                                                                                                         #html.Br(),
                                                                                                         html.Small(
@@ -577,7 +577,7 @@ layout = html.Div(
                             className = div_m
                         )
                     ],
-                    class_name = 'col-lg-10'
+                    class_name = 'col-md-10'
                 )
             ],
             class_name = 'justify-content-center'

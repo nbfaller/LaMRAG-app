@@ -596,7 +596,7 @@ layout = html.Div(
                             style = {'display' : 'block'}
                         )
                     ],
-                    class_name = 'col-lg-10'
+                    class_name = 'col-md-10'
                 )
             ],
             class_name = 'justify-content-center'

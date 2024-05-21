@@ -8094,6 +8094,10 @@ fieldset:disabled .btn {
   margin-top: 3rem !important;
 }
 
+.mt-6 {
+  margin-top: 5rem !important;
+}
+
 .mt-auto {
   margin-top: auto !important;
 }
@@ -9623,6 +9627,11 @@ fieldset:disabled .btn {
   .mx-md-4 {
     margin-right: 1.5rem !important;
     margin-left: 1.5rem !important;
+  }
+
+  .mx-md-4pt5 {
+    margin-right: 2rem !important;
+    margin-left: 2rem !important;
   }
 
   .mx-md-5 {
