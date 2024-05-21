@@ -441,7 +441,7 @@ layout = html.Div(
     ]
 )
 
-dat_ena_url_pathname = '/data/enable'
+dat_ena_url_pathname = '/data/activate'
 
 # Callback for populating basic dropdown menus and other restrictions
 @app.callback(
