@@ -114,7 +114,11 @@ layout = html.Div(
                         ),
                         html.Div(
                             id = 'usr_src_div_results',
-                            className = div_m
+                            className = div_m,
+                            style = {
+                                'max-width' : '100%',
+                                'overflow' : 'scroll'
+                            }
                         )
                     ],
                     class_name = 'col-md-10'
@@ -134,11 +138,11 @@ usr_src_url_pathname = '/users/search'
     ],
     [
         Input('url', 'pathname'),
-        #Input('usr_src_input_user', 'value')
+        Input('usr_src_input_user', 'value')
     ]
 )
 
-def usr_src_loadsearchresults(pathname):
+def usr_src_loadsearchresults(pathname, search):
     if pathname == usr_src_url_pathname:
         sql = """SELECT CONCAT(u.lname, ', ', COALESCE(u.livedname, u.fname), ' ', LEFT(u.mname, 1)) AS Name,
         o.name AS Office,
@@ -147,10 +151,16 @@ def usr_src_loadsearchresults(pathname):
         FROM users.user AS u
         LEFT JOIN utilities.office AS o ON u.office_id = o.id
         LEFT JOIN utilities.usertype AS ut ON u.usertype_id = ut.id
-        WHERE u.is_active;
+        WHERE u.is_active
         """
         values = []
         cols = ['Name', 'Office', 'Designation', 'User type']
+
+        if search:
+            sql += """ AND (u.lname ILIKE %s OR u.fname ILIKE %s
+            OR u.livedname ILIKE %s OR u.mname ILIKE %s)"""
+            values += [f"%{search}%", f"%{search}%", f"%{search}%", f"%{search}%"]
+
         df = db.querydatafromdatabase(sql, values, cols)
         table = dbc.Table.from_dataframe(
             df,
