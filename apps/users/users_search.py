@@ -50,7 +50,7 @@ layout = html.Div(
                                     [
                                         dbc.Col(
                                             dbc.Input(
-                                                id = 'usr_src_input_user',
+                                                id = 'usr_src_input_search',
                                                 type = 'text',
                                                 placeholder = "Search by last name, first name, lived name, or middle name"
                                                 #value = 1
@@ -58,7 +58,7 @@ layout = html.Div(
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12'
                                         ),
                                     ], className = 'mb-1 mb-md-0',
-                                    id = 'usr_src_row_searchuser',
+                                    id = 'usr_src_row_search',
                                     class_name = row_m
                                 ),
                                 dbc.Row(
@@ -72,37 +72,27 @@ layout = html.Div(
                                                 id = 'usr_src_label_filter',
                                                 class_name = label_m
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-auto'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-2'
                                         ),
                                         dbc.Col(
-                                            dbc.DropdownMenu(
-                                                dbc.Checklist(
-                                                    id = 'usr_src_input_usertype_id',
-                                                    #type = 'text',
-                                                    #placeholder = "Search by last name, first name, lived name, or middle name"
-                                                    #value = 1
-                                                ),
-                                                id = 'usr_src_dropdown_usertype_id',
-                                                color = 'white',
-                                                label = 'User type',
-                                                #size = 'sm'
+                                            dcc.Dropdown(
+                                                id = 'usr_src_input_usertype_id',
+                                                multi = True,
+                                                #type = 'text',
+                                                #placeholder = "Search by last name, first name, lived name, or middle name"
+                                                #value = 1
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-auto'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-5'
                                         ),
                                         dbc.Col(
-                                            dbc.DropdownMenu(
-                                                dbc.Checklist(
-                                                    id = 'usr_src_input_office_id',
-                                                    #type = 'text',
-                                                    #placeholder = "Search by last name, first name, lived name, or middle name"
-                                                    #value = 1
-                                                ),
-                                                id = 'usr_src_dropdown_office_id',
-                                                color = 'white',
-                                                label = 'Office',
-                                                #size = 'sm'
+                                            dcc.Dropdown(
+                                                id = 'usr_src_input_office_id',
+                                                multi = True
+                                                #type = 'text',
+                                                #placeholder = "Search by last name, first name, lived name, or middle name"
+                                                #value = 1
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-auto'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-5'
                                         ),
                                     ], className = 'mb-1 mb-md-0',
                                     id = 'usr_src_row_filter',
@@ -131,6 +121,44 @@ layout = html.Div(
 
 usr_src_url_pathname = '/users/search'
 
+# Callback for populating dropdowns and checklists
+@app.callback(
+    [
+        Output('usr_src_input_usertype_id', 'options'),
+        Output('usr_src_input_office_id', 'options'),
+    ],
+    [
+        Input('url', 'pathname')
+    ]
+)
+
+def usr_src_populatedropdowns(pathname):
+    if pathname == usr_src_url_pathname:
+        dropdowns = []
+
+        # User types
+        sql = """SELECT label AS label, id AS value
+        FROM utilities.usertype;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        usertypes = df.to_dict('records')
+        dropdowns.append(usertypes)
+
+        # Offices
+        sql = """SELECT label AS label, id AS value
+        FROM utilities.office;
+        """
+        df = db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        offices = df.to_dict('records')
+        dropdowns.append(offices)
+
+        return dropdowns
+    else: raise PreventUpdate
+
 # Callback for searching users
 @app.callback(
     [
@@ -138,7 +166,7 @@ usr_src_url_pathname = '/users/search'
     ],
     [
         Input('url', 'pathname'),
-        Input('usr_src_input_user', 'value')
+        Input('usr_src_input_search', 'value')
     ]
 )
 
@@ -158,8 +186,9 @@ def usr_src_loadsearchresults(pathname, search):
 
         if search:
             sql += """ AND (u.lname ILIKE %s OR u.fname ILIKE %s
-            OR u.livedname ILIKE %s OR u.mname ILIKE %s)"""
-            values += [f"%{search}%", f"%{search}%", f"%{search}%", f"%{search}%"]
+            OR u.livedname ILIKE %s OR u.mname ILIKE %s
+            OR u.designation ILIKE %s)"""
+            values += [f"%{search}%", f"%{search}%", f"%{search}%", f"%{search}%", f"%{search}%"]
 
         df = db.querydatafromdatabase(sql, values, cols)
         table = dbc.Table.from_dataframe(
