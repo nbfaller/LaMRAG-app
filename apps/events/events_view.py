@@ -217,7 +217,7 @@ def eve_vie_loadsearchresults(pathname, search, type, isactive):
                 c += 1
             sql += """)"""
 
-        sql += """ ORDER BY e.name ASC;"""
+        sql += """ ORDER BY e.startdate ASC;"""
         df = db.querydatafromdatabase(sql, values, cols)
 
         for i in df.index:
