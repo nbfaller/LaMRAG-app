@@ -686,7 +686,7 @@ footer = html.Footer(
                                         html.A(html.Small([html.I(className = 'bi bi-patch-question me-2'), "Mga pirmi ginpapakiana (Frequently asked questions)"]), href = '/faq', style = hyperlink_style, target = '_blank'), html.Br(),
                                         html.A(html.Small([html.I(className = 'bi bi-shield-lock me-2'), "Polisiya hiúnong san pribasidad (Privacy policy)"]), href = '/privacy', style = hyperlink_style, target = '_blank'), html.Br(),
                                         html.A(html.Small([html.I(className = 'bi bi-megaphone me-2'), "Pagpaabot komento/suhestiyon (Feedback form)"]), href = '/feedback', style = hyperlink_style, target = '_blank'), html.Br(),
-                                        html.A(html.Small([html.I(className = 'bi bi-info-circle me-2'), "Hiúnong san LáMRAG (About LáMRAG)"]), href = '/about-us', style = hyperlink_style, target = '_blank')
+                                        html.A(html.Small([html.I(className = 'bi bi-info-circle me-2'), "Hiúnong san LáMRAG (About LáMRAG)"]), href = '/about-lamrag', style = hyperlink_style, target = '_blank')
                                     ],
                                 className = 'mb-0')
                             ], className = 'mb-3'

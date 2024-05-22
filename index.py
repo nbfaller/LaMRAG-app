@@ -8,7 +8,7 @@ from dash.exceptions import PreventUpdate
 import webbrowser
 # App definition
 from app import app
-from apps import dashboard, home, commonmodules as cm, error, sandbox
+from apps import dashboard, home, commonmodules as cm, error, sandbox, about
 from apps.users import users_register, users_search
 from apps.reports import reports_create
 from apps.events import events_create, events_view, events_profile
@@ -87,6 +87,8 @@ def displaypage(pathname, sessionlogout, user_id, usertype_id):
             if user_id < 0: # If logged out
                 if pathname == '/' or pathname == '/home':
                     returnlayout = home.layout
+                elif pathname == '/about' or pathname == '/about-lamrag':
+                    returnlayout = about.layout
                 elif pathname == '/data/barangays':
                     returnlayout = data_barangays.layout
                 elif pathname == '/data/demographics':
