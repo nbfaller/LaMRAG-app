@@ -109,7 +109,7 @@ def displaypage(pathname, sessionlogout, user_id, usertype_id):
                     returnlayout = users_search.layout
                 elif pathname == '/reports/create':
                     returnlayout = reports_create.layout
-                elif pathname == '/events' or '/events/view':
+                elif pathname == '/events' or pathname == '/events/view':
                     returnlayout = events_view.layout
                 elif pathname == '/events/create':
                     returnlayout = events_create.layout
