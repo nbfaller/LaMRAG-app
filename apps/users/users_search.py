@@ -82,7 +82,7 @@ layout = html.Div(
                                                 #placeholder = "Search by last name, first name, lived name, or middle name"
                                                 #value = 1
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-5'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-4'
                                         ),
                                         dbc.Col(
                                             dcc.Dropdown(
@@ -92,7 +92,7 @@ layout = html.Div(
                                                 #placeholder = "Search by last name, first name, lived name, or middle name"
                                                 #value = 1
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-5'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-6'
                                         ),
                                     ], className = 'mb-1 mb-md-0',
                                     id = 'usr_src_row_filter',
@@ -166,11 +166,13 @@ def usr_src_populatedropdowns(pathname):
     ],
     [
         Input('url', 'pathname'),
-        Input('usr_src_input_search', 'value')
+        Input('usr_src_input_search', 'value'),
+        Input('usr_src_input_usertype_id', 'value'),
+        Input('usr_src_input_office_id', 'value')
     ]
 )
 
-def usr_src_loadsearchresults(pathname, search):
+def usr_src_loadsearchresults(pathname, search, usertype, office):
     if pathname == usr_src_url_pathname:
         sql = """SELECT CONCAT(u.lname, ', ', COALESCE(u.livedname, u.fname), ' ', LEFT(u.mname, 1)) AS Name,
         o.name AS Office,
@@ -189,6 +191,26 @@ def usr_src_loadsearchresults(pathname, search):
             OR u.livedname ILIKE %s OR u.mname ILIKE %s
             OR o.name ILIKE %s OR u.designation ILIKE %s)"""
             values += [f"%{search}%", f"%{search}%", f"%{search}%", f"%{search}%", f"%{search}%", f"%{search}%"]
+        
+        if usertype:
+            c = 1
+            sql += """ AND ("""
+            for i in usertype:
+                sql += """ u.usertype_id = %s"""
+                if c < len(usertype): sql += """ OR"""
+                values += [i]
+                c += 1
+            sql += """)"""
+        
+        if office:
+            c = 1
+            sql += """ AND ("""
+            for i in office:
+                sql += """ u.office_id = %s"""
+                if c < len(office): sql += """ OR"""
+                values += [i]
+                c += 1
+            sql += """)"""
 
         df = db.querydatafromdatabase(sql, values, cols)
         table = dbc.Table.from_dataframe(
