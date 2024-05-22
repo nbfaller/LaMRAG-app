@@ -58,31 +58,54 @@ layout = html.Div(
                                             "Event profile",
                                             id = 'eve_pro_h1_header'
                                         ),
+                                        html.P(
+                                            id = 'eve_pro_htp_description',
+                                            className = p_m
+                                        )
                                     ],
-                                    #class_name = row_m,
+                                    class_name = row_m,
                                 )
                             ],
                             id = 'eve_pro_div_header',
-                            #className = div_m
+                            className = header_m
                         ),
                         # Basic information
                         html.Div(
                             [
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            id = 'eve_pro_col_basicinfo',
-                                            #class_name = 'table-responsive',
-                                            style = {
-                                                'max-width' : '100%',
-                                                'overflow' : 'scroll'
-                                            }
-                                        )
-                                    ], class_name = row_m
-                                ),
+                                dbc.Card(
+                                    dbc.CardBody(
+                                        [
+                                            dbc.Row(
+                                                [
+                                                    html.H4(
+                                                        [
+                                                            html.I(className = 'bi bi-exclamation-square-fill me-2'),
+                                                            "Primero nga impormasyon",
+                                                            #html.Br(),
+                                                            html.Small(" (Basic information)", className = 'text-muted')
+                                                        ]
+                                                    ),
+                                                ], class_name = row_m
+                                            ),
+                                            dbc.Row(
+                                                [
+                                                    dbc.Col(
+                                                        id = 'eve_pro_col_basicinfo',
+                                                        #class_name = 'table-responsive',
+                                                        style = {
+                                                            'max-width' : '100%',
+                                                            'overflow' : 'scroll'
+                                                        }
+                                                    )
+                                                ], #class_name = row_m
+                                            )
+                                        ]
+                                    ),
+                                    style = card_style
+                                )
                             ],
                             id = 'eve_pro_div_basicinfo',
-                            #className = div_m
+                            className = div_m
                         )
                     ],
                     class_name = 'col-md-10'
@@ -99,7 +122,8 @@ eve_pro_url_pathname = '/events/profile'
 @app.callback(
     [
         Output('eve_pro_h1_header', 'children'),
-        Output('eve_pro_col_basicinfo', 'children')
+        Output('eve_pro_htp_description', 'children'),
+        Output('eve_pro_col_basicinfo', 'children'),
     ],
     [
         Input('url', 'pathname')
@@ -132,26 +156,77 @@ def eve_pro_setevent(pathname, search):
                 """
                 values = [event_id]
                 cols = [
-                    'Name', 'Type', 'Start date', 'End date',
-                    'Description', 'Creator', 'Creation time',
-                    'Status', 'Status time'
+                    'Name', 'Klase (Type)', 'Petsa san pagtikang (Start date)', 'Petsa san pagtapos (End date)',
+                    'Deskripsiyon (Description)', 'Naghimo (Creator)', 'Oras san paghimo (Creation time)',
+                    'Kamutangan (Status)', 'Oras san kamutangan (Status time)'
                 ]
                 df = db.querydatafromdatabase(sql, values, cols)
-                print(df)
 
                 # Header
                 to_return.append(df['Name'][0])
+                # Description
+                to_return.append(df['Deskripsiyon (Description)'][0])
 
                 # Basic information table
-                table_df = df[['Type', 'Start date', 'End date', 'Description', 'Creator', 'Creation time', 'Status', 'Status time']].transpose()
-                table_df.insert(0, "Information", [html.B('Type'), html.B('Start date'), html.B('End date'), html.B('Description'), html.B('Creator'), html.B('Creation time'), html.B('Status'), html.B('Status time')], True)
+                table_df = df[['Klase (Type)', 'Petsa san pagtikang (Start date)', 'Petsa san pagtapos (End date)', 'Naghimo (Creator)', 'Oras san paghimo (Creation time)', 'Kamutangan (Status)', 'Oras san kamutangan (Status time)']].transpose()
+                table_df.insert(
+                    0,
+                    "Information",
+                    [
+                        html.Span(
+                            [
+                                html.B("Klase"),
+                                html.Small(" (Type)", className = 'text-muted')
+                            ]
+                        ),
+                        html.Span(
+                            [
+                                html.B("Petsa san pagtikang"),
+                                html.Small(" (Start date)", className = 'text-muted')
+                            ]
+                        ),
+                        html.Span(
+                            [
+                                html.B("Petsa san pagtapos"),
+                                html.Small(" (End date)", className = 'text-muted')
+                            ]
+                        ),
+                        html.Span(
+                            [
+                                html.B("Naghimo"),
+                                html.Small(" (Creator)", className = 'text-muted')
+                            ]
+                        ),
+                        html.Span(
+                            [
+                                html.B("Oras san paghimo"),
+                                html.Small(" (Creation time)", className = 'text-muted')
+                            ]
+                        ),
+                        html.Span(
+                            [
+                                html.B("Kamutangan"),
+                                html.Small(" (Status)", className = 'text-muted')
+                            ]
+                        ),
+                        html.Span(
+                            [
+                                html.B("Oras san kamutangan"),
+                                html.Small(" (Status time)", className = 'text-muted')
+                            ]
+                        ),
+                    ],
+                    True
+                )
                 table_df = table_df.rename(columns={'Information' : '', 0 : ''})
                 table = dbc.Table.from_dataframe(
                     table_df,
                     striped = False,
                     bordered = False,
                     hover = False,
-                    size = 'sm'
+                    size = 'sm',
+                    borderless = True,
+                    style = {'margin' : '0px'}
                 )
                 to_return.append(table)
             else: raise PreventUpdate
