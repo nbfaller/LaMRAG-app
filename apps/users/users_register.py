@@ -1869,7 +1869,6 @@ def usr_reg_confirmregistration(
 # Callback for creating new user
 @app.callback(
     [
-        #Output('url', 'pathname'),
         # Success modal
         #Output('usr_reg_modal_regsuccess', 'is_open'),
         Output('usr_reg_store_regsuccess', 'data'),

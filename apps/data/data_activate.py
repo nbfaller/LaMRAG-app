@@ -708,24 +708,3 @@ def dat_ena_submitcreation(
             return [alert_open, alert_class_name, alert_color, alert_col_text, password_invalid, window_id]
         else: raise PreventUpdate
     else: raise PreventUpdate
-
-# Callback for routing to new community profiling window page
-#@app.callback(
-#    [
-#        Output('url', 'pathname')
-#    ],
-#    [
-#        Input('dat_ena_sto_window_id', 'modified_timestamp')
-#    ],
-#    [
-#        State('app_currentuser_id', 'data'),
-#        State('url', 'pathname')
-#    ],
-#    prevent_initial_call = True
-#)
-
-#def com_home_routelogin(logintime, user_id, pathname):
-#    ctx = dash.callback_context
-#    if ctx.triggered and pathname == 'dat_ena_url_pathname': # Fix this part
-#        return ['/dashboard']
-#    else: raise PreventUpdate
