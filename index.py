@@ -10,7 +10,7 @@ import webbrowser
 from app import app
 from apps import dashboard, home, commonmodules as cm, error, sandbox, about
 from apps.users import users_register, users_search
-from apps.reports import reports_create
+from apps.reports import reports_create, reports_view
 from apps.events import events_create, events_view, events_profile
 from apps.data import data_activate, data_barangays, data_demographics
 from apps.data.household import data_household_upload
@@ -99,6 +99,8 @@ def displaypage(pathname, sessionlogout, user_id, usertype_id):
                 if pathname == '/logout':
                     returnlayout = home.layout
                     sessionlogout = True
+                elif pathname == '/about' or pathname == '/about-lamrag':
+                    returnlayout = about.layout
                 elif pathname == '/data/barangays':
                     returnlayout = data_barangays.layout
                 elif pathname == '/data/demographics':
@@ -109,6 +111,8 @@ def displaypage(pathname, sessionlogout, user_id, usertype_id):
                     returnlayout = users_register.layout
                 elif pathname == '/users/search':
                     returnlayout = users_search.layout
+                elif pathname == '/reports' or pathname == '/reports/view':
+                    returnlayout = reports_view.layout
                 elif pathname == '/reports/create':
                     returnlayout = reports_create.layout
                 elif pathname == '/events' or pathname == '/events/view':

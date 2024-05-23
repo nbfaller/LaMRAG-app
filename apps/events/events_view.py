@@ -1,7 +1,3 @@
-# FIX THIS ERROR
-# When you input permanent address first and add present address later
-# details in permanent address fields disappear.
-
 # Dash related dependencies
 import dash
 from dash import dcc, html, dash_table, callback
@@ -59,7 +55,7 @@ layout = html.Div(
                                                 placeholder = "Search by name or event type."
                                                 #value = 1
                                                ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12'
+                                            class_name = 'align-self-center mb-2 mb-md-0 col-12'
                                         ),
                                     ], className = 'mb-1 mb-md-0',
                                     id = 'eve_vie_row_search',
@@ -76,7 +72,7 @@ layout = html.Div(
                                                 id = 'eve_vie_label_filter',
                                                 class_name = label_m
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-2'
+                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3 col-lg-2'
                                         ),
                                         dbc.Col(
                                             dcc.Dropdown(
@@ -91,7 +87,7 @@ layout = html.Div(
                                                 value = [True]
                                                 #value = 1
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
+                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-4 col-lg-3'
                                         ),
                                         dbc.Col(
                                             dcc.Dropdown(
@@ -101,7 +97,7 @@ layout = html.Div(
                                                 placeholder = "Event type"
                                                 #value = 1
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-7'
+                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-5 col-lg-7'
                                         ),
                                     ], className = 'mb-1 mb-md-0',
                                     id = 'eve_vie_row_filter',
@@ -184,8 +180,8 @@ def eve_vie_loadsearchresults(pathname, search, type, isactive):
         e.id AS id,
         e.name AS name,
         CONCAT(et.symbol, ' ', et.label_war, ' (', et.label_en, ')') AS eventtype,
-        e.startdate AS startdate,
-        e.enddate AS enddate
+        TO_CHAR(e.startdate, 'Month dd, yyyy') AS startdate,
+        TO_CHAR(e.enddate, 'Month dd, yyyy') AS enddate
         FROM events.event AS e
         LEFT JOIN utilities.eventtype AS et ON e.type_id = et.id
         """
