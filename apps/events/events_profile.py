@@ -175,42 +175,49 @@ def eve_pro_setevent(pathname, search):
                     [
                         html.Span(
                             [
+                                html.I(className = 'bi bi-menu-app me-2'),
                                 html.B("Klase"),
                                 html.Small(" (Type)", className = 'text-muted')
                             ]
                         ),
                         html.Span(
                             [
+                                html.I(className = 'bi bi-calendar-event me-2'),
                                 html.B("Petsa san pagtikang"),
                                 html.Small(" (Start date)", className = 'text-muted')
                             ]
                         ),
                         html.Span(
                             [
+                                html.I(className = 'bi bi-calendar3-range me-2'),
                                 html.B("Petsa san pagtapos"),
                                 html.Small(" (End date)", className = 'text-muted')
                             ]
                         ),
                         html.Span(
                             [
+                                html.I(className = 'bi bi-person me-2'),
                                 html.B("Naghimo"),
                                 html.Small(" (Creator)", className = 'text-muted')
                             ]
                         ),
                         html.Span(
                             [
+                                html.I(className = 'bi bi-clock me-2'),
                                 html.B("Oras san paghimo"),
                                 html.Small(" (Creation time)", className = 'text-muted')
                             ]
                         ),
                         html.Span(
                             [
+                                html.I(className = 'bi bi-patch-question me-2'),
                                 html.B("Kamutangan"),
                                 html.Small(" (Status)", className = 'text-muted')
                             ]
                         ),
                         html.Span(
                             [
+                                html.I(className = 'bi bi-clock-history me-2'),
                                 html.B("Oras san kamutangan"),
                                 html.Small(" (Status time)", className = 'text-muted')
                             ]
