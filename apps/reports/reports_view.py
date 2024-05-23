@@ -83,32 +83,6 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Label(
                                                 [
-                                                    "Search", tag_required, #html.Br(),
-                                                    #html.Small(" (Event)", className = 'text-muted')
-                                                ],
-                                                id = 'rep_vie_label_brgy_id',
-                                                class_name = label_m
-                                            ),
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3 col-lg-2'
-                                        ),
-                                        dbc.Col(
-                                            dbc.Input(
-                                                id = 'rep_vie_input_search',
-                                                type = 'text',
-                                                placeholder = "Search by name or event type."
-                                                #value = 1
-                                               ),
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9 col-lg-10'
-                                        ),
-                                    ], className = 'mb-1 mb-md-0',
-                                    id = 'rep_vie_row_search',
-                                    class_name = row_m
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            dbc.Label(
-                                                [
                                                     "Filter by:", #html.Br(),
                                                     #html.Small(" (Year)", className = 'text-muted')
                                                 ],
@@ -125,22 +99,35 @@ layout = html.Div(
                                                 placeholder = "Report type",
                                                 #value = 1
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-6 col-lg-7'
+                                            class_name = 'align-self-center mb-0 col-12 col-md-9 col-lg-10'
                                         ),
+                                    ],
+                                    class_name = row_m
+                                ),
+                                dbc.Row(
+                                    [
                                         dbc.Col(
                                             dcc.Dropdown(
                                                 id = 'rep_vie_input_event_id',
                                                 multi = True,
                                                 #type = 'text',
-                                                placeholder = "Event"
+                                                placeholder = "Event",
                                                 #value = 1
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-6 col-lg-7'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Input(
+                                                id = 'rep_vie_input_purok',
+                                                type = 'number',
+                                                placeholder = "Purok",
+                                                min = 1
                                             ),
                                             class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3 col-lg-3'
                                         ),
-                                    ], className = 'mb-1 mb-md-0',
-                                    id = 'rep_vie_row_filter',
-                                    class_name = row_m
-                                ),
+                                    ],
+                                    className = row_m + ' justify-content-end'
+                                )
                             ],
                             id = 'rep_vie_div_header',
                             className = header_m
@@ -235,13 +222,12 @@ def rep_vie_populatedropdowns(pathname, region, province, citymun, brgy):
     ],
     [
         Input('url', 'pathname'),
-        Input('rep_vie_input_search', 'value'),
         Input('rep_vie_input_reporttype_id', 'value'),
         Input('rep_vie_input_event_id', 'value'),
     ]
 )
 
-def rep_vie_loadsearchresults(pathname, search, type, eventtype):
+def rep_vie_loadsearchresults(pathname, type, event):
     conditions = [
         pathname == '/reports',
         pathname == '/reports/view'
@@ -254,7 +240,7 @@ def rep_vie_loadsearchresults(pathname, search, type, eventtype):
         CONCAT(rt.label_war, ' (', rt.label_en, ')') as reporttype_id,
         r.purok,
         rv.occurrence_date,
-        rv.occurrence_time,
+        rv.occurrence_time::time,
         CONCAT(u.lname, ', ', COALESCE(u.livedname, u.fname), ' ', LEFT(u.mname, 1)) AS creator_name,
         TO_CHAR(rv.create_time, 'Month dd, yyyy • HH:MI:SS AM') AS create_time,
         CONCAT(rs.label_war, ' (', rs.label_en, ')') as reportstatus_id
@@ -267,6 +253,26 @@ def rep_vie_loadsearchresults(pathname, search, type, eventtype):
         values = []
         cols = ['Report ID', 'Version No.', 'Type', 'Purok', 'Occurrence date', 'Occurrence time', 'Creator', 'Creation time', 'Status']
 
+        if type:
+            c = 1
+            sql += """ WHERE ("""
+            for i in type:
+                sql += """ r.type_id = %s"""
+                if c < len(type): sql += """ OR"""
+                values += [i]
+                c += 1
+            sql += """)"""
+        
+        if event:
+            c = 1
+            sql += """ AND ("""
+            for i in event:
+                sql += """ r.event_id = %s"""
+                if c < len(event): sql += """ OR"""
+                values += [i]
+                c += 1
+            sql += """)"""
+        
         sql += """ ORDER BY rv.create_time DESC;"""
         df = db.querydatafromdatabase(sql, values, cols)
 
