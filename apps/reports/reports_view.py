@@ -227,3 +227,58 @@ def rep_vie_populatedropdowns(pathname, region, province, citymun, brgy):
 
         return dropdowns
     else: raise PreventUpdate
+
+# Callback for searching reports
+@app.callback(
+    [
+        Output('rep_vie_div_results', 'children')
+    ],
+    [
+        Input('url', 'pathname'),
+        Input('rep_vie_input_search', 'value'),
+        Input('rep_vie_input_reporttype_id', 'value'),
+        Input('rep_vie_input_event_id', 'value'),
+    ]
+)
+
+def rep_vie_loadsearchresults(pathname, search, type, eventtype):
+    conditions = [
+        pathname == '/reports',
+        pathname == '/reports/view'
+    ]
+    if any(conditions):
+        # Retrieve users as dataframe
+        sql = """SELECT
+        r.id AS report_id,
+        rv.id AS version_id,
+        CONCAT(rt.label_war, ' (', rt.label_en, ')') as reporttype_id,
+        r.purok,
+        rv.occurrence_date,
+        rv.occurrence_time,
+        CONCAT(u.lname, ', ', COALESCE(u.livedname, u.fname), ' ', LEFT(u.mname, 1)) AS creator_name,
+        TO_CHAR(rv.create_time, 'Month dd, yyyy • HH:MI:SS AM') AS create_time,
+        CONCAT(rs.label_war, ' (', rs.label_en, ')') as reportstatus_id
+        FROM reports.reportversion AS rv
+        LEFT JOIN reports.report AS r ON rv.report_id = r.id
+        LEFT JOIN users.user AS u ON rv.creator_id = u.id
+        LEFT JOIN utilities.reporttype AS rt ON r.type_id = rt.id
+        LEFT JOIN utilities.reportstatus AS rs ON rv.status_id = rs.id
+        """
+        values = []
+        cols = ['Report ID', 'Version No.', 'Type', 'Purok', 'Occurrence date', 'Occurrence time', 'Creator', 'Creation time', 'Status']
+
+        sql += """ ORDER BY rv.create_time DESC;"""
+        df = db.querydatafromdatabase(sql, values, cols)
+
+        #df = df[['Name', 'Event type', 'Start date', 'End date']]
+
+        table = dbc.Table.from_dataframe(
+            df,
+            striped = False,
+            bordered = False,
+            hover = True,
+            size = 'sm'
+        )
+
+        return [table]
+    else: raise PreventUpdate
