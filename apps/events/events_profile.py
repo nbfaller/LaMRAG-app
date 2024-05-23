@@ -69,12 +69,13 @@ layout = html.Div(
                             id = 'eve_pro_div_header',
                             className = header_m
                         ),
+                        html.Hr(),
                         # Basic information
                         html.Div(
                             [
-                                dbc.Card(
-                                    dbc.CardBody(
-                                        [
+                                #dbc.Card(
+                                    #dbc.CardBody(
+                                        #[
                                             dbc.Row(
                                                 [
                                                     html.H4(
@@ -99,12 +100,62 @@ layout = html.Div(
                                                     )
                                                 ], #class_name = row_m
                                             )
-                                        ]
-                                    ),
-                                    style = card_style
-                                )
+                                        #]
+                                    #),
+                                    #style = card_style
+                                #)
                             ],
                             id = 'eve_pro_div_basicinfo',
+                            className = div_m
+                        ),
+                        html.Hr(),
+                        html.Div(
+                            [
+                                dbc.Row(
+                                    [
+                                        html.H4(
+                                            [
+                                                html.I(className = 'bi bi-graph-up me-2'),
+                                                "Data summary",
+                                                #html.Br(),
+                                                #html.Small(" (Generated consolidated reports)", className = 'text-muted')
+                                            ]
+                                        ),
+                                    ], class_name = row_m
+                                ),
+                            ],
+                            id = 'eve_pro_div_data',
+                            className = div_m
+                        ),
+                        html.Hr(),
+                        html.Div(
+                            [
+                                dbc.Row(
+                                    [
+                                        html.H4(
+                                            [
+                                                html.I(className = 'bi bi-clipboard-data-fill me-2'),
+                                                "Mga ginhimo nga consolidated report",
+                                                #html.Br(),
+                                                html.Small(" (Generated consolidated reports)", className = 'text-muted')
+                                            ]
+                                        ),
+                                    ], class_name = row_m
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            id = 'eve_pro_col_reportsgraph',
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-4'
+                                        ),
+                                        dbc.Col(
+                                            id = 'eve_pro_col_reportsgraph',
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-8'
+                                        )
+                                    ]
+                                ),
+                            ],
+                            id = 'eve_pro_div_reports',
                             className = div_m
                         )
                     ],
@@ -145,7 +196,7 @@ def eve_pro_setevent(pathname, search):
                 CONCAT(et.symbol, ' ', et.label_war, ' (', et.label_en, ')'),
                 e.startdate, e.enddate,
                 e.description,
-                u.username AS creator,
+                CONCAT(u.lname, ', ', COALESCE(u.livedname, u.fname), ' ', LEFT(u.mname, 1), ' (', u.username, ')') AS creator,
                 e.create_time,
                 e.is_active AS status,
                 e.is_active_time AS status_time
@@ -175,7 +226,7 @@ def eve_pro_setevent(pathname, search):
                     [
                         html.Span(
                             [
-                                html.I(className = 'bi bi-menu-app me-2'),
+                                html.I(className = 'bi bi-tag me-2'),
                                 html.B("Klase"),
                                 html.Small(" (Type)", className = 'text-muted')
                             ]
