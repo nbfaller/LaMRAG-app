@@ -12,10 +12,7 @@ from apps import dbconnect as db
 
 tag_required = html.Sup("*", className = 'text-danger')
 
-hyperlink_style = {
-    'text-decoration' : 'none',
-    'color' : 'inherit'
-}
+
 
 # Default margins and spacing settings
 header_m = 'mb-3'
@@ -221,7 +218,6 @@ def eve_vie_loadsearchresults(pathname, search, type, isactive):
             df.loc[i, 'Name'] = html.A(
                 df['Name'][i],
                 href = '/events/event?id=%s' % df['ID No.'][i],
-                style = hyperlink_style
             )
 
         df = df[['Name', 'Event type', 'Start date', 'End date']]

@@ -637,10 +637,7 @@ sidebar = dbc.Offcanvas(
 )
 
 # Footer
-hyperlink_style = {
-    'text-decoration' : 'none',
-    'color' : 'inherit'
-}
+
 footer = html.Footer(
     [
         dbc.Row(
@@ -677,17 +674,17 @@ footer = html.Footer(
                             [
                                 html.P(html.Small("Republic of the Philippines • City of Calbayog"), className = 'mb-0'),
                                 html.H4("City Disaster Risk Reduction and Management Office", className = 'mb-0 fw-bold'),
-                                html.A(html.P(html.Small([html.I(className = 'bi bi-pin-map-fill me-2'), "Government Center, Magsaysay Ext. (Diversion Rd.), Brgy. Bagacay, Calbayog City, Samar 6710"]), className = 'mb-0'), href = 'https://maps.app.goo.gl/Sjw7n6DwXn5qvUfg9', style = hyperlink_style, target = '_blank')
+                                html.A(html.P(html.Small([html.I(className = 'bi bi-pin-map-fill me-2'), "Government Center, Magsaysay Ext. (Diversion Rd.), Brgy. Bagacay, Calbayog City, Samar 6710"]), className = 'mb-0'), href = 'https://maps.app.goo.gl/Sjw7n6DwXn5qvUfg9', target = '_blank')
                             ], className = 'mb-3'
                         ),
                         html.Div(
                             [
                                 html.P(
                                     [
-                                        html.A(html.Small([html.I(className = 'bi bi-patch-question me-2'), "Mga pirmi ginpapakiana (Frequently asked questions)"]), href = '/faq', style = hyperlink_style, target = '_blank'), html.Br(),
-                                        html.A(html.Small([html.I(className = 'bi bi-shield-lock me-2'), "Polisiya hiúnong san pribasidad (Privacy policy)"]), href = '/privacy', style = hyperlink_style, target = '_blank'), html.Br(),
-                                        html.A(html.Small([html.I(className = 'bi bi-megaphone me-2'), "Pagpaabot komento/suhestiyon (Feedback form)"]), href = '/feedback', style = hyperlink_style, target = '_blank'), html.Br(),
-                                        html.A(html.Small([html.I(className = 'bi bi-info-circle me-2'), "Hiúnong san LáMRAG (About LáMRAG)"]), href = '/about-lamrag', style = hyperlink_style, target = '_blank')
+                                        html.A(html.Small([html.I(className = 'bi bi-patch-question me-2'), "Mga pirmi ginpapakiana (Frequently asked questions)"]), href = '/faq', target = '_blank'), html.Br(),
+                                        html.A(html.Small([html.I(className = 'bi bi-shield-lock me-2'), "Polisiya hiúnong san pribasidad (Privacy policy)"]), href = '/privacy', target = '_blank'), html.Br(),
+                                        html.A(html.Small([html.I(className = 'bi bi-megaphone me-2'), "Pagpaabot komento/suhestiyon (Feedback form)"]), href = '/feedback', target = '_blank'), html.Br(),
+                                        html.A(html.Small([html.I(className = 'bi bi-info-circle me-2'), "Hiúnong san LáMRAG (About LáMRAG)"]), href = '/about-lamrag', target = '_blank')
                                     ],
                                 className = 'mb-0')
                             ], className = 'mb-3'
@@ -727,12 +724,12 @@ footer = html.Footer(
                                         dbc.Row(
                                             html.Small([html.I(className = 'bi bi-house-fill me-2'), "Local Government"], className = 'mb-0 fw-bold')
                                         ),
-                                        html.A(html.P(html.Small("Main Website"), className = 'mb-0'), href = 'https://calbayog.gov.ph', style = hyperlink_style, target = '_blank'),
-                                        html.A(html.P(html.Small("Public Information Office"), className = 'mb-0'), href = 'https://www.facebook.com/people/Calbayog-City-Public-Information-Office/100090744381505/', style = hyperlink_style, target = '_blank'),
-                                        html.A(html.P(html.Small("Office of the City Mayor"), className = 'mb-0'), href = 'https://www.facebook.com/people/Raymund-Monmon-C-Uy/100086298882034/', style = hyperlink_style, target = '_blank'),
-                                        html.A(html.P(html.Small("Office of the City Vice Mayor"), className = 'mb-0'), href = 'https://www.facebook.com/RexMDaguman', style = hyperlink_style, target = '_blank'),
-                                        html.A(html.P(html.Small("Sangguniang Panlungsod"), className = 'mb-0'), href = 'https://www.facebook.com/calbayogsp/', style = hyperlink_style, target = '_blank'),
-                                        html.A(html.P(html.Small("Directory of Offices"), className = 'mb-0'), href = 'https://calbayog.gov.ph/contact-us/', style = hyperlink_style, target = '_blank')
+                                        html.A(html.P(html.Small("Main Website"), className = 'mb-0'), href = 'https://calbayog.gov.ph', target = '_blank'),
+                                        html.A(html.P(html.Small("Public Information Office"), className = 'mb-0'), href = 'https://www.facebook.com/people/Calbayog-City-Public-Information-Office/100090744381505/', target = '_blank'),
+                                        html.A(html.P(html.Small("Office of the City Mayor"), className = 'mb-0'), href = 'https://www.facebook.com/people/Raymund-Monmon-C-Uy/100086298882034/', target = '_blank'),
+                                        html.A(html.P(html.Small("Office of the City Vice Mayor"), className = 'mb-0'), href = 'https://www.facebook.com/RexMDaguman', target = '_blank'),
+                                        html.A(html.P(html.Small("Sangguniang Panlungsod"), className = 'mb-0'), href = 'https://www.facebook.com/calbayogsp/', target = '_blank'),
+                                        html.A(html.P(html.Small("Directory of Offices"), className = 'mb-0'), href = 'https://calbayog.gov.ph/contact-us/', target = '_blank')
                                     ],
                                     class_name = 'col-lg-4 col-md-6 col-sm-4 col-xs-12',
                                 ),
@@ -745,12 +742,12 @@ footer = html.Footer(
                                             [
                                                 dbc.Col(
                                                     [
-                                                        html.A(html.P(html.Small("GOV.PH"), className = 'mb-0'), href = 'https://www.gov.ph', style = hyperlink_style, target = '_blank'),
-                                                        html.A(html.P(html.Small("Official Gazette"), className = 'mb-0'), href = 'https://officialgazette.gov.ph', style = hyperlink_style, target = '_blank'),
-                                                        html.A(html.P(html.Small("Open Data Portal"), className = 'mb-0'), href = 'https://data.gov.ph', style = hyperlink_style, target = '_blank'),
-                                                        html.A(html.P(html.Small("The President"), className = 'mb-0'), href = 'https://president.gov.ph', style = hyperlink_style, target = '_blank'),
-                                                        html.A(html.P(html.Small("Office of the President"), className = 'mb-0'), href = 'https://op-proper.gov.ph', style = hyperlink_style, target = '_blank'),
-                                                        html.A(html.P(html.Small("Office of the Vice President"), className = 'mb-0'), href = 'https://ovp.gov.ph', style = hyperlink_style, target = '_blank'),
+                                                        html.A(html.P(html.Small("GOV.PH"), className = 'mb-0'), href = 'https://www.gov.ph', target = '_blank'),
+                                                        html.A(html.P(html.Small("Official Gazette"), className = 'mb-0'), href = 'https://officialgazette.gov.ph', target = '_blank'),
+                                                        html.A(html.P(html.Small("Open Data Portal"), className = 'mb-0'), href = 'https://data.gov.ph', target = '_blank'),
+                                                        html.A(html.P(html.Small("The President"), className = 'mb-0'), href = 'https://president.gov.ph', target = '_blank'),
+                                                        html.A(html.P(html.Small("Office of the President"), className = 'mb-0'), href = 'https://op-proper.gov.ph', target = '_blank'),
+                                                        html.A(html.P(html.Small("Office of the Vice President"), className = 'mb-0'), href = 'https://ovp.gov.ph', target = '_blank'),
                                                     ],
                                                     lg = 6,
                                                     md = 12,
@@ -760,11 +757,11 @@ footer = html.Footer(
                                                 ),
                                                 dbc.Col(
                                                     [
-                                                        html.A(html.P(html.Small("Senate of the Philippines"), className = 'mb-0'), href = 'https://senate.gov.ph', style = hyperlink_style, target = '_blank'),
-                                                        html.A(html.P(html.Small("House of Representatives"), className = 'mb-0'), href = 'https://congress.gov.ph', style = hyperlink_style, target = '_blank'),
-                                                        html.A(html.P(html.Small("Supreme Court"), className = 'mb-0'), href = 'https://sc.judiciary.gov.ph', style = hyperlink_style, target = '_blank'),
-                                                        html.A(html.P(html.Small("Court of Appeals"), className = 'mb-0'), href = 'https://ca.judiciary.gov.ph', style = hyperlink_style, target = '_blank'),
-                                                        html.A(html.P(html.Small("Sandiganbayan"), className = 'mb-0'), href = 'https://sb.judiciary.gov.ph', style = hyperlink_style, target = '_blank'),
+                                                        html.A(html.P(html.Small("Senate of the Philippines"), className = 'mb-0'), href = 'https://senate.gov.ph', target = '_blank'),
+                                                        html.A(html.P(html.Small("House of Representatives"), className = 'mb-0'), href = 'https://congress.gov.ph', target = '_blank'),
+                                                        html.A(html.P(html.Small("Supreme Court"), className = 'mb-0'), href = 'https://sc.judiciary.gov.ph', target = '_blank'),
+                                                        html.A(html.P(html.Small("Court of Appeals"), className = 'mb-0'), href = 'https://ca.judiciary.gov.ph', target = '_blank'),
+                                                        html.A(html.P(html.Small("Sandiganbayan"), className = 'mb-0'), href = 'https://sb.judiciary.gov.ph', target = '_blank'),
                                                     ],
                                                     lg = 6,
                                                     md = 12,

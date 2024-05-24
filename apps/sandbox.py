@@ -9,10 +9,7 @@ from app import app
 from apps import dbconnect as db
 
 tag_required = html.Sup("*", className = 'text-danger')
-hyperlink_style = {
-    'text-decoration' : 'none',
-    'color' : 'inherit'
-}
+
 
 # Default margins and spacing settings
 header_m = 'mb-3'
@@ -254,7 +251,6 @@ layout = html.Div(
                                                                         html.A(
                                                                             "puwesto yana sa GPS",
                                                                             #id = 'rep_cre_geoloc_loc_war',
-                                                                            style = hyperlink_style,
                                                                             target = '_blank'
                                                                         )
                                                                     ),
@@ -267,7 +263,6 @@ layout = html.Div(
                                                                                 html.A(
                                                                                     "GPS location",
                                                                                     #id = 'rep_cre_geoloc_loc_en',
-                                                                                    style = hyperlink_style,
                                                                                     target = '_blank'
                                                                                 )
                                                                             ),

@@ -12,10 +12,6 @@ from app import app
 from apps import dbconnect as db
 
 tag_required = html.Sup("*", className = 'text-danger')
-hyperlink_style = {
-    'text-decoration' : 'none',
-    'color' : 'inherit'
-}
 card_style = {
     'border-radius' : '0.75rem',
     'overflow' : 'hidden',
@@ -124,8 +120,7 @@ layout = html.Div(
                                                     """,
                                                     html.A(
                                                         html.B("Industrial Engineering and Operations Research Department (IEORD)"),
-                                                        href = 'https://ieor.engg.upd.edu.ph',
-                                                        style = hyperlink_style
+                                                        href = 'https://ieor.engg.upd.edu.ph'
                                                     ),
                                                     """ of the University of the Philippines College of Engineering in Diliman, Quezon City.
                                                     The project team is composed of:"""

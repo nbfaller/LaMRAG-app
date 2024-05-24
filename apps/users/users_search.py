@@ -16,10 +16,7 @@ from apps import dbconnect as db
 
 tag_required = html.Sup("*", className = 'text-danger')
 
-hyperlink_style = {
-    'text-decoration' : 'none',
-    'color' : 'inherit'
-}
+
 
 # Default margins and spacing settings
 header_m = 'mb-3'
@@ -227,8 +224,7 @@ def usr_src_loadsearchresults(pathname, search, usertype, office):
             # Names as hyperlinks
             df.loc[i, 'Name'] = html.A(
                 df['Name'][i],
-                href = '/users/user?id=%s' % df['ID No.'][i],
-                style = hyperlink_style
+                href = '/users/user?id=%s' % df['ID No.'][i]
             )
             # User types as badges
             if df['User type'][i] == 'Administrator': badge_color = 'warning'

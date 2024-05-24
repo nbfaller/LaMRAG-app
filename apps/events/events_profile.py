@@ -13,10 +13,6 @@ from app import app
 from apps import dbconnect as db
 
 tag_required = html.Sup("*", className = 'text-danger')
-hyperlink_style = {
-    'text-decoration' : 'none',
-    'color' : 'inherit'
-}
 card_style = {
     'border-radius' : '0.75rem',
     'overflow' : 'hidden',

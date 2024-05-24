@@ -10,10 +10,7 @@ from app import app
 from apps import dbconnect as db
 
 tag_required = html.Sup("*", className = 'text-danger')
-hyperlink_style = {
-    'text-decoration' : 'none',
-    'color' : 'inherit'
-}
+
 
 # Default margins and spacing settings
 header_m = 'mb-3'
@@ -2250,8 +2247,8 @@ def rep_cre_populatedropdowns(pathname, region, province, citymun, brgy):
                                 html.Div(dmgdhousetype_list),
                                 html.Div(
                                     [
-                                        "Ginkuhaan sini nga mga depinisyon: ", html.A("Memorandum Circular No. 6, s. 2019 san DSWD", href = 'https://www.dswd.gov.ph/issuances/MCs/MC_2019-006.pdf', style = hyperlink_style), html.Br(),
-                                        html.Small(["(Source of definitions: ", html.A("Memorandum Circular No. 6, s. 2019 san DSWD", href = 'https://www.dswd.gov.ph/issuances/MCs/MC_2019-006.pdf', style = hyperlink_style), ")"], className = 'text-muted')
+                                        "Ginkuhaan sini nga mga depinisyon: ", html.A("Memorandum Circular No. 6, s. 2019 san DSWD", href = 'https://www.dswd.gov.ph/issuances/MCs/MC_2019-006.pdf'), html.Br(),
+                                        html.Small(["(Source of definitions: ", html.A("Memorandum Circular No. 6, s. 2019 san DSWD", href = 'https://www.dswd.gov.ph/issuances/MCs/MC_2019-006.pdf'), ")"], className = 'text-muted')
                                     ],
                                     className = 'mb-2'
                                 ),

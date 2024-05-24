@@ -12,10 +12,7 @@ from apps import dbconnect as db
 
 tag_required = html.Sup("*", className = 'text-danger')
 
-hyperlink_style = {
-    'text-decoration' : 'none',
-    'color' : 'inherit'
-}
+
 
 # Default margins and spacing settings
 header_m = 'mb-3'
@@ -289,8 +286,7 @@ def rep_vie_loadsearchresults(pathname, type, event, purok, region, province, ci
             # Names as hyperlinks
             df.loc[i, 'Report type'] = html.A(
                 df['Report type'][i],
-                href = '/reports/report?id=%s' % df['No.'][i],
-                style = hyperlink_style
+                href = '/reports/report?id=%s' % df['No.'][i]
             )
 
         table = dbc.Table.from_dataframe(

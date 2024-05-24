@@ -12,10 +12,6 @@ from app import app
 from apps import dbconnect as db
 
 tag_required = html.Sup("*", className = 'text-danger')
-hyperlink_style = {
-    'text-decoration' : 'none',
-    'color' : 'inherit'
-}
 card_style = {
     'border-radius' : '0.75rem',
     'overflow' : 'hidden',
@@ -371,13 +367,13 @@ layout = html.Div(
                                                                                                 html.P(
                                                                                                     [
                                                                                                         "Sumala san datos san ",
-                                                                                                        html.B(html.A("UP National Operational Assessment of Hazards", href = 'https://noah.up.edu.ph/', style = hyperlink_style)),
+                                                                                                        html.B(html.A("UP National Operational Assessment of Hazards", href = 'https://noah.up.edu.ph/')),
                                                                                                         #":",
                                                                                                         #html.Br(),
                                                                                                         html.Small(
                                                                                                             [
                                                                                                                 " (According to data from the ",
-                                                                                                                html.B(html.A("UP National Operational Assessment of Hazards", href = 'https://noah.up.edu.ph/', style = hyperlink_style)),
+                                                                                                                html.B(html.A("UP National Operational Assessment of Hazards", href = 'https://noah.up.edu.ph/')),
                                                                                                                 "):",
                                                                                                             ],
                                                                                                             className = 'text-muted'
