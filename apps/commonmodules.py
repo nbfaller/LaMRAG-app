@@ -84,7 +84,8 @@ def com_mod_setgreeting(sessionlogout, user_id):
         if time >= 0 and time < 12:
             if time >= 0 and time < 5: icon_className = 'bi bi-moon-fill me-2'
             elif time >= 5 and time < 7: icon_className = 'bi bi-sunrise-fill me-2'
-            else: icon_className = 'bi bi-brightness-low-fill me-2'
+            elif time >= 7 and time < 9: icon_className = 'bi bi-brightness-low-fill me-2'
+            else: icon_className = 'bi bi-brightness-high-fill me-2'
             timegreeting = "aga"
         elif time >= 12 and time < 13:
             icon_className = 'bi bi-brightness-high-fill me-2'

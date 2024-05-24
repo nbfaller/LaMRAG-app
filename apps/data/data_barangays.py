@@ -51,7 +51,8 @@ layout = html.Div(
                                             #color = 'danger'
                                         ),
                                         width = 'auto'
-                                    )
+                                    ),
+                                    class_name = row_m,
                                 ),
                                 dbc.Row(
                                     [

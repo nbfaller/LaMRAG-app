@@ -10,7 +10,7 @@ import webbrowser
 from app import app
 from apps import dashboard, home, commonmodules as cm, error, sandbox, about
 from apps.users import users_register, users_search
-from apps.reports import reports_create, reports_view
+from apps.reports import reports_create, reports_view, reports_report
 from apps.events import events_create, events_view, events_profile
 from apps.data import data_activate, data_barangays, data_demographics
 from apps.data.household import data_household_upload
@@ -115,6 +115,8 @@ def displaypage(pathname, sessionlogout, user_id, usertype_id):
                     returnlayout = reports_view.layout
                 elif pathname == '/reports/create':
                     returnlayout = reports_create.layout
+                elif pathname == '/reports/report':
+                    returnlayout = reports_report.layout
                 elif pathname == '/events' or pathname == '/events/view':
                     returnlayout = events_view.layout
                 elif pathname == '/events/create':
