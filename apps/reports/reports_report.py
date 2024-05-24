@@ -48,7 +48,10 @@ layout = html.Div(
                                 dbc.Row(
                                     dbc.Col(
                                         dbc.Badge(
-                                            "REPORT",
+                                            [
+                                                "REPORT SERIAL NO. ",
+                                                html.Span("-", id = 'rep_rep_span_reportid')
+                                            ]
                                             #color = 'danger'
                                         ),
                                         width = 'auto'
@@ -130,7 +133,7 @@ layout = html.Div(
                                                     [
                                                         dbc.CardHeader(
                                                             dbc.Tabs(
-                                                                id = 'rep_rep_crd_tbs_reportversions'
+                                                                id = 'rep_rep_crd_tbs_reportversions',
                                                             )
                                                         ),
                                                         dbc.CardBody(
@@ -177,7 +180,7 @@ layout = html.Div(
                                                                                             dbc.Button(
                                                                                                 [
                                                                                                     html.I(className = 'bi bi-pencil-square me-2'),
-                                                                                                    "Edit"
+                                                                                                    "Edit/update"
                                                                                                 ],
                                                                                                 id = 'rep_rep_btn_validate',
                                                                                                 style = {'width': ' 100%'},
@@ -239,6 +242,7 @@ rep_rep_url_pathname = '/reports/report'
     [
         Output('rep_rep_h1_header', 'children'),
         Output('rep_rep_report_id', 'data'),
+        Output('rep_rep_span_reportid', 'children'),
         Output('rep_rep_reporttype_id', 'data'),
         Output('rep_rep_col_basicinfo', 'children'),
     ],
@@ -287,6 +291,8 @@ def rep_rep_setreport(pathname, search):
                 # Header
                 to_return.append(df['Klase san report (Report type)'][0])
                 # Report ID
+                to_return.append(df['No.'][0])
+                # Report serial number
                 to_return.append(df['No.'][0])
                 # Report type
                 to_return.append(df['Type ID'][0])
@@ -374,8 +380,9 @@ def rep_rep_populatereports(report_id, type):
         while latest_version < len(df.index):
             tabs.append(
                 dbc.Tab(
-                    label = 'v. %s' % (latest_version + 1),
-                    id = 'rep_rep_tbs_tab_%s' % (latest_version + 1)
+                    label = 'R. No. %s-%s' % (report_id, latest_version + 1),
+                    id = 'rep_rep_tbs_tab_%s' % (latest_version + 1),
+                    active_label_style = {'font-weight' : '700'}
                 )
             )
             latest_version += 1
@@ -436,11 +443,11 @@ def rep_rep_populatereports(version, report_id, type):
                 'Mga ginhimo pagkatapos (Actions taken)',
                 'Kamutangan san insidente (Status)',
             ]
-        if type == 2:
-            sql += """ rv_casualty.type_id,
+        elif type == 2:
+            sql += """ CONCAT(rv_casualty_type.symbol, ' ', rv_casualty_type.label_war, ' (', rv_casualty_type.label_en, ')'),
             CONCAT(rv_casualty.lname, ', ', rv_casualty.fname, ' ', rv_casualty.mname),
             rv_casualty.age,
-            rv_casualty.assignedsex_id,
+            CONCAT(rv_casualty_assignedsex.symbol, ' ', rv_casualty_assignedsex.label_war, ' (', rv_casualty_assignedsex.label_en, ')'),
             rv_casualty.region_id,
             rv_casualty.province_id,
             rv_casualty.citymun_id,
@@ -448,7 +455,7 @@ def rep_rep_populatereports(version, report_id, type):
             rv_casualty.street,
             rv_casualty.cause,
             rv_casualty.infosource,
-            rv_casualty.status_id,
+            CONCAT(rv_casualty_status.label_war, ' (', rv_casualty_status.label_en, ')'),
             """
             cols += [
                 'Klase san disgrasiya (Casualty type)',
@@ -463,6 +470,60 @@ def rep_rep_populatereports(version, report_id, type):
                 'Rason san pagkadisgrasiya (Cause of casualty)',
                 'Ginkuhaan san impormasyon (Source of information)',
                 'Kamutangan san pagprubar (Validation status)',
+            ]
+        elif type == 3:
+            sql += """ CONCAT(rv_pubutil_type.symbol, ' ', rv_pubutil_type.label_war, ' (', rv_pubutil_type.label_en, ')'),
+            rv_pubutilint_pubutil.name,
+            CONCAT(rv_pubutilint_type.symbol, ' ', rv_pubutilint_type.label_war, ' (', rv_pubutilint_type.label_en, ')'),
+            TO_CHAR(rv_pubutilint.int_date, 'Month dd, yyyy'),
+            rv_pubutilint.int_time::time,
+            TO_CHAR(rv_pubutilint.res_date, 'Month dd, yyyy'),
+            rv_pubutilint.res_time::time,
+            """
+            cols += [
+                'Klase san utilidad, (Type of utility)',
+                'Naghahatag san serbisyo (Service provider)',
+                'Klase san pag-undang',
+                'Petsa san pag-undang',
+                'Oras san pag-undang',
+                'Petsa san pagbalik',
+                'Oras san pagbalik'
+            ]
+        elif type == 4:
+            sql += """ CONCAT(rv_dmgdhouse_type.symbol, ' ', rv_dmgdhouse_type.label_war, ' (', rv_dmgdhouse_type.label_en, ')'),
+            CONCAT(rv_dmgdhouse.lname, ', ', rv_dmgdhouse.fname, ' ', rv_dmgdhouse.mname),
+            rv_dmgdhouse.age,
+            CONCAT(rv_dmgdhouse_assignedsex.symbol, ' ', rv_dmgdhouse_assignedsex.label_war, ' (', rv_dmgdhouse_assignedsex.label_en, ')'),
+            rv_dmgdhouse.loc_text,
+            rv_dmgdhouse.loc_gps,
+            """
+            cols += [
+                'Klase san pagkarubat (Type of damage)',
+                'Ngaran san tag-iya (Name of homeowner)',
+                'Edad (Age)',
+                'Natawo nga babayi/lalaki (Sex assigned at birth)',
+                'Lokasiyon san balay (Location of home)',
+                'GPS coordinates'
+            ]
+        elif type == 5:
+            sql += """ CONCAT(rv_infra_type.symbol, ' ', rv_infra_type.label_war, ' (', rv_infra_type.label_en, ')'),
+            CONCAT(rv_infra_class.label_war, ' (', rv_infra_class.label_en, ')'),
+            rv_dmgdinfra.infraname,
+            rv_dmgdinfra.loc_text,
+            rv_dmgdinfra.loc_gps,
+            CONCAT(rv_dmgdinfra.qty, ' ', rv_dmgdinfra_qtyunit.label_war, ' (', rv_dmgdinfra_qtyunit.label_en, ')'),
+            CONCAT('₱', ROUND(CAST(rv_dmgdinfra.infracost AS NUMERIC), 2)),
+            CONCAT(rv_dmgdinfra_type.symbol, ' ', rv_dmgdinfra_type.label_war, ' (', rv_dmgdinfra_type.label_en, ')'),
+            """
+            cols += [
+                'Tipo san imprastruktura (Infrastructure type)',
+                'Klase (Classification)',
+                'Ngaran/deskripsiyon (Name/description)',
+                'Lokasiyon',
+                'GPS coordinates',
+                'Kadamo san narubat (Quantity of damage)',
+                'Kantidad san narubat (Cost of damage)',
+                'Kamutangan (Status)'
             ]
         
         # Other common version information (auxiliary)
@@ -496,11 +557,51 @@ def rep_rep_populatereports(version, report_id, type):
                     rv_relinc.status_id = rv_relinc_status.id AND
                     rv_relinc.type_id = rv_relinc_status.relinctype_id)
             """
-        if type == 2:
+        elif type == 2:
             sql += """ LEFT JOIN reports.casualty AS rv_casualty ON (
-                rv.report_id = rv_casualty.report_id AND
-                rv.id = rv_casualty.version_id)
+                    rv.report_id = rv_casualty.report_id AND
+                    rv.id = rv_casualty.version_id)
+                LEFT JOIN utilities.casualtytype AS rv_casualty_type ON (
+                    rv_casualty.type_id = rv_casualty_type.id)
+                LEFT JOIN utilities.casualtystatus AS rv_casualty_status ON (
+                    rv_casualty.status_id = rv_casualty_status.id)
+                LEFT JOIN utilities.assignedsex AS rv_casualty_assignedsex ON (
+                    rv_casualty.assignedsex_id = rv_casualty_assignedsex.id)
             """
+        elif type == 3:
+            sql += """ LEFT JOIN reports.pubutilint AS rv_pubutilint ON (
+                    rv.report_id = rv_pubutilint.report_id AND
+                    rv.id = rv_pubutilint.version_id)
+                LEFT JOIN utilities.pubutil AS rv_pubutilint_pubutil ON (
+                    rv_pubutilint.pubutil_id = rv_pubutilint_pubutil.id)
+                LEFT JOIN utilities.pubutiltype AS rv_pubutil_type ON (
+                    rv_pubutilint_pubutil.type_id = rv_pubutil_type.id)
+                LEFT JOIN utilities.pubutilinttype AS rv_pubutilint_type ON (
+                    rv_pubutilint.inttype_id = rv_pubutilint_type.id)
+            """
+        elif type == 4:
+            sql += """ LEFT JOIN reports.dmgdhouse AS rv_dmgdhouse ON (
+                    rv.report_id = rv_dmgdhouse.report_id AND
+                    rv.id = rv_dmgdhouse.version_id)
+                LEFT JOIN utilities.dmgdinfratype AS rv_dmgdhouse_type ON (
+                    rv_dmgdhouse.type_id = rv_dmgdhouse_type.id)
+                LEFT JOIN utilities.assignedsex AS rv_dmgdhouse_assignedsex ON (
+                    rv_dmgdhouse.assignedsex_id = rv_dmgdhouse_assignedsex.id)
+            """
+        elif type == 5:
+            sql += """ LEFT JOIN reports.dmgdinfra AS rv_dmgdinfra ON (
+                    rv.report_id = rv_dmgdinfra.report_id AND
+                    rv.id = rv_dmgdinfra.version_id)
+                LEFT JOIN utilities.infratype AS rv_infra_type ON (
+                    rv_dmgdinfra.infratype_id = rv_infra_type.id)
+                LEFT JOIN utilities.infraclass AS rv_infra_class ON (
+                    rv_dmgdinfra.infraclass_id = rv_infra_class.id)
+                LEFT JOIN utilities.qtyunit AS rv_dmgdinfra_qtyunit ON (
+                    rv_dmgdinfra.qtyunit_id = rv_dmgdinfra_qtyunit.id)
+                LEFT JOIN utilities.dmgdinfratype AS rv_dmgdinfra_type ON (
+                    rv_dmgdinfra.dmgtype_id = rv_dmgdinfra_type.id)
+            """
+
         
         sql += """ WHERE rv.report_id = %s AND rv.id = %s;"""
         df = db.querydatafromdatabase(sql, values, cols)

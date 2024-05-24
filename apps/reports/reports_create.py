@@ -1460,7 +1460,7 @@ layout = html.Div(
                                                                 ),
                                                                 dbc.Col(
                                                                     dbc.Switch(
-                                                                        id = 'rep_cre_input_selectgps',
+                                                                        id = 'rep_cre_input_dmgdhouse_selectgps',
                                                                         label = html.Span(
                                                                             [
                                                                                 "Kuha-a sa GPS. ",
@@ -1595,6 +1595,54 @@ layout = html.Div(
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 ),
                                             ], class_name = row_m,
+                                        ),
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Lokasiyon", tag_required,
+                                                            html.Br(),
+                                                            html.Small(" (Location)", className = 'text-muted')
+                                                        ],
+                                                        id = 'rep_cre_label_dmgdinfra_geoloc',
+                                                        class_name = label_m
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
+                                                ),
+                                                dbc.Col(
+                                                    [
+                                                        dbc.Row(
+                                                            [
+                                                                dbc.Col(
+                                                                    dbc.Input(
+                                                                        id = 'rep_cre_input_dmgdinfra_loc',
+                                                                        #disabled = True,
+                                                                        #placeholder = "Pili (select)...",
+                                                                        #value = 8
+                                                                    ),
+                                                                    class_name = 'align-self-center col-12 col-md-6 col-lg-8 mb-2 mb-md-0'
+                                                                ),
+                                                                dbc.Col(
+                                                                    dbc.Switch(
+                                                                        id = 'rep_cre_input_dmgdinfra_selectgps',
+                                                                        label = html.Span(
+                                                                            [
+                                                                                "Kuha-a sa GPS. ",
+                                                                                html.Small("(Use GPS.)", className = 'text-muted')
+                                                                            ]
+                                                                        ),
+                                                                        value = False,
+                                                                        class_name = 'mb-0'
+                                                                    ),
+                                                                    class_name = 'align-self-center col-12 col-md-6 col-lg-4 mb-2 mb-md-0'
+                                                                )
+                                                            ]
+                                                        )
+                                                    ],
+                                                    class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
+                                                )
+                                            ], class_name = row_m
                                         ),
                                         dbc.Row(
                                             [
@@ -1891,12 +1939,13 @@ rep_cre_url_pathname = '/reports/create'
         Output('rep_cre_geoloc', 'update_now'),
     ],
     [
-        Input('rep_cre_input_selectgps', 'value'),
+        Input('rep_cre_input_dmgdhouse_selectgps', 'value'),
+        Input('rep_cre_input_dmgdinfra_selectgps', 'value'),
     ]
 )
 
-def rep_cre_geolocrefresh(selectgps):
-    if selectgps: return [True]
+def rep_cre_geolocrefresh(housegps, infragps):
+    if housegps or infragps: return [True]
     else: return [False]
 
 # Callback for setting the current GPS location
@@ -1904,9 +1953,12 @@ def rep_cre_geolocrefresh(selectgps):
     [
         Output('rep_cre_input_dmgdhouse_loc', 'value'),
         Output('rep_cre_input_dmgdhouse_loc', 'disabled'),
+        Output('rep_cre_input_dmgdinfra_loc', 'value'),
+        Output('rep_cre_input_dmgdinfra_loc', 'disabled'),
     ],
     [
-        Input('rep_cre_input_selectgps', 'value'),
+        Input('rep_cre_input_dmgdhouse_selectgps', 'value'),
+        Input('rep_cre_input_dmgdinfra_selectgps', 'value'),
     ],
     [
         State('rep_cre_geoloc', 'position'),
@@ -1915,15 +1967,21 @@ def rep_cre_geolocrefresh(selectgps):
     prevent_initial_call = True
 )
 
-def rep_cre_geolocset(selectgps, pos, date):
-    geoloc = None
-    disabled = False
-    if selectgps and pos:
+def rep_cre_geolocset(housegps, infragps, pos, date):
+    house_geoloc = None
+    infra_geoloc = None
+    house_disabled = False
+    infra_disabled = False
+    if (housegps or infragps) and pos:
         lat = pos['lat']
         lon = pos ['lon']
-        geoloc = '%s, %s' % (lat, lon)
-        disabled = True
-    return [geoloc, disabled]
+        if housegps:
+            house_geoloc = '%s, %s' % (lat, lon)
+            house_disabled = True
+        elif infragps:
+            infra_geoloc = '%s, %s' % (lat, lon)
+            infra_disabled = True
+    return [house_geoloc, house_disabled, infra_geoloc, infra_disabled]
 
 # Callback for populating basic dropdown menus and descriptions
 @app.callback(
@@ -2542,6 +2600,7 @@ def rep_cre_setpubutilintdatetime(date, hh, mm, ss, ampm):
         Output('rep_cre_input_dmgdinfra_qty', 'invalid'),
         Output('rep_cre_input_dmgdinfra_qtyunit_id', 'invalid'),
         Output('rep_cre_label_dmgdinfratype_id', 'invalid'),
+        Output('rep_cre_input_dmgdinfra_loc', 'invalid'),
     ],
     [
         Input('rep_cre_btn_submit', 'n_clicks')
@@ -2609,8 +2668,10 @@ def rep_cre_setpubutilintdatetime(date, hh, mm, ss, ampm):
         State('rep_cre_input_dmgdinfra_qty', 'value'),
         State('rep_cre_input_dmgdinfra_qtyunit_id', 'value'),
         State('rep_cre_label_dmgdinfratype_id', 'value'),
+        State('rep_cre_input_dmgdinfra_loc', 'value'),
             # OPTIONAL
             #State('rep_cre_input_dmgdinfra_cost', 'value'),
+            #State('rep_cre_input_dmgdinfra_selectgps', 'value'),
     ]
 )
 
@@ -2649,7 +2710,7 @@ def rep_cre_confirmcreation(
     
     # Report type 5: Damaged infrastructure
     infratype, infraclass, dmgdinfra_description, dmgdinfra_qty, dmgdinfra_qtyunit,
-    dmgdinfra_type,
+    dmgdinfra_type, dmgdinfra_loc
         # OPTIONAL
         #dmgdinfra_cost,
 ):
@@ -2693,6 +2754,7 @@ def rep_cre_confirmcreation(
             dmgdinfra_qty_invalid = False
             dmgdinfra_qtyunit_invalid = False
             dmgdinfra_type_invalid = False
+            dmgdinfra_loc_invalid = False
 
             if (not(brgy) or not(event) or not(type) or not (purok) or not (date)):
                 alert_open = True
@@ -2964,7 +3026,7 @@ def rep_cre_confirmcreation(
                     conditions = [
                         not(infratype), not(infraclass), not(dmgdinfra_description),
                         not(dmgdinfra_qty), not(dmgdinfra_qtyunit),
-                        not(dmgdinfra_type)
+                        not(dmgdinfra_type), not(dmgdinfra_loc)
                     ]
                     if(any(conditions)):
                         alert_open = True
@@ -3029,6 +3091,16 @@ def rep_cre_confirmcreation(
                                     ]
                                 )
                             )
+                        if not(dmgdinfra_loc):
+                            dmgdinfra_loc_invalid = True
+                            alert_span.append(
+                                html.Li(
+                                    [
+                                        "Lokasiyon", html.Br(),
+                                        html.Small(" (Location)", className = 'ms-3 text-muted'),
+                                    ]
+                                )
+                            )
                     else: modal_open = True
             return [
                 # Modal
@@ -3049,6 +3121,7 @@ def rep_cre_confirmcreation(
                 # Report type 5 (Damaged infrastructure) input validation
                 infratype_invalid, infraclass_invalid, dmgdinfra_description_invalid,
                 dmgdinfra_qty_invalid, dmgdinfra_qtyunit_invalid, dmgdinfra_type_invalid,
+                dmgdinfra_loc_invalid,
             ]
         else: raise PreventUpdate
     else: raise PreventUpdate
@@ -3134,7 +3207,7 @@ def rep_cre_confirmcreation(
         State('rep_cre_input_dmgdhouse_loc', 'value'),
             # OPTIONAL
             State('rep_cre_input_dmgdhouse_mname', 'value'),
-            State('rep_cre_input_selectgps', 'value'),
+            State('rep_cre_input_dmgdhouse_selectgps', 'value'),
             State('rep_cre_geoloc', 'position'),
         # Report type 5: Damaged infrastructure
         State('rep_cre_input_infratype_id', 'value'),
@@ -3143,8 +3216,10 @@ def rep_cre_confirmcreation(
         State('rep_cre_input_dmgdinfra_qty', 'value'),
         State('rep_cre_input_dmgdinfra_qtyunit_id', 'value'),
         State('rep_cre_label_dmgdinfratype_id', 'value'),
+        State('rep_cre_input_dmgdinfra_loc', 'value'),
             # OPTIONAL
             State('rep_cre_input_dmgdinfra_cost', 'value'),
+            State('rep_cre_input_dmgdinfra_selectgps', 'value'),
     ]
 )
 
@@ -3185,9 +3260,9 @@ def rep_cre_submitcreation(
     
     # Report type 5: Damaged infrastructure
     infratype, infraclass, dmgdinfra_description, dmgdinfra_qty, dmgdinfra_qtyunit,
-    dmgdinfra_type,
+    dmgdinfra_type, dmgdinfra_loc,
         # OPTIONAL
-        dmgdinfra_cost,
+        dmgdinfra_cost, dmgdinfra_selectgps
 ):
     ctx = dash.callback_context
     if ctx.triggered:
@@ -3327,16 +3402,19 @@ def rep_cre_submitcreation(
                         ]
                         db.modifydatabase(sql, values)
                     elif type == 5:
+                        dmgdinfra_loc_gps = None
+                        if dmgdinfra_selectgps:
+                            dmgdinfra_loc_gps = "(%s,%s)" % (geoloc_pos['lat'], geoloc_pos['lon'])
                         sql = """INSERT INTO reports.dmgdinfra(report_id, version_id,
-                        infatype_id, infraclass_id, infraname,
+                        infratype_id, infraclass_id, infraname,
                         qty, qtyunit_id, infracost,
-                        dmgtype_id)
-                        VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s);"""
+                        dmgtype_id, loc_text, loc_gps)
+                        VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"""
                         values = [
                             newreport_id, newversion_id,
                             infratype, infraclass, dmgdinfra_description,
                             dmgdinfra_qty, dmgdinfra_qtyunit, dmgdinfra_cost,
-                            dmgdinfra_type
+                            dmgdinfra_type, dmgdinfra_loc, dmgdinfra_loc_gps
                         ]
                         db.modifydatabase(sql, values)
 
