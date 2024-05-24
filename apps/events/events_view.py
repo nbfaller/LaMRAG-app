@@ -220,7 +220,7 @@ def eve_vie_loadsearchresults(pathname, search, type, isactive):
             # Names as hyperlinks
             df.loc[i, 'Name'] = html.A(
                 df['Name'][i],
-                href = '/events/profile?id=%s' % df['ID No.'][i],
+                href = '/events/event?id=%s' % df['ID No.'][i],
                 style = hyperlink_style
             )
 

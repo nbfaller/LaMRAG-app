@@ -227,7 +227,7 @@ def usr_src_loadsearchresults(pathname, search, usertype, office):
             # Names as hyperlinks
             df.loc[i, 'Name'] = html.A(
                 df['Name'][i],
-                href = '/users/profile?id=%s' % df['ID No.'][i],
+                href = '/users/user?id=%s' % df['ID No.'][i],
                 style = hyperlink_style
             )
             # User types as badges

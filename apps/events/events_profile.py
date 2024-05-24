@@ -167,7 +167,7 @@ layout = html.Div(
     ]
 )
 
-eve_pro_url_pathname = '/events/profile'
+eve_pro_url_pathname = '/events/event'
 
 # Callback for displaying event details
 @app.callback(

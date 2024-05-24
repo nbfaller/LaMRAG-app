@@ -224,10 +224,17 @@ def rep_vie_populatedropdowns(pathname, region, province, citymun, brgy):
         Input('url', 'pathname'),
         Input('rep_vie_input_reporttype_id', 'value'),
         Input('rep_vie_input_event_id', 'value'),
+        Input('rep_vie_input_purok', 'value')
+    ],
+    [
+        State('app_region_id', 'data'),
+        State('app_province_id', 'data'),
+        State('app_citymun_id', 'data'),
+        State('app_brgy_id', 'data')
     ]
 )
 
-def rep_vie_loadsearchresults(pathname, type, event):
+def rep_vie_loadsearchresults(pathname, type, event, purok, region, province, citymun, brgy):
     conditions = [
         pathname == '/reports',
         pathname == '/reports/view'
@@ -236,33 +243,31 @@ def rep_vie_loadsearchresults(pathname, type, event):
         # Retrieve users as dataframe
         sql = """SELECT
         r.id AS report_id,
-        rv.id AS version_id,
-        CONCAT(rt.label_war, ' (', rt.label_en, ')') as reporttype_id,
-        r.purok,
-        rv.occurrence_date,
-        rv.occurrence_time::time,
-        CONCAT(u.lname, ', ', COALESCE(u.livedname, u.fname), ' ', LEFT(u.mname, 1)) AS creator_name,
-        TO_CHAR(rv.create_time, 'Month dd, yyyy • HH:MI:SS AM') AS create_time,
-        CONCAT(rs.label_war, ' (', rs.label_en, ')') as reportstatus_id
-        FROM reports.reportversion AS rv
-        LEFT JOIN reports.report AS r ON rv.report_id = r.id
-        LEFT JOIN users.user AS u ON rv.creator_id = u.id
+		e.name AS event_name,
+        CONCAT(rt.symbol, ' ', rt.label_war, ' (', rt.label_en, ')') as reporttype_id,
+        r.purok
+        FROM reports.report AS r
         LEFT JOIN utilities.reporttype AS rt ON r.type_id = rt.id
-        LEFT JOIN utilities.reportstatus AS rs ON rv.status_id = rs.id
+		LEFT JOIN events.event AS e ON r.event_id = e.id
+        WHERE (region_id = %s AND province_id = %s AND citymun_id = %s
         """
-        values = []
-        cols = ['Report ID', 'Version No.', 'Type', 'Purok', 'Occurrence date', 'Occurrence time', 'Creator', 'Creation time', 'Status']
+        values = [region, province, citymun]
+        cols = ['No.', 'Event', 'Report type', 'Purok']
 
+        if brgy:
+            sql += """ AND brgy_id = %s)"""
+            values += [brgy]
+            
         if type:
             c = 1
-            sql += """ WHERE ("""
+            sql += """ AND ("""
             for i in type:
                 sql += """ r.type_id = %s"""
                 if c < len(type): sql += """ OR"""
                 values += [i]
                 c += 1
             sql += """)"""
-        
+            
         if event:
             c = 1
             sql += """ AND ("""
@@ -273,10 +278,20 @@ def rep_vie_loadsearchresults(pathname, type, event):
                 c += 1
             sql += """)"""
         
-        sql += """ ORDER BY rv.create_time DESC;"""
+        if purok and purok > 0:
+            sql += """ AND (r.purok = %s)"""
+            values += [purok]
+        
+        sql += """ ORDER BY r.id DESC;"""
         df = db.querydatafromdatabase(sql, values, cols)
 
-        #df = df[['Name', 'Event type', 'Start date', 'End date']]
+        for i in df.index:
+            # Names as hyperlinks
+            df.loc[i, 'Report type'] = html.A(
+                df['Report type'][i],
+                href = '/reports/report?id=%s' % df['No.'][i],
+                style = hyperlink_style
+            )
 
         table = dbc.Table.from_dataframe(
             df,
