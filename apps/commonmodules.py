@@ -591,14 +591,14 @@ sidebar = dbc.Offcanvas(
                         #),
                         dbc.Col(
                             html.Img(
-                                src = app.get_asset_url('city-seal-mono-dark.png'),
+                                src = app.get_asset_url('city-seal.png'),
                                 style = {'height' : '3em'},
                             ),
                             width = 'auto',
                         ),
                         dbc.Col(
                             html.Img(
-                                src = app.get_asset_url('cdrrmo-logo-mono-dark.png'),
+                                src = app.get_asset_url('cdrrmo-logo.png'),
                                 style = {'height' : '3em'},
                             ),
                             width = 'auto'
@@ -613,7 +613,7 @@ sidebar = dbc.Offcanvas(
                         html.Br(), html.Br(),
                         "All content is in the public domain unless otherwise stated."
                     ],
-                    className = 'text-muted',
+                    className = 'text-light',
                     style = {'font-size' : '0.7625em'}
                 )
             ]
@@ -631,9 +631,9 @@ sidebar = dbc.Offcanvas(
     style = {
     #    'color' : '#F5F5F5',
         #'width' : '100%',
-        'background-color' : '#203354'
+        #'background-color' : '#203354'
     },
-    class_name = 'text-bg-dark w-100 w-md-50'
+    class_name = 'bg-dark text-light w-100 w-md-50'
 )
 
 # Footer

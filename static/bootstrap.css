@@ -3627,16 +3627,16 @@ fieldset:disabled .btn {
 
 .btn-dark:hover {
   color: #fff;
-  background-color: #1c1f23;
-  border-color: #1a1e21;
+  background-color: #231f1b;
+  border-color: #1f1d1a;
 }
 
 .btn-check:focus+.btn-dark,
 .btn-dark:focus {
   color: #fff;
-  background-color: #1c1f23;
-  border-color: #1a1e21;
-  box-shadow: 0 0 0 0.25rem rgba(66, 70, 73, 0.5);
+  background-color: #231f1b;
+  border-color: #1f1d1a;
+  box-shadow: 0 0 0 0.25rem rgba(75, 72, 69, 0.5);
 }
 
 .btn-check:checked+.btn-dark,
@@ -3645,8 +3645,8 @@ fieldset:disabled .btn {
 .btn-dark.active,
 .show>.btn-dark.dropdown-toggle {
   color: #fff;
-  background-color: #1a1e21;
-  border-color: #191c1f;
+  background-color: #1f1d1a;
+  border-color: #221e1a;
 }
 
 .btn-check:checked+.btn-dark:focus,
@@ -3654,7 +3654,7 @@ fieldset:disabled .btn {
 .btn-dark:active:focus,
 .btn-dark.active:focus,
 .show>.btn-dark.dropdown-toggle:focus {
-  box-shadow: 0 0 0 0.25rem rgba(66, 70, 73, 0.5);
+  box-shadow: 0 0 0 0.25rem rgba(75, 72, 69, 0.5);
 }
 
 .btn-dark:disabled,
@@ -7183,7 +7183,7 @@ fieldset:disabled .btn {
 
 .link-dark:hover,
 .link-dark:focus {
-  color: #1a1e21;
+  color: #1f1d1a;
 }
 
 .ratio {
