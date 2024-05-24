@@ -115,9 +115,9 @@ layout = html.Div(
                                         html.H4(
                                             [
                                                 html.I(className = 'bi bi-file-earmark-diff-fill me-2'),
-                                                "Versions",
+                                                "Mga bersiyon",
                                                 #html.Br(),
-                                                #html.Small(" (Generated consolidated reports)", className = 'text-muted')
+                                                html.Small(" (Versions)", className = 'text-muted')
                                             ]
                                         ),
                                     ], class_name = row_m
@@ -145,6 +145,69 @@ layout = html.Div(
                                                                 'max-width' : '100%',
                                                                 'overflow' : 'scroll'
                                                             }
+                                                        ),
+                                                        dbc.CardFooter(
+                                                            [
+                                                                dbc.Row(
+                                                                    [
+                                                                        dbc.Col(
+                                                                            [
+                                                                                html.Small(
+                                                                                    [
+                                                                                        "Submitted by ",
+                                                                                        html.Span(id = 'rep_rep_spa_creator_name'),
+                                                                                        " on ",
+                                                                                        html.Span(id = 'rep_rep_spa_creation_datetime'),
+                                                                                        html.Br(),
+                                                                                        "Status: ",
+                                                                                        dbc.Badge("Status", id = 'rep_rep_bdg_status_label', class_name = 'align-content-center align-text-top'),
+                                                                                        " . Updated on ",
+                                                                                        html.Span(id = 'rep_rep_spa_status_datetime'),
+                                                                                    ],
+                                                                                    className = 'align-self-center card-text text-muted'
+                                                                                ),
+                                                                            ],
+                                                                            class_name = 'col-12 col-xl-auto my-2'
+                                                                        ),
+                                                                        dbc.Col(
+                                                                            [
+                                                                                dbc.Row(
+                                                                                    [
+                                                                                        dbc.Col(
+                                                                                            dbc.Button(
+                                                                                                [
+                                                                                                    html.I(className = 'bi bi-pencil-square me-2'),
+                                                                                                    "Edit"
+                                                                                                ],
+                                                                                                id = 'rep_rep_btn_validate',
+                                                                                                style = {'width': ' 100%'},
+                                                                                                color = 'primary',
+                                                                                                outline = True
+                                                                                                #type = 'submit'
+                                                                                            ),
+                                                                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-6 col-xl-auto'
+                                                                                        ),
+                                                                                        dbc.Col(
+                                                                                            dbc.Button(
+                                                                                                [
+                                                                                                    html.I(className = 'bi bi-check-circle-fill me-2'),
+                                                                                                    "Validate"
+                                                                                                ],
+                                                                                                id = 'rep_rep_btn_edit',
+                                                                                                style = {'width': ' 100%'},
+                                                                                                #type = 'submit'
+                                                                                            ),
+                                                                                            class_name = 'align-self-center mt-2 mt-md-0 col-12 col-md-6 col-xl-auto'
+                                                                                        )
+                                                                                    ]
+                                                                                )
+                                                                            ],
+                                                                            class_name = 'align-self-center col-12 col-xl-auto my-2'
+                                                                        ),
+                                                                    ],
+                                                                    class_name = 'justify-content-between'
+                                                                )
+                                                            ]
                                                         )
                                                     ],
                                                     style = card_style
@@ -190,7 +253,6 @@ rep_rep_url_pathname = '/reports/report'
 def rep_rep_setreport(pathname, search):
     if pathname == rep_rep_url_pathname:
         to_return = []
-        report_header = "Report"
         parsed = urlparse(search)
         if parse_qs(parsed.query):
             report_id = parse_qs(parsed.query)['id'][0]
@@ -324,6 +386,11 @@ def rep_rep_populatereports(report_id, type):
 @app.callback(
     [
         Output('rep_rep_crd_bdy_reportversions', 'children'),
+        Output('rep_rep_spa_creator_name', 'children'),
+        Output('rep_rep_spa_creation_datetime', 'children'),
+        Output('rep_rep_bdg_status_label', 'children'),
+        Output('rep_rep_bdg_status_label', 'color'),
+        Output('rep_rep_spa_status_datetime', 'children')
     ],
     [
         Input('rep_rep_crd_tbs_reportversions', 'active_tab'),
@@ -336,6 +403,11 @@ def rep_rep_populatereports(report_id, type):
 
 def rep_rep_populatereports(version, report_id, type):
     content = []
+    creator_name = "-"
+    creation_datetime = "-"
+    status_label = "-"
+    status_datetime = "-"
+    status_color = None
     if version:
         version_id = int((str(version).split("-")[1])) + 1
         sql = """SELECT rv.id,
@@ -394,21 +466,23 @@ def rep_rep_populatereports(version, report_id, type):
             ]
         
         # Other common version information (auxiliary)
-        sql += """ CONCAT(u.lname, ', ', COALESCE(u.livedname, u.fname), ' ', LEFT(u.mname, 1), ' (', u.username, ')') AS creator,
-        rv.create_time,
+        sql += """ rv.remarks,
         CONCAT(rs.label_war, ' (', rs.label_en, ')') AS status,
-        rv.status_time,
-        rv.remarks
+        TO_CHAR(rv.status_time, 'Month dd, yyyy at HH:MI:SS AM'),
+        rs.color,
+        CONCAT(u.lname, ', ', COALESCE(u.livedname, u.fname), ' ', LEFT(u.mname, 1), ' (', u.username, ')') AS creator,
+        TO_CHAR(rv.create_time, 'Month dd, yyyy at HH:MI:SS AM')
         FROM reports.reportversion AS rv
         LEFT JOIN users.user AS u ON rv.creator_id = u.id
         LEFT JOIN utilities.reportstatus AS rs ON rv.status_id = rs.id
         """
         cols += [
-            'Nag-report (Reported by)',
-            'Oras san pagreport (Report time)',
+            'Iba pa nga komento (remarks)',
             'Kamutangan san report (Report status)',
             'Oras san pagbag-o san kamutangan (Time of report status)',
-            'Iba pa nga komento (remarks)',
+            'Status color',
+            'Nag-report (Reported by)',
+            'Oras san pagreport (Report time)',
         ]
 
         # Type-specific left join
@@ -430,104 +504,30 @@ def rep_rep_populatereports(version, report_id, type):
         
         sql += """ WHERE rv.report_id = %s AND rv.id = %s;"""
         df = db.querydatafromdatabase(sql, values, cols)
-        #print(df)
-        #dbc.Tab(label="Tab 1", tab_id="tab-1"),
 
-        # Rows for label
-        label_rows = [
-            html.Span(
-                [
-                    html.I(className = 'bi bi-calendar-event me-2'),
-                    html.B("Petsa san panhitabó"),
-                    html.Small(" (Date of occurrence)", className = 'text-muted')
-                ]
-            ),
-            html.Span(
-                [
-                    html.I(className = 'bi bi-clock me-2'),
-                    html.B("Oras san panhitabó"),
-                    html.Small(" (Time of occurrence)", className = 'text-muted')
-                ],
-            )
-        ]
+        # Set report creator name
+        creator_name = df['Nag-report (Reported by)'][0]
+        creation_datetime = df['Oras san pagreport (Report time)'][0]
+        status_label = df['Kamutangan san report (Report status)'][0]
+        status_datetime = df['Oras san pagbag-o san kamutangan (Time of report status)'][0]
+        status_color = df['Status color'][0]
 
-        # Type-specific labels
-        if type == 1:
+        # Remove last two columns
+        df = df.iloc[:, :-5]
+        cols = cols[:-5]
+
+        label_rows = []
+        for i in cols[1:]:
+            secondary_label = None
+            if len(i.split(' (')) > 1: secondary_label = html.Small([" (", str(i.split(' (')[1])[:-1], ")"], className = 'text-muted')
             label_rows += [
                 html.Span(
                     [
-                        html.I(className = 'bi bi-tag me-2'),
-                        html.B("Klase san insidente"),
-                        html.Small(" (Type of incident)", className = 'text-muted')
+                        html.B(i.split(' (')[0]),
+                        secondary_label
                     ]
-                ),
-                html.Span(
-                    [
-                        html.I(className = 'bi bi-123 me-2'),
-                        html.B("Kantidad san insidente"),
-                        html.Small(" (Quantity of incident)", className = 'text-muted')
-                    ]
-                ),
-                html.Span(
-                    [
-                        html.I(className = 'bi bi-card-text me-2'),
-                        html.B("Deskripsiyon"),
-                        html.Small(" (Description)", className = 'text-muted')
-                    ]
-                ),
-                html.Span(
-                    [
-                        html.I(className = 'bi bi-wrench-adjustable-circle me-2'),
-                        html.B("Mga ginhimo pagkatapos"),
-                        html.Small(" (Actions taken)", className = 'text-muted')
-                    ]
-                ),
-                html.Span(
-                    [
-                        html.I(className = 'bi bi-info-circle me-2'),
-                        html.B("Kamutangan san insidente"),
-                        html.Small(" (Status)", className = 'text-muted')
-                    ]
-                ),
+                )
             ]
-        
-        label_rows += [
-            html.Span(
-                [
-                    html.I(className = 'bi bi-person me-2'),
-                    html.B("Nag-report"),
-                    html.Small(" (Reported by)", className = 'text-muted')
-                ]
-            ),
-            html.Span(
-                [
-                    html.I(className = 'bi bi-send me-2'),
-                    html.B("Oras san pagreport"),
-                    html.Small(" (Report time)", className = 'text-muted')
-                ]
-            ),
-            html.Span(
-                [
-                    html.I(className = 'bi bi-check-circle me-2'),
-                    html.B("Kamutangan san pagreport"),
-                    html.Small(" (Report status)", className = 'text-muted')
-                ]
-            ),
-            html.Span(
-                [
-                    html.I(className = 'bi bi-clock-history me-2'),
-                    html.B("Oras san pagbag-o san kamutangan"),
-                    html.Small(" (Status change time)", className = 'text-muted')
-                ]
-            ),
-            html.Span(
-                [
-                    html.I(className = 'bi bi-chat-left-text me-2'),
-                    html.B("Iba pa nga komento"),
-                    html.Small(" (Remarks)", className = 'text-muted')
-                ]
-            ),
-        ]
 
         # Table
         version_df = df[df['No.'] == version_id].transpose()
@@ -553,4 +553,4 @@ def rep_rep_populatereports(version, report_id, type):
 
         content.append(table)
     else: raise PreventUpdate
-    return [content]
+    return [content, creator_name, creation_datetime, status_label, status_color, status_datetime]

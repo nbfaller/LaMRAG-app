@@ -3,20 +3,6 @@ import pandas as pd
 import boto3
 import os
 
-endpoint = 'lamrag-database.cxikw2ss0mou.ap-southeast-1.rds.amazonaws.com'
-port = 5432
-user = 'postgres'
-region = 'ap-southeast-1b'
-
-#session = boto3.Session(profile_name = 'eb-cli')
-#client = session.client('rds')
-#token = client.generate_db_auth_token(
-#    DBHostname = endpoint,
-#    Port = port,
-#    DBUsername = user,
-#    Region = region
-#)
-
 class dbcreds:
     local = dict(
         host = 'localhost',
@@ -30,7 +16,7 @@ class dbcreds:
     #)
 
 def getdblocation():
-    local = False
+    local = True
     if local:
         # Define connection details
         creds = dbcreds.local
