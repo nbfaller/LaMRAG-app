@@ -1,6 +1,5 @@
 import psycopg2
 import pandas as pd
-import boto3
 import os
 
 class dbcreds:

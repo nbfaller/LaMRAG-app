@@ -419,7 +419,7 @@ def rep_rep_populatereports(version, report_id, type):
         version_id = int((str(version).split("-")[1])) + 1
         sql = """SELECT rv.id,
         TO_CHAR(rv.occurrence_date, 'Month dd, yyyy'),
-        rv.occurrence_time::time,
+        rv.occurrence_time::time at time zone 'CCT',
         """
         values = [report_id, version_id]
         cols = [
@@ -476,9 +476,9 @@ def rep_rep_populatereports(version, report_id, type):
             rv_pubutilint_pubutil.name,
             CONCAT(rv_pubutilint_type.symbol, ' ', rv_pubutilint_type.label_war, ' (', rv_pubutilint_type.label_en, ')'),
             TO_CHAR(rv_pubutilint.int_date, 'Month dd, yyyy'),
-            rv_pubutilint.int_time::time,
+            rv_pubutilint.int_time::time at time zone 'CCT',
             TO_CHAR(rv_pubutilint.res_date, 'Month dd, yyyy'),
-            rv_pubutilint.res_time::time,
+            rv_pubutilint.res_time::time at time zone 'CCT',
             """
             cols += [
                 'Klase san utilidad, (Type of utility)',
@@ -529,10 +529,10 @@ def rep_rep_populatereports(version, report_id, type):
         # Other common version information (auxiliary)
         sql += """ rv.remarks,
         CONCAT(rs.label_war, ' (', rs.label_en, ')') AS status,
-        TO_CHAR(rv.status_time, 'Month dd, yyyy at HH:MI:SS AM'),
+        TO_CHAR(rv.status_time::timestamp at time zone 'CCT', 'Month dd, yyyy at HH:MI:SS AM TZ'),
         rs.color,
         CONCAT(u.lname, ', ', COALESCE(u.livedname, u.fname), ' ', LEFT(u.mname, 1), ' (', u.username, ')') AS creator,
-        TO_CHAR(rv.create_time, 'Month dd, yyyy at HH:MI:SS AM')
+        TO_CHAR(rv.create_time::timestamp at time zone 'CCT', 'Month dd, yyyy at HH:MI:SS AM TZ')
         FROM reports.reportversion AS rv
         LEFT JOIN users.user AS u ON rv.creator_id = u.id
         LEFT JOIN utilities.reportstatus AS rs ON rv.status_id = rs.id
@@ -613,7 +613,7 @@ def rep_rep_populatereports(version, report_id, type):
         status_datetime = df['Oras san pagbag-o san kamutangan (Time of report status)'][0]
         status_color = df['Status color'][0]
 
-        # Remove last two columns
+        # Remove last five columns
         df = df.iloc[:, :-5]
         cols = cols[:-5]
 
