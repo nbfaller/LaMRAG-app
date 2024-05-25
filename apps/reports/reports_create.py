@@ -3340,8 +3340,8 @@ def rep_cre_submitcreation(
 
                     # New version creation
                     sql = """INSERT INTO reports.reportversion(id, report_id, occurrence_date, occurrence_time,
-                    remarks, creator_id) VALUES(%s, %s, %s, %s, %s, %s)"""
-                    values = [newversion_id, newreport_id, date, time, remarks, user_id]
+                    remarks, creator_id, status_updater_id) VALUES(%s, %s, %s, %s, %s, %s, %s)"""
+                    values = [newversion_id, newreport_id, date, time, remarks, user_id, user_id]
                     db.modifydatabase(sql, values)
 
                     # Creation of report-type specific table rows

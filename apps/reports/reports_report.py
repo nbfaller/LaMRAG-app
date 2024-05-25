@@ -8,6 +8,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio
 from urllib.parse import urlparse, parse_qs
+import hashlib
+from datetime import datetime
+import pytz
 # App definition
 from app import app
 from apps import dbconnect as db
@@ -32,8 +35,9 @@ footer_m = 'mt-3'
 
 layout = html.Div(
     [
-        dcc.Store(id = 'rep_rep_report_id', storage_type = 'memory'),
-        dcc.Store(id = 'rep_rep_reporttype_id', storage_type = 'memory'),
+        dcc.Store(id = 'rep_rep_sto_report_id', storage_type = 'memory'),
+        dcc.Store(id = 'rep_rep_sto_reportversion_id', storage_type = 'memory'),
+        dcc.Store(id = 'rep_rep_sto_reporttype_id', storage_type = 'memory'),
         dbc.Row(
             [
                 dbc.Col(
@@ -154,14 +158,16 @@ layout = html.Div(
                                                                                 html.Small(
                                                                                     [
                                                                                         "Submitted by ",
-                                                                                        html.Span(id = 'rep_rep_spa_creator_name'),
+                                                                                        html.Span("-", id = 'rep_rep_spa_creator_name'),
                                                                                         " on ",
-                                                                                        html.Span(id = 'rep_rep_spa_creation_datetime'),
+                                                                                        html.Span("-", id = 'rep_rep_spa_creation_datetime'),
                                                                                         html.Br(),
                                                                                         "Status: ",
                                                                                         dbc.Badge("Status", id = 'rep_rep_bdg_status_label', class_name = 'align-content-center align-text-top'),
-                                                                                        " . Updated on ",
-                                                                                        html.Span(id = 'rep_rep_spa_status_datetime'),
+                                                                                        html.Br(),
+                                                                                        "Updated by ", html.Span("-", id = 'rep_rep_spa_status_updater'),
+                                                                                        " on ",
+                                                                                        html.Span("-", id = 'rep_rep_spa_status_datetime'),
                                                                                     ],
                                                                                     className = 'align-self-center card-text text-muted'
                                                                                 ),
@@ -178,13 +184,13 @@ layout = html.Div(
                                                                                                     html.I(className = 'bi bi-pencil-square me-2'),
                                                                                                     "Edit/update"
                                                                                                 ],
-                                                                                                id = 'rep_rep_btn_validate',
+                                                                                                id = 'rep_rep_btn_edit',
                                                                                                 style = {'width': ' 100%'},
                                                                                                 color = 'primary',
                                                                                                 outline = True
                                                                                                 #type = 'submit'
                                                                                             ),
-                                                                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-6 col-xl-auto'
+                                                                                            class_name = 'd-inline align-self-center mb-2 mb-md-0 col-12 col-md-6 col-xl-auto'
                                                                                         ),
                                                                                         dbc.Col(
                                                                                             dbc.Button(
@@ -192,11 +198,12 @@ layout = html.Div(
                                                                                                     html.I(className = 'bi bi-check-circle-fill me-2'),
                                                                                                     "Validate"
                                                                                                 ],
-                                                                                                id = 'rep_rep_btn_edit',
+                                                                                                id = 'rep_rep_btn_validate',
                                                                                                 style = {'width': ' 100%'},
                                                                                                 #type = 'submit'
                                                                                             ),
-                                                                                            class_name = 'align-self-center mt-2 mt-md-0 col-12 col-md-6 col-xl-auto'
+                                                                                            class_name = 'd-inline align-self-center mt-2 mt-md-0 col-12 col-md-6 col-xl-auto',
+                                                                                            id = 'rep_rep_col_validate'
                                                                                         )
                                                                                     ]
                                                                                 )
@@ -227,7 +234,143 @@ layout = html.Div(
                 )
             ],
             class_name = 'justify-content-center'
-        )
+        ),
+        dbc.Modal(
+            [
+                dbc.Form(
+                    [
+                        dbc.ModalBody(
+                            [
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.H4("Confirm report validation"),
+                                                html.P(
+                                                    [
+                                                        """Alayon pagbutang san imo password para makumpirma an validation sini nga report.
+                                                        Alayon liwat pagseguro nga sakto an ngatanan nga nakabutang nga impormasyon.""",
+                                                        html.Br(),
+                                                        html.Small(
+                                                            """(Please enter your password to confirm the validation of this event.
+                                                            Also, please ensure that all information submitted is correct.)
+                                                            """,
+                                                            className = 'text-muted'
+                                                        )
+                                                    ], className = p_m
+                                                ),
+                                            ]
+                                        )
+                                    ], class_name = 'mb-3'
+                                ),
+                                #html.Hr(),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                dbc.Alert(
+                                                    dbc.Row(
+                                                        [
+                                                            dbc.Col(
+                                                                html.I(className = 'bi bi-exclamation-circle-fill me-2'),
+                                                                width = 'auto',
+                                                                class_name = alert_i_m
+                                                            ),
+                                                            dbc.Col(
+                                                                id = 'rep_rep_alert_passwordvalidation_col_text'
+                                                            )
+                                                        ]
+                                                    ),
+                                                    id = 'rep_rep_alert_passwordvalidation',
+                                                    is_open = False,
+                                                    color = 'warning',
+                                                    class_name = label_m,
+                                                    dismissable = True,
+                                                    #fade = True,
+                                                )
+                                            ]
+                                        )
+                                    ]
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                dbc.Input(
+                                                    type = 'password',
+                                                    id = 'rep_rep_input_password',
+                                                    placeholder = ['Enter password'],
+                                                    invalid = False
+                                                ),
+                                            ]
+                                        )
+                                    ],
+                                    id = 'rep_rep_row_password',
+                                    class_name = row_m + ' d-block'
+                                ),
+                            ],
+                            id = 'rep_rep_modal_confirm_body'
+                        ),
+                        dbc.ModalFooter(
+                            [
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
+                                                    html.I(className = 'bi bi-arrow-clockwise me-2'),
+                                                    "Basahon utro an report (Review report)"
+                                                ],
+                                                id = 'rep_rep_btn_review',
+                                                style = {'width': ' 100%'},
+                                                external_link = True
+                                            ),
+                                            id = 'rep_rep_col_review',
+                                            class_name = 'd-none align-self-center col-12 p-0'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
+                                                    html.I(className = 'bi bi-arrow-return-left me-2'),
+                                                    "Balik sa reports (Return to reports)"
+                                                ],
+                                                id = 'rep_rep_btn_return',
+                                                style = {'width': ' 100%'},
+                                                href = '/reports',
+                                                external_link = True
+                                            ),
+                                            id = 'rep_rep_col_return',
+                                            class_name = 'd-none align-self-center col-12 p-0'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
+                                                    html.I(className = 'bi bi-check-circle-fill me-2'),
+                                                    "I-kumpirma (Confirm)"
+                                                ],
+                                                id = 'rep_rep_btn_confirm',
+                                                style = {'width': ' 100%'},
+                                                type = 'submit'
+                                            ),
+                                            id = 'rep_rep_col_confirm',
+                                            class_name = 'd-inline align-self-center col-12 col-md-auto'
+                                        )
+                                    ],
+                                    class_name = 'justify-content-end'
+                                )
+                            ],
+                            id = 'rep_rep_modal_confirm_footer'
+                        )
+                    ]
+                )
+            ],
+            id = 'rep_rep_modal_confirm',
+            is_open = False,
+            centered = True,
+            scrollable = True,
+            backdrop = True,
+            #size = 'lg',
+        ),
     ]
 )
 
@@ -237,9 +380,10 @@ rep_rep_url_pathname = '/reports/report'
 @app.callback(
     [
         Output('rep_rep_h1_header', 'children'),
-        Output('rep_rep_report_id', 'data'),
+        Output('rep_rep_btn_review', 'href'),
+        Output('rep_rep_sto_report_id', 'data'),
         Output('rep_rep_span_reportid', 'children'),
-        Output('rep_rep_reporttype_id', 'data'),
+        Output('rep_rep_sto_reporttype_id', 'data'),
         Output('rep_rep_col_basicinfo', 'children'),
     ],
     [
@@ -286,6 +430,9 @@ def rep_rep_setreport(pathname, search):
 
                 # Header
                 to_return.append(df['Klase san report (Report type)'][0])
+                # Return button href
+                review_href = '/reports/report?id=%s' % df['No.'][0]
+                to_return.append(review_href)
                 # Report ID
                 to_return.append(df['No.'][0])
                 # Report serial number
@@ -353,10 +500,10 @@ def rep_rep_setreport(pathname, search):
         Output('rep_rep_crd_tbs_reportversions', 'active_tab'),
     ],
     [
-        Input('rep_rep_report_id', 'data'),
+        Input('rep_rep_sto_report_id', 'data'),
     ],
     [
-        State('rep_rep_reporttype_id', 'data'),
+        State('rep_rep_sto_reporttype_id', 'data'),
     ]
 )
 
@@ -393,14 +540,16 @@ def rep_rep_populatereports(report_id, type):
         Output('rep_rep_spa_creation_datetime', 'children'),
         Output('rep_rep_bdg_status_label', 'children'),
         Output('rep_rep_bdg_status_label', 'color'),
-        Output('rep_rep_spa_status_datetime', 'children')
+        Output('rep_rep_spa_status_updater', 'children'),
+        Output('rep_rep_spa_status_datetime', 'children'),
+        Output('rep_rep_col_validate', 'class_name')
     ],
     [
         Input('rep_rep_crd_tbs_reportversions', 'active_tab'),
     ],
     [
-        State('rep_rep_report_id', 'data'),
-        State('rep_rep_reporttype_id', 'data'),
+        State('rep_rep_sto_report_id', 'data'),
+        State('rep_rep_sto_reporttype_id', 'data'),
     ]
 )
 
@@ -411,6 +560,8 @@ def rep_rep_populatereports(version, report_id, type):
     status_label = "-"
     status_datetime = "-"
     status_color = None
+    status_updater = "-"
+    validate_class_name = 'd-inline align-self-center mt-2 mt-md-0 col-12 col-md-6 col-xl-auto'
     if version:
         version_id = int((str(version).split("-")[1])) + 1
         sql = """SELECT rv.id,
@@ -524,6 +675,8 @@ def rep_rep_populatereports(version, report_id, type):
         
         # Other common version information (auxiliary)
         sql += """ rv.remarks,
+        rs.id,
+        CONCAT(us.lname, ', ', us.fname, ' ', LEFT(us.mname, 1), ' (', us.username, ')') AS status_updater,
         CONCAT(rs.label_war, ' (', rs.label_en, ')') AS status,
         TO_CHAR(rv.status_time::timestamp at time zone 'CCT', 'Month dd, yyyy at HH:MI:SS AM TZ'),
         rs.color,
@@ -531,10 +684,13 @@ def rep_rep_populatereports(version, report_id, type):
         TO_CHAR(rv.create_time::timestamp at time zone 'CCT', 'Month dd, yyyy at HH:MI:SS AM TZ')
         FROM reports.reportversion AS rv
         LEFT JOIN users.user AS u ON rv.creator_id = u.id
+        LEFT JOIN users.user AS us ON rv.status_updater_id = us.id
         LEFT JOIN utilities.reportstatus AS rs ON rv.status_id = rs.id
         """
         cols += [
-            'Iba pa nga komento (remarks)',
+            'Iba pa nga komento (Remarks)',
+            'status_id',
+            'Nag-update (Updated by)',
             'Kamutangan san report (Report status)',
             'Oras san pagbag-o san kamutangan (Time of report status)',
             'Status color',
@@ -608,10 +764,16 @@ def rep_rep_populatereports(version, report_id, type):
         status_label = df['Kamutangan san report (Report status)'][0]
         status_datetime = df['Oras san pagbag-o san kamutangan (Time of report status)'][0]
         status_color = df['Status color'][0]
+        status_updater = df['Nag-update (Updated by)'][0]
+
+        # Show validation button depending on report status
+        status_id = df['status_id'][0]
+        if status_id == 2:
+            validate_class_name = 'd-none align-self-center mt-2 mt-md-0 col-12 col-md-6 col-xl-auto'
 
         # Remove last five columns
-        df = df.iloc[:, :-5]
-        cols = cols[:-5]
+        df = df.iloc[:, :-7]
+        cols = cols[:-7]
 
         label_rows = []
         for i in cols[1:]:
@@ -650,4 +812,178 @@ def rep_rep_populatereports(version, report_id, type):
 
         content.append(table)
     else: raise PreventUpdate
-    return [content, creator_name, creation_datetime, status_label, status_color, status_datetime]
+    return [content, creator_name, creation_datetime, status_label, status_color, status_updater, status_datetime, validate_class_name]
+
+# Callback for confirming report validation
+@app.callback(
+    [
+        # Modal
+        Output('rep_rep_modal_confirm', 'is_open'),
+        # Report version
+        Output('rep_rep_sto_reportversion_id', 'data')
+    ],
+    [
+        Input('rep_rep_btn_validate', 'n_clicks')
+    ],
+    [
+        State('rep_rep_crd_tbs_reportversions', 'active_tab'),
+    ],
+    prevent_initial_call = True
+)
+
+def rep_rep_confirmcreation(btn, reportversion):
+    ctx = dash.callback_context
+    if ctx.triggered:
+        eventid = ctx.triggered[0]['prop_id'].split('.')[0]
+        if eventid == 'rep_rep_btn_validate' and btn:
+            # Modal
+            modal_open = True
+            version = int(str(reportversion).split("-")[1]) + 1
+            return [modal_open, version]
+        else: raise PreventUpdate
+    else: raise PreventUpdate
+
+# Callback for validating report
+@app.callback(
+    [
+        # In-modal alert
+        Output('rep_rep_alert_passwordvalidation', 'is_open'),
+        Output('rep_rep_alert_passwordvalidation', 'class_name'),
+        Output('rep_rep_alert_passwordvalidation', 'color'),
+        Output('rep_rep_alert_passwordvalidation_col_text', 'children'),
+        # Input validation
+        Output('rep_rep_input_password', 'invalid'),
+        Output('rep_rep_input_password', 'valid'),
+        # Button visibility
+        Output('rep_rep_col_review', 'class_name'),
+        Output('rep_rep_col_return', 'class_name'),
+        Output('rep_rep_col_confirm', 'class_name'),
+        # Modal dissmisability
+        Output('rep_rep_modal_confirm', 'backdrop'),
+        # Password field visibility
+        Output('rep_rep_row_password', 'class_name')
+    ],
+    [
+        Input('rep_rep_btn_confirm', 'n_clicks')
+    ],
+    [
+        # User details
+        State('app_currentuser_id', 'data'),
+        State('rep_rep_input_password', 'value'),
+        # Report details
+        State('rep_rep_sto_report_id', 'data'),
+        State('rep_rep_sto_reportversion_id', 'data')
+    ],
+    prevent_initial_call = True
+)
+
+def rep_rep_submitcreation(
+    btn, user_id, password,
+    report_id, version_id
+):
+    ctx = dash.callback_context
+    if ctx.triggered:
+        eventid = ctx.triggered[0]['prop_id'].split('.')[0]
+        if eventid == 'rep_rep_btn_confirm' and btn:
+            # Alert
+            alert_open = False
+            alert_class_name = None
+            alert_color = None
+            alert_col_text = None
+            # Password validation
+            password_invalid = False
+            password_valid = False
+            # Button visibility
+            vis_none = 'd-none'
+            #vis_inline = 'd-inline'
+            vis_block = 'd-block'
+            common_class = ' align-self-center col-12 p-0'
+            class_review = vis_none + common_class
+            class_return = vis_none + common_class
+            class_confirm = vis_block + common_class + ' col-md-auto'
+            # Modal dissmisability
+            modal_backdrop = True
+            # Password visibility
+            class_password = row_m + ' ' + vis_block
+            if not(password):
+                alert_open = True
+                alert_class_name = 'mb-3'
+                alert_color = 'warning'
+                password_invalid = True
+                alert_col_text = [
+                    "Alayon pagbutang san imo password.",
+                    html.Br(),
+                    html.Small(
+                        "(Please enter your password.)",
+                        className = 'text-muted'
+                    ),
+                ]
+            else:
+                sql = """SELECT username FROM users.user
+                WHERE id = %s AND password = %s;"""
+                encrypt_string = lambda string: hashlib.sha256(string.encode('utf-8')).hexdigest()
+                values = [user_id, encrypt_string(password)]
+                cols = ['username']
+                df = db.querydatafromdatabase(sql, values, cols)
+                if df.shape[0]:
+                    # Actual report validation
+                    sql = """UPDATE reports.reportversion
+                    SET status_id = 2,
+                        status_time = %s,
+                        status_updater_id = %s
+                    WHERE report_id = %s
+                        AND id = %s;
+                    """
+                    values = [
+                        datetime.now(pytz.timezone('Asia/Manila')),
+                        user_id,
+                        report_id,
+                        version_id
+                    ]
+                    db.modifydatabase(sql, values)
+                    
+                    # Open alert
+                    alert_open = True
+                    alert_class_name = 'mb-3'
+                    alert_color = 'success'
+                    # Change validity
+                    password_valid = True
+                    # Button visibility
+                    class_review = vis_block + common_class + ' mb-2'
+                    class_return = vis_block + common_class + ' mt-2'
+                    class_confirm = vis_none + common_class
+                    # Modal dissmisability
+                    modal_backdrop = 'static'
+                    # Password visibility
+                    class_password = row_m + ' ' + vis_none
+
+                    alert_col_text = [
+                        "Na-validate na an report.",
+                        html.Br(),
+                        html.Small(
+                            "(Report validated.)",
+                            className = 'text-muted'
+                        ),
+                    ]
+                else:
+                    alert_open = True
+                    alert_class_name = 'mb-3'
+                    alert_color = 'warning'
+                    password_invalid = True
+                    alert_col_text = [
+                        "Diri sakto an nabutang nga password.",
+                        html.Br(),
+                        html.Small(
+                            "(Incorrect password.)",
+                            className = 'text-muted'
+                        ),
+                    ]
+            return [
+                alert_open, alert_class_name, alert_color, alert_col_text,
+                password_invalid, password_valid,
+                class_review, class_return, class_confirm,
+                modal_backdrop,
+                class_password
+            ]
+        else: raise PreventUpdate
+    else: raise PreventUpdate
