@@ -157,15 +157,15 @@ layout = html.Div(
                                                                             [
                                                                                 html.Small(
                                                                                     [
-                                                                                        "Submitted by ",
+                                                                                        "Status: ",
+                                                                                        dbc.Badge("Status", id = 'rep_rep_bdg_status_label', class_name = 'align-content-center align-text-top'),
+                                                                                        html.Br(),
+                                                                                        "Created by ",
                                                                                         html.Span("-", id = 'rep_rep_spa_creator_name'),
                                                                                         " on ",
                                                                                         html.Span("-", id = 'rep_rep_spa_creation_datetime'),
                                                                                         html.Br(),
-                                                                                        "Status: ",
-                                                                                        dbc.Badge("Status", id = 'rep_rep_bdg_status_label', class_name = 'align-content-center align-text-top'),
-                                                                                        html.Br(),
-                                                                                        "Updated by ", html.Span("-", id = 'rep_rep_spa_status_updater'),
+                                                                                        "Validated by ", html.Span("-", id = 'rep_rep_spa_status_updater'),
                                                                                         " on ",
                                                                                         html.Span("-", id = 'rep_rep_spa_status_datetime'),
                                                                                     ],
@@ -229,6 +229,31 @@ layout = html.Div(
                             id = 'rep_rep_div_data',
                             className = div_m
                         ),
+                        html.Hr(),
+                        html.Div(
+                            [
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.A(
+                                                    [
+                                                        html.I(className = 'bi bi-arrow-return-left me-2'),
+                                                        "Balik sa mga report",
+                                                        html.Small(" (Return to reports)", className = 'text-muted')
+                                                    ],
+                                                    href = '/reports'
+                                                )
+                                            ],
+                                            class_name = 'col-auto'
+                                        )
+                                    ],
+                                    class_name = row_m + ' justify-content-end'
+                                )
+                            ],
+                            id = 'rep_rep_div_footer',
+                            className = footer_m
+                        )
                     ],
                     class_name = 'col-md-10'
                 )
