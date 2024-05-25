@@ -2149,13 +2149,17 @@ def rep_cre_populatedropdowns(
         hh_value = None
         mm_value = None
         ss_value = None
-        ampm_value = None
+        ampm_value = "AM"
         if existing_df.shape[0]:
             date_value = existing_df['occurrence_date'][0]
             if existing_df['occurrence_time'][0]:
                 hh_value = int(str(existing_df['occurrence_time'][0]).split('+')[0].split(":")[0])
+                if hh_value > 12:
+                    hh_value -= 12
+                    ampm_value = "PM"
                 mm_value = int(str(existing_df['occurrence_time'][0]).split('+')[0].split(":")[1])
                 ss_value = int(str(existing_df['occurrence_time'][0]).split('+')[0].split(":")[2])
+                print(hh_value, mm_value, ss_value)
         dropdowns.append(date_value)
 
         # Time of occurrence

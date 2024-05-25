@@ -29,7 +29,7 @@ footer_m = 'mt-3'
 
 layout = html.Div(
     [
-        dcc.Store(id = 'usr_reg_store_regsuccess', data = False, storage_type = 'session'),
+        dcc.Store(id = 'usr_reg_sto_newuser_id', data = False, storage_type = 'session'),
         dbc.Row(
             [
                 dbc.Col(
@@ -113,9 +113,9 @@ layout = html.Div(
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
-                                                    dcc.Dropdown(
+                                                    dbc.Select(
                                                         id = 'usr_reg_input_usertype_id',
-                                                        clearable = True,
+                                                        #clearable = True,
                                                         value = 1
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
@@ -328,9 +328,9 @@ layout = html.Div(
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
                                                 dbc.Col(
-                                                    dcc.Dropdown(
+                                                    dbc.Select(
                                                         id = 'usr_reg_input_assignedsex_id',
-                                                        clearable = True
+                                                        #clearable = True
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -1013,7 +1013,9 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = row_m
+                                    ],
+                                    id = 'usr_reg_row_password_initial',
+                                    class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -1027,7 +1029,9 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = label_m
+                                    ],
+                                    id = 'usr_reg_row_password_confirm',
+                                    class_name = row_m
                                 )
                             ],
                             id = 'usr_reg_modal_confirm_body'
@@ -1039,6 +1043,47 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Button(
                                                 [
+                                                    html.I(className = 'bi bi-arrow-clockwise me-2'),
+                                                    "Magrehistro pa (Register another user)"
+                                                ],
+                                                id = 'usr_reg_btn_repeat',
+                                                style = {'width': ' 100%'},
+                                                href = '/users/register',
+                                                external_link = True
+                                            ),
+                                            id = 'usr_reg_col_repeat',
+                                            class_name = 'd-none align-self-center col-12 p-0'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
+                                                    html.I(className = 'bi bi-arrow-return-left me-2'),
+                                                    "Abriha an profile (View profile)"
+                                                ],
+                                                id = 'usr_reg_btn_profile',
+                                                style = {'width': ' 100%'},
+                                                external_link = True
+                                            ),
+                                            id = 'usr_reg_col_profile',
+                                            class_name = 'd-none align-self-center col-12 p-0'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
+                                                    html.I(className = 'bi bi-arrow-return-left me-2'),
+                                                    "Balik sa dashboard (Return to dashboard)"
+                                                ],
+                                                id = 'usr_reg_btn_return',
+                                                style = {'width': ' 100%'},
+                                                href = '/dashboard',
+                                                external_link = True
+                                            ),
+                                            id = 'usr_reg_col_return',
+                                            class_name = 'd-none align-self-center col-12 p-0'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
                                                     html.I(className = 'bi bi-check-circle-fill me-2'),
                                                     "I-kumpirma (Confirm)"
                                                 ],
@@ -1046,7 +1091,8 @@ layout = html.Div(
                                                 style = {'width': ' 100%'},
                                                 type = 'submit'
                                             ),
-                                            class_name = 'align-self-center col-12 col-md-auto'
+                                            id = 'usr_reg_col_confirm',
+                                            class_name = 'd-inline align-self-center col-12 col-md-auto'
                                         )
                                     ],
                                     class_name = 'justify-content-end'
@@ -1154,6 +1200,27 @@ layout = html.Div(
 )
 
 usr_reg_url_pathname = '/users/register'
+
+# Callback for determining next user id
+@app.callback(
+    [
+        Output('usr_reg_sto_newuser_id', 'data')
+    ],
+    [
+        Input('url', 'pathname')
+    ]
+)
+
+def usr_reg_setnewid(pathname):
+    if pathname == usr_reg_url_pathname:
+        sql = """SELECT id FROM users.user ORDER BY id DESC LIMIT 1;"""
+        values = []
+        cols = ['id']
+        df = db.querydatafromdatabase(sql, values, cols)
+        if df.shape[0]:
+            return [int(df['id'][0]) + 1]
+        else: raise PreventUpdate
+    else: raise PreventUpdate
 
 # Callback for populating regions and other basic dropdown menus
 @app.callback(
@@ -1599,7 +1666,9 @@ def usr_reg_displayusertypealert(usertype):
         Output('usr_reg_input_designation', 'invalid'),
         Output('usr_reg_input_contactnum', 'invalid'),
         Output('usr_reg_input_present_street', 'invalid'),
-        Output('usr_reg_input_permanent_street', 'invalid')
+        Output('usr_reg_input_permanent_street', 'invalid'),
+        # Button href
+        Output('usr_reg_btn_profile', 'href'),
     ],
     [
         Input('usr_reg_btn_submit', 'n_clicks')
@@ -1637,6 +1706,8 @@ def usr_reg_displayusertypealert(usertype):
         State('usr_reg_input_permanent_citymun_id', 'value'), # REQUIRED
         State('usr_reg_input_permanent_brgy_id', 'value'), # REQUIRED
         State('usr_reg_input_permanent_street', 'value'), # REQUIRED
+        # New user id
+        State('usr_reg_sto_newuser_id', 'data')
     ],
     prevent_initial_call = True
 )
@@ -1655,6 +1726,8 @@ def usr_reg_confirmregistration(
     present_region_id, present_province_id, present_citymun_id, present_brgy_id, present_street,
     # Permanent address
     permanent_region_id, permanent_province_id, permanent_citymun_id, permanent_brgy_id, permanent_street,
+    # new user id
+    newuser_id
 ):
     ctx = dash.callback_context
     if ctx.triggered:
@@ -1677,6 +1750,8 @@ def usr_reg_confirmregistration(
             contactnum_invalid = False
             present_street_invalid = False
             permanent_street_invalid = False
+            # Button href
+            profile_href = '/users/profile?id=%s' % newuser_id
 
             sql = """SELECT id FROM users.user
             WHERE fname = %s AND mname = %s AND lname = %s;
@@ -1861,7 +1936,9 @@ def usr_reg_confirmregistration(
                 # Name validation alert
                 alert_name_open, alert_name_class_name,
                 # Input validation
-                fname_invalid, lname_invalid, designation_invalid, contactnum_invalid, present_street_invalid, permanent_street_invalid
+                fname_invalid, lname_invalid, designation_invalid, contactnum_invalid, present_street_invalid, permanent_street_invalid,
+                # Button href
+                profile_href
             ]
         else: raise PreventUpdate
     else: raise PreventUpdate
@@ -1869,9 +1946,6 @@ def usr_reg_confirmregistration(
 # Callback for creating new user
 @app.callback(
     [
-        # Success modal
-        #Output('usr_reg_modal_regsuccess', 'is_open'),
-        Output('usr_reg_store_regsuccess', 'data'),
         # Alert
         Output('usr_reg_alert_passwordvalidation', 'is_open'),
         Output('usr_reg_alert_passwordvalidation', 'class_name'),
@@ -1879,7 +1953,19 @@ def usr_reg_confirmregistration(
         Output('usr_reg_alert_passwordvalidation_col_text', 'children'),
         # Input validation
         Output('usr_reg_input_password_initial', 'invalid'),
-        Output('usr_reg_input_password_confirm', 'invalid')
+        Output('usr_reg_input_password_confirm', 'invalid'),
+        Output('usr_reg_input_password_initial', 'valid'),
+        Output('usr_reg_input_password_confirm', 'valid'),
+        # Button visibility
+        Output('usr_reg_col_repeat', 'class_name'),
+        Output('usr_reg_col_profile', 'class_name'),
+        Output('usr_reg_col_return', 'class_name'),
+        Output('usr_reg_col_confirm', 'class_name'),
+        # Modal dissmisability
+        Output('usr_reg_modal_confirm', 'backdrop'),
+        # Password field visibility
+        Output('usr_reg_row_password_initial', 'class_name'),
+        Output('usr_reg_row_password_confirm', 'class_name')
     ],
     [
         Input('usr_reg_btn_confirm', 'n_clicks')
@@ -1920,6 +2006,8 @@ def usr_reg_confirmregistration(
         State('usr_reg_input_permanent_citymun_id', 'value'), # REQUIRED
         State('usr_reg_input_permanent_brgy_id', 'value'), # REQUIRED
         State('usr_reg_input_permanent_street', 'value'), # REQUIRED
+        # New user id
+        State('usr_reg_sto_newuser_id', 'data'), # REQUIRED
     ],
     prevent_initial_call = True
 )
@@ -1942,14 +2030,13 @@ def usr_reg_submitregistration(
     present_region_id, present_province_id, present_citymun_id, present_brgy_id, present_street,
     # Permanent address
     permanent_region_id, permanent_province_id, permanent_citymun_id, permanent_brgy_id, permanent_street,
+    # New user id
+    newuser_id
 ):
     ctx = dash.callback_context
     if ctx.triggered:
         eventid = ctx.triggered[0]['prop_id'].split('.')[0]
         if eventid == 'usr_reg_btn_confirm' and btn:
-            success_modal = False
-            reg_success = False
-            #confirm_modal = True
             # Alert
             alert_open = False
             alert_class_name = None
@@ -1958,6 +2045,23 @@ def usr_reg_submitregistration(
             # Input validation
             password_initial_invalid = False
             password_confirm_invalid = False
+            password_initial_valid = False
+            password_confirm_valid = False
+            # Button visibility
+            vis_none = 'd-none'
+            #vis_inline = 'd-inline'
+            vis_block = 'd-block'
+            common_class = ' align-self-center col-12 p-0'
+            class_repeat = vis_none + common_class
+            class_profile = vis_none + common_class
+            class_return = vis_none + common_class
+            class_confirm = vis_block + common_class + ' col-md-auto'
+            # Modal dissmisability
+            modal_backdrop = True
+            # Password visibility
+            class_password_initial = row_m + ' ' + vis_block
+            class_password_confirm = row_m + ' ' + vis_block
+
             if not(password_initial) or not(password_confirm):
                 alert_open = True
                 alert_class_name = 'mb-3'
@@ -2007,9 +2111,7 @@ def usr_reg_submitregistration(
                     ),
                 ]
             else:
-                success_modal = True
-                reg_success = True
-                #confirm_modal = False
+                # Open alert
                 alert_open = True
                 alert_class_name = 'mb-3'
                 alert_color = 'success'
@@ -2021,16 +2123,29 @@ def usr_reg_submitregistration(
                         className = 'text-muted'
                     ),
                 ]
-                #url = '/users/profile?id=%s' % 1 # Note: add code for determing latest id number to grant
+                # Change validity
+                password_initial_valid = True
+                password_confirm_valid = True
+                # Button visibility
+                class_repeat = vis_block + common_class + ' mb-2'
+                class_profile = vis_block + common_class + ' mb-2 mt-2'
+                class_return = vis_block + common_class + ' mt-2'
+                class_confirm = vis_none + common_class
+                # Modal dissmisability
+                modal_backdrop = 'static'
+                # Password visibility
+                class_password_initial = row_m + ' ' + vis_none
+                class_password_confirm = row_m + ' ' + vis_none
+                
                 regsuccess = True
                 encrypt_string = lambda string: hashlib.sha256(string.encode('utf-8')).hexdigest()
-                sql = """INSERT INTO users.user (usertype_id, password,
+                sql = """INSERT INTO users.user (id, usertype_id, password,
                     fname, mname, lname, username, birthdate, assignedsex_id,
                     livedname, honorific, pronouns, office_id, designation,
                     contactnum, email, facebook,
                     present_region_id, present_province_id, present_citymun_id, present_brgy_id, present_street,
                     permanent_region_id, permanent_province_id, permanent_citymun_id, permanent_brgy_id, permanent_street)
-                    VALUES (%s, %s,
+                    VALUES (%s, %s, %s,
                     %s, %s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s,
                     %s, %s, %s,
@@ -2038,7 +2153,7 @@ def usr_reg_submitregistration(
                     %s, %s, %s, %s, %s)
                 """
                 values = [
-                    usertype_id, encrypt_string(password_initial),
+                    newuser_id, usertype_id, encrypt_string(password_initial),
                     # Basic information
                     fname, mname, lname, username, birthdate, assignedsex_id,
                     # Affirmative identity
@@ -2054,10 +2169,11 @@ def usr_reg_submitregistration(
                 ]
                 db.modifydatabase(sql, values)
             return [
-                #success_modal,
-                reg_success, #confirm_modal,
                 alert_open, alert_class_name, alert_color, alert_col_text,
-                password_initial_invalid, password_confirm_invalid
+                password_initial_invalid, password_confirm_invalid, password_initial_valid, password_confirm_valid,
+                class_repeat, class_profile, class_return, class_confirm,
+                modal_backdrop,
+                class_password_initial, class_password_confirm
             ]
         else: raise PreventUpdate
     else: raise PreventUpdate
