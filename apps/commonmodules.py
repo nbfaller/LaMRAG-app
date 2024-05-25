@@ -348,7 +348,7 @@ sidebar = dbc.Offcanvas(
                             width = sidebar_btn_col_width
                         ), class_name = sidebar_btn_row_class_name
                     ),
-                    href = '/reports/create',
+                    href = '/reports/create?mode=new',
                     external_link = True,
                     color = 'warning', outline = True, #sidebar_btn_color,
                     size = sidebar_btn_size,

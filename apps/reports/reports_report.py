@@ -187,7 +187,8 @@ layout = html.Div(
                                                                                                 id = 'rep_rep_btn_edit',
                                                                                                 style = {'width': ' 100%'},
                                                                                                 color = 'primary',
-                                                                                                outline = True
+                                                                                                outline = True,
+                                                                                                external_link = True
                                                                                                 #type = 'submit'
                                                                                             ),
                                                                                             class_name = 'd-inline align-self-center mb-2 mb-md-0 col-12 col-md-6 col-xl-auto'
@@ -406,6 +407,7 @@ rep_rep_url_pathname = '/reports/report'
     [
         Output('rep_rep_h1_header', 'children'),
         Output('rep_rep_btn_review', 'href'),
+        Output('rep_rep_btn_edit', 'href'),
         Output('rep_rep_sto_report_id', 'data'),
         Output('rep_rep_span_reportid', 'children'),
         Output('rep_rep_sto_reporttype_id', 'data'),
@@ -458,6 +460,9 @@ def rep_rep_setreport(pathname, search):
                 # Return button href
                 review_href = '/reports/report?id=%s' % df['No.'][0]
                 to_return.append(review_href)
+                # Edit button href
+                edit_href = '/reports/create?mode=update&id=%s' % df['No.'][0]
+                to_return.append(edit_href)
                 # Report ID
                 to_return.append(df['No.'][0])
                 # Report serial number

@@ -4,7 +4,9 @@ from dash import dcc, html, dash_table, callback
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
+from urllib.parse import urlparse, parse_qs
 import hashlib
+import pandas as pd
 # App definition
 from app import app
 from apps import dbconnect as db
@@ -26,10 +28,12 @@ footer_m = 'mt-3'
 layout = html.Div(
     [
         dcc.Geolocation(id = 'rep_cre_geoloc'),
+        # Store for mode
+        dcc.Store(id = 'rep_cre_sto_mode', data = 'new', storage_type = 'memory'),
         # Use this dcc.Store to facilitate URL redirection
         # once a new report is made, similar to logging in
-        dcc.Store(id = 'rep_cre_newreport_id', data = 1),
-        dcc.Store(id = 'rep_cre_newversion_id', data = 1),
+        dcc.Store(id = 'rep_cre_sto_newreport_id', data = 1),
+        dcc.Store(id = 'rep_cre_sto_newversion_id', data = 1),
         dbc.Row(
             [
                 dbc.Col(
@@ -41,7 +45,10 @@ layout = html.Div(
                                     [
                                         dbc.Row(
                                             [
-                                                html.H1("File a report"),
+                                                html.H1(
+                                                    "File a report",
+                                                    id = 'rep_cre_h1_header'
+                                                ),
                                                 html.P(
                                                     [
                                                         "Kinihanglan pun-on an mga patlang nga may pula nga asterisk ", tag_required, ".",
@@ -1735,7 +1742,7 @@ layout = html.Div(
                                                     [
                                                         dbc.Select(
                                                         #dcc.Dropdown(
-                                                            id = 'rep_cre_label_dmgdinfratype_id',
+                                                            id = 'rep_cre_input_dmgdinfratype_id',
                                                             #clearable = True,
                                                             #disabled = True
                                                         ),
@@ -1983,14 +1990,27 @@ def rep_cre_geolocset(housegps, infragps, pos, date):
 # Callback for populating basic dropdown menus and descriptions
 @app.callback(
     [
+        # Mode
+        Output('rep_cre_sto_mode', 'data'),
+        # Header
+        Output('rep_cre_h1_header', 'children'),
         # Report type
         Output('rep_cre_input_reporttype_id', 'options'),
+        Output('rep_cre_input_reporttype_id', 'value'),
+        Output('rep_cre_input_reporttype_id', 'disabled'),
+        # Purok
+        Output('rep_cre_input_purok', 'value'),
+        Output('rep_cre_input_purok', 'disabled'),
         # Event
         Output('rep_cre_input_event_id', 'options'),
+        Output('rep_cre_input_event_id', 'value'),
+        Output('rep_cre_input_event_id', 'disabled'),
+        # Date of occurrence
+        Output('rep_cre_input_date', 'date'),
         # Barangay
         Output('rep_cre_input_brgy_id', 'options'),
-        Output('rep_cre_input_brgy_id', 'disabled'),
         Output('rep_cre_input_brgy_id', 'value'),
+        Output('rep_cre_input_brgy_id', 'disabled'),
         # Related incident
         Output('rep_cre_input_relinctype_id', 'options'),
         # Assigned sex at birth
@@ -2007,7 +2027,7 @@ def rep_cre_geolocset(housegps, infragps, pos, date):
         Output('rep_cre_col_pubutilinttype_desc', 'children'),
         # Damaged house/infrastructure
         Output('rep_cre_input_dmgdhousetype_id', 'options'),
-        Output('rep_cre_label_dmgdinfratype_id', 'options'),
+        Output('rep_cre_input_dmgdinfratype_id', 'options'),
         Output('rep_cre_col_dmgdhousetype_desc', 'children'),
         # Infrastructure
         Output('rep_cre_input_infratype_id', 'options'),
@@ -2022,15 +2042,64 @@ def rep_cre_geolocset(housegps, infragps, pos, date):
         State('app_region_id', 'data'),
         State('app_province_id', 'data'),
         State('app_citymun_id', 'data'),
-        State('app_brgy_id', 'data')
+        State('app_brgy_id', 'data'),
+        State('url', 'search')
     ]
 )
 
-def rep_cre_populatedropdowns(pathname, region, province, citymun, brgy):
+def rep_cre_populatedropdowns(
+    pathname,
+    region, province, citymun, brgy,
+    search
+):
     if pathname == rep_cre_url_pathname:
         dropdowns = []
+        report_id = None
+
+        # Set mode and report id, if any
+        mode = 'new'
+        header = "File a report"
+        parsed = urlparse(search)
+        if parse_qs(parsed.query)['mode'][0]:
+            mode = parse_qs(parsed.query)['mode'][0]
+        dropdowns.append(mode)
+
+        existing_df = pd.DataFrame()
+        if mode == 'update':
+            header = "Update a report"
+            parsed = urlparse(search)
+            if parse_qs(parsed.query)['id'][0]:
+                report_id = parse_qs(parsed.query)['id'][0]
+                sql = """SELECT
+                rv.id AS version_id,
+                rv.occurrence_date,
+                rv.occurrence_time,
+                rv.remarks,
+                r.event_id,
+                r.brgy_id,
+                r.type_id,
+                r.purok
+                FROM reports.reportversion AS rv
+                LEFT JOIN reports.report AS r ON rv.report_id = r.id
+                WHERE rv.report_id = %s;
+                """
+                values = [report_id]
+                cols = [
+                    'version_id',
+                    'occurrence_date',
+                    'occurrence_time',
+                    'remarks',
+                    'event_id',
+                    'brgy_id',
+                    'type_id',
+                    'purok'
+                ]
+                existing_df = db.querydatafromdatabase(sql, values, cols)
+        dropdowns.append(header)
 
         # Report types
+        type_value = None
+        type_disabled = False
         sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
         FROM utilities.reporttype;
         """
@@ -2040,8 +2109,24 @@ def rep_cre_populatedropdowns(pathname, region, province, citymun, brgy):
         df = df.sort_values('value')
         reporttypes = df.to_dict('records')
         dropdowns.append(reporttypes)
+        if existing_df.shape[0]:
+            type_value = existing_df['type_id'][0]
+            type_disabled = True
+        dropdowns.append(type_value)
+        dropdowns.append(type_disabled)
+
+        # Purok
+        purok_value = None
+        purok_disabled = False
+        if existing_df.shape[0]:
+            purok_value = existing_df['purok'][0]
+            purok_disabled = True
+        dropdowns.append(purok_value)
+        dropdowns.append(purok_disabled)
 
         # Events
+        event_value = None
+        event_disabled = False
         sql = """SELECT event.name AS label, event.id AS value
         FROM events.event
         INNER JOIN events.eventbrgy ON event.id = eventbrgy.event_id
@@ -2053,6 +2138,26 @@ def rep_cre_populatedropdowns(pathname, region, province, citymun, brgy):
         df = df.sort_values('value')
         events = df.to_dict('records')
         dropdowns.append(events)
+        if existing_df.shape[0]:
+            event_value = existing_df['event_id'][0]
+            event_disabled = True
+        dropdowns.append(event_value)
+        dropdowns.append(event_disabled)
+
+        # Date of occurrence
+        date_value = None
+        hh_value = None
+        mm_value = None
+        ss_value = None
+        ampm_value = None
+        if existing_df.shape[0]:
+            date_value = existing_df['occurrence_date'][0]
+            hh_value = int(str(existing_df['occurrence_time'][0]).split('+')[0].split(":")[0])
+            mm_value = int(str(existing_df['occurrence_time'][0]).split('+')[0].split(":")[1])
+            ss_value = int(str(existing_df['occurrence_time'][0]).split('+')[0].split(":")[2])
+        dropdowns.append(date_value)
+
+        # Time of occurrence
 
         # Barangays
         sql = """SELECT name AS label, id AS value
@@ -2066,11 +2171,11 @@ def rep_cre_populatedropdowns(pathname, region, province, citymun, brgy):
         dropdowns.append(brgys)
 
         if brgy:
-            dropdowns.append(True)
             dropdowns.append(brgy)
+            dropdowns.append(True)
         else:
-            dropdowns.append(False)
             dropdowns.append(None)
+            dropdowns.append(False)
 
         # Related incident types
         sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
@@ -2596,7 +2701,7 @@ def rep_cre_setpubutilintdatetime(date, hh, mm, ss, ampm):
         Output('rep_cre_input_dmgdinfra_description', 'invalid'),
         Output('rep_cre_input_dmgdinfra_qty', 'invalid'),
         Output('rep_cre_input_dmgdinfra_qtyunit_id', 'invalid'),
-        Output('rep_cre_label_dmgdinfratype_id', 'invalid'),
+        Output('rep_cre_input_dmgdinfratype_id', 'invalid'),
         Output('rep_cre_input_dmgdinfra_loc', 'invalid'),
     ],
     [
@@ -2664,7 +2769,7 @@ def rep_cre_setpubutilintdatetime(date, hh, mm, ss, ampm):
         State('rep_cre_input_dmgdinfra_description', 'value'),
         State('rep_cre_input_dmgdinfra_qty', 'value'),
         State('rep_cre_input_dmgdinfra_qtyunit_id', 'value'),
-        State('rep_cre_label_dmgdinfratype_id', 'value'),
+        State('rep_cre_input_dmgdinfratype_id', 'value'),
         State('rep_cre_input_dmgdinfra_loc', 'value'),
             # OPTIONAL
             #State('rep_cre_input_dmgdinfra_cost', 'value'),
@@ -3135,8 +3240,8 @@ def rep_cre_confirmcreation(
         Output('rep_cre_input_password', 'invalid'),
         Output('rep_cre_input_password', 'valid'),
         # New report and version id
-        Output('rep_cre_newreport_id', 'data'),
-        Output('rep_cre_newversion_id', 'data')
+        Output('rep_cre_sto_newreport_id', 'data'),
+        Output('rep_cre_sto_newversion_id', 'data')
     ],
     [
         Input('rep_cre_btn_confirm', 'n_clicks')
@@ -3212,7 +3317,7 @@ def rep_cre_confirmcreation(
         State('rep_cre_input_dmgdinfra_description', 'value'),
         State('rep_cre_input_dmgdinfra_qty', 'value'),
         State('rep_cre_input_dmgdinfra_qtyunit_id', 'value'),
-        State('rep_cre_label_dmgdinfratype_id', 'value'),
+        State('rep_cre_input_dmgdinfratype_id', 'value'),
         State('rep_cre_input_dmgdinfra_loc', 'value'),
             # OPTIONAL
             State('rep_cre_input_dmgdinfra_cost', 'value'),
