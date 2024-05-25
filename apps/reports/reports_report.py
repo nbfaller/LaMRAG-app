@@ -165,9 +165,15 @@ layout = html.Div(
                                                                                         " on ",
                                                                                         html.Span("-", id = 'rep_rep_spa_creation_datetime'),
                                                                                         html.Br(),
-                                                                                        "Validated by ", html.Span("-", id = 'rep_rep_spa_status_updater'),
-                                                                                        " on ",
-                                                                                        html.Span("-", id = 'rep_rep_spa_status_datetime'),
+                                                                                        html.Div(
+                                                                                            [
+                                                                                                "Validated by ", html.Span("-", id = 'rep_rep_spa_status_updater'),
+                                                                                                " on ",
+                                                                                                html.Span("-", id = 'rep_rep_spa_status_datetime')
+                                                                                            ],
+                                                                                            id = 'rep_rep_div_validation',
+                                                                                            className = 'd-none'
+                                                                                        ),
                                                                                     ],
                                                                                     className = 'align-self-center card-text text-muted'
                                                                                 ),
@@ -572,7 +578,8 @@ def rep_rep_populatereports(report_id, type):
         Output('rep_rep_bdg_status_label', 'color'),
         Output('rep_rep_spa_status_updater', 'children'),
         Output('rep_rep_spa_status_datetime', 'children'),
-        Output('rep_rep_col_validate', 'class_name')
+        Output('rep_rep_col_validate', 'class_name'),
+        Output('rep_rep_div_validation', 'className')
     ],
     [
         Input('rep_rep_crd_tbs_reportversions', 'active_tab'),
@@ -592,6 +599,7 @@ def rep_rep_populatereports(version, report_id, type):
     status_color = None
     status_updater = "-"
     validate_class_name = 'd-inline align-self-center mt-2 mt-md-0 col-12 col-md-6 col-xl-auto'
+    validate_div_class = 'd-none'
     if version:
         version_id = int((str(version).split("-")[1])) + 1
         sql = """SELECT rv.id,
@@ -800,6 +808,7 @@ def rep_rep_populatereports(version, report_id, type):
         status_id = df['status_id'][0]
         if status_id == 2:
             validate_class_name = 'd-none align-self-center mt-2 mt-md-0 col-12 col-md-6 col-xl-auto'
+            validate_div_class = 'd-inline'
 
         # Remove last five columns
         df = df.iloc[:, :-7]
@@ -842,7 +851,7 @@ def rep_rep_populatereports(version, report_id, type):
 
         content.append(table)
     else: raise PreventUpdate
-    return [content, creator_name, creation_datetime, status_label, status_color, status_updater, status_datetime, validate_class_name]
+    return [content, creator_name, creation_datetime, status_label, status_color, status_updater, status_datetime, validate_class_name, validate_div_class]
 
 # Callback for confirming report validation
 @app.callback(
