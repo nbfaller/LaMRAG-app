@@ -730,10 +730,10 @@ def rep_rep_populatereports(version, report_id, type):
         rs.id,
         CONCAT(us.lname, ', ', us.fname, ' ', LEFT(us.mname, 1), ' (', us.username, ')') AS status_updater,
         CONCAT(rs.label_war, ' (', rs.label_en, ')') AS status,
-        TO_CHAR(rv.status_time::timestamp at time zone 'CCT', 'Month dd, yyyy at HH:MI:SS AM TZ'),
+        TO_CHAR(rv.status_time, 'Month dd, yyyy at HH:MI:SS AM TZ'),
         rs.color,
         CONCAT(u.lname, ', ', COALESCE(u.livedname, u.fname), ' ', LEFT(u.mname, 1), ' (', u.username, ')') AS creator,
-        TO_CHAR(rv.create_time::timestamp at time zone 'CCT', 'Month dd, yyyy at HH:MI:SS AM TZ')
+        TO_CHAR(rv.create_time, 'Month dd, yyyy at HH:MI:SS AM TZ')
         FROM reports.reportversion AS rv
         LEFT JOIN users.user AS u ON rv.creator_id = u.id
         LEFT JOIN users.user AS us ON rv.status_updater_id = us.id
