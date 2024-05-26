@@ -217,8 +217,12 @@ def com_home_loginprocess(btn, sessionlogout_time,
                 cols = ['id', 'usertype_id']
                 df = db.querydatafromdatabase(sql, values, cols)
                 if df.shape[0]: # If the query returns rows
-                    user_id = df['id'][0]
-                    usertype_id = df['usertype_id'][0]
+                    user_id = int(df['id'][0])
+                    usertype_id = int(df['usertype_id'][0])
+                    # Update user access log
+                    sql = """INSERT INTO logs.accesslog(user_id) VALUES(%s);"""
+                    values = [int(user_id)]
+                    db.modifydatabase(sql, values)
                 else:
                     user_id = -1
                     usertype_id = -1
@@ -267,9 +271,8 @@ def com_home_loginprocess(btn, sessionlogout_time,
         usertype_id = -1
     else:
         raise PreventUpdate
-    # Maybe move this inside the if statement to
-    # avoid updating app_currentuser_id every time
-    # this callback is triggered?
+    # Maybe the login glitch is caused by the fact that this callback
+    # (or the one that produces the value for app_sessionlogout) will always return values?
     return [alert_open, alert_row_class, alert_col_text, user_id, usertype_id]
 
 # Callback for routing login
