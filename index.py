@@ -6,6 +6,8 @@ from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 # For opening browser
 import webbrowser
+# Other libraries
+from urllib.parse import urlparse, parse_qs
 # App definition
 from app import app
 from apps import dashboard, home, commonmodules as cm, error, sandbox, about
@@ -73,13 +75,14 @@ server = app.server
         Input('url', 'pathname')
     ],
     [
+        Input('url', 'search'),
         State('app_sessionlogout', 'data'),
         State('app_currentuser_id', 'data'),
         State('app_usertype_id', 'data')
     ]
 )
 
-def displaypage(pathname, sessionlogout, user_id, usertype_id):
+def displaypage(pathname, search, sessionlogout, user_id, usertype_id):
     ctx = dash.callback_context
     if ctx.triggered:
         eventid = ctx.triggered[0]['prop_id'].split('.')[0]

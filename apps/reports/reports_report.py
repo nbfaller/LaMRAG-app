@@ -618,7 +618,7 @@ def rep_rep_populatereports(version, report_id, type):
         version_id = int((str(version).split("-")[1])) + 1
         sql = """SELECT rv.id,
         TO_CHAR(rv.occurrence_date, 'Month dd, yyyy'),
-        rv.occurrence_time::time at time zone 'CCT',
+        rv.occurrence_time::time AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Manila',
         """
         values = [report_id, version_id]
         cols = [
@@ -675,9 +675,9 @@ def rep_rep_populatereports(version, report_id, type):
             rv_pubutilint_pubutil.name,
             CONCAT(rv_pubutilint_type.symbol, ' ', rv_pubutilint_type.label_war, ' (', rv_pubutilint_type.label_en, ')'),
             TO_CHAR(rv_pubutilint.int_date, 'Month dd, yyyy'),
-            rv_pubutilint.int_time::time at time zone 'CCT',
+            rv_pubutilint.int_time::time AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Manila',
             TO_CHAR(rv_pubutilint.res_date, 'Month dd, yyyy'),
-            rv_pubutilint.res_time::time at time zone 'CCT',
+            rv_pubutilint.res_time::time AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Manila',
             """
             cols += [
                 'Klase san utilidad, (Type of utility)',
