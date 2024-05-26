@@ -1632,7 +1632,7 @@ def usr_reg_displayusertypealert(usertype):
     color = None
     war = ''
     en = '('
-    if usertype and usertype > 1:
+    if usertype and int(usertype) > 1:
         sql = """SELECT alert_war AS war, alert_en AS en, alert_color AS color
         FROM utilities.usertype WHERE id = %s;
         """
