@@ -223,9 +223,9 @@ def eve_pro_setevent(pathname, search):
                 TO_CHAR(e.startdate, 'Month dd, yyyy'), TO_CHAR(e.enddate, 'Month dd, yyyy'),
                 e.description,
                 CONCAT(u.lname, ', ', COALESCE(u.livedname, u.fname), ' ', LEFT(u.mname, 1), ' (', u.username, ')') AS creator,
-                TO_CHAR(e.create_time, 'Month dd, yyyy • HH:MI:SS AM'),
+                TO_CHAR(e.create_time::timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Manila', 'Month dd, yyyy • HH:MI:SS AM'),
                 CAST(e.is_active AS TEXT) AS status,
-                TO_CHAR(e.is_active_time, 'Month dd, yyyy • HH:MI:SS AM') AS status_time
+                TO_CHAR(e.is_active_time::timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Manila', 'Month dd, yyyy • HH:MI:SS AM') AS status_time
                 FROM events.event AS e
                 LEFT JOIN utilities.eventtype AS et ON e.type_id = et.id
                 LEFT JOIN users.user AS u ON e.creator_id = u.id
