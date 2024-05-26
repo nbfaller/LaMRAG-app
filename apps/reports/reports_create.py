@@ -30,8 +30,7 @@ layout = html.Div(
         dcc.Geolocation(id = 'rep_cre_geoloc'),
         # Store for mode
         dcc.Store(id = 'rep_cre_sto_mode', data = 'new', storage_type = 'memory'),
-        # Use this dcc.Store to facilitate URL redirection
-        # once a new report is made, similar to logging in
+        # Stores for new report and version id
         dcc.Store(id = 'rep_cre_sto_newreport_id', data = 1),
         dcc.Store(id = 'rep_cre_sto_newversion_id', data = 1),
         dbc.Row(
@@ -1895,7 +1894,9 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = row_m
+                                    ],
+                                    id = 'rep_cre_row_password',
+                                    class_name = row_m
                                 ),
                             ],
                             id = 'rep_cre_modal_confirm_body'
@@ -1907,6 +1908,47 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Button(
                                                 [
+                                                    html.I(className = 'bi bi-arrow-clockwise me-2'),
+                                                    "Himo usa pa (Create another report)"
+                                                ],
+                                                id = 'rep_cre_btn_repeat',
+                                                style = {'width': ' 100%'},
+                                                href = '/reports/create?mode=new',
+                                                external_link = True
+                                            ),
+                                            id = 'rep_cre_col_repeat',
+                                            class_name = 'd-none align-self-center col-12 p-0'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
+                                                    html.I(className = 'bi bi-file-earmark-text me-2'),
+                                                    "Abriha an report (View report)"
+                                                ],
+                                                id = 'rep_cre_btn_view',
+                                                style = {'width': ' 100%'},
+                                                external_link = True
+                                            ),
+                                            id = 'rep_cre_col_view',
+                                            class_name = 'd-none align-self-center col-12 p-0'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
+                                                    html.I(className = 'bi bi-arrow-return-left me-2'),
+                                                    "Balik sa dashboard (Return to dashboard)"
+                                                ],
+                                                id = 'rep_cre_btn_return',
+                                                style = {'width': ' 100%'},
+                                                href = '/dashboard',
+                                                external_link = True
+                                            ),
+                                            id = 'rep_cre_col_return',
+                                            class_name = 'd-none align-self-center col-12 p-0'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
                                                     html.I(className = 'bi bi-check-circle-fill me-2'),
                                                     "I-kumpirma (Confirm)"
                                                 ],
@@ -1914,6 +1956,7 @@ layout = html.Div(
                                                 style = {'width': ' 100%'},
                                                 type = 'submit'
                                             ),
+                                            id = 'rep_cre_col_confirm',
                                             class_name = 'align-self-center col-12 col-md-auto'
                                         )
                                     ],
@@ -1992,6 +2035,9 @@ def rep_cre_geolocset(housegps, infragps, pos, date):
     [
         # Mode
         Output('rep_cre_sto_mode', 'data'),
+        # New report and version id based on mode
+        Output('rep_cre_sto_newreport_id', 'data'),
+        Output('rep_cre_sto_newversion_id', 'data'),
         # Header
         Output('rep_cre_h1_header', 'children'),
         # Report type
@@ -2054,7 +2100,8 @@ def rep_cre_populatedropdowns(
 ):
     if pathname == rep_cre_url_pathname:
         dropdowns = []
-        report_id = None
+        report_id = 1
+        version_id = 1
 
         # Set mode and report id, if any
         mode = 'new'
@@ -2065,7 +2112,15 @@ def rep_cre_populatedropdowns(
         dropdowns.append(mode)
 
         existing_df = pd.DataFrame()
-        if mode == 'update':
+        if mode == 'new':
+            header = "File a report"
+            sql = """SELECT id FROM reports.report ORDER BY id DESC LIMIT 1;"""
+            values = []
+            cols = ['id']
+            df = db.querydatafromdatabase(sql, values, cols)
+            if df.shape[0]:
+                report_id = int(df['id'][0]) + 1
+        elif mode == 'update':
             header = "Update a report"
             parsed = urlparse(search)
             if parse_qs(parsed.query)['id'][0]:
@@ -2081,7 +2136,8 @@ def rep_cre_populatedropdowns(
                 r.purok
                 FROM reports.reportversion AS rv
                 LEFT JOIN reports.report AS r ON rv.report_id = r.id
-                WHERE rv.report_id = %s;
+                WHERE rv.report_id = %s
+                ORDER BY version_id DESC LIMIT 1;
                 """
                 values = [report_id]
                 cols = [
@@ -2095,6 +2151,9 @@ def rep_cre_populatedropdowns(
                     'purok'
                 ]
                 existing_df = db.querydatafromdatabase(sql, values, cols)
+                version_id = existing_df['version_id'][0] + 1
+        dropdowns.append(report_id)
+        dropdowns.append(version_id)
         dropdowns.append(header)
 
         # Report types
@@ -2708,11 +2767,16 @@ def rep_cre_setpubutilintdatetime(date, hh, mm, ss, ampm):
         Output('rep_cre_input_dmgdinfra_qtyunit_id', 'invalid'),
         Output('rep_cre_input_dmgdinfratype_id', 'invalid'),
         Output('rep_cre_input_dmgdinfra_loc', 'invalid'),
+        # Button href
+        Output('rep_cre_btn_view', 'href'),
     ],
     [
         Input('rep_cre_btn_submit', 'n_clicks')
     ],
     [
+        # New report and version id
+        State('rep_cre_sto_newreport_id', 'data'),
+        State('rep_cre_sto_newversion_id', 'data'),
         # Common information
         State('rep_cre_input_brgy_id', 'value'),
         State('rep_cre_input_event_id', 'value'),
@@ -2783,7 +2847,7 @@ def rep_cre_setpubutilintdatetime(date, hh, mm, ss, ampm):
 )
 
 def rep_cre_confirmcreation(
-    btn,
+    btn, report_id, version_id,
 
     # Common information
     brgy, event, type, purok, date,
@@ -2862,6 +2926,8 @@ def rep_cre_confirmcreation(
             dmgdinfra_qtyunit_invalid = False
             dmgdinfra_type_invalid = False
             dmgdinfra_loc_invalid = False
+            # Button href
+            view_href = '/reports/report?id=%s&v=%s' % (report_id, version_id)
 
             if (not(brgy) or not(event) or not(type) or not (purok) or not (date)):
                 alert_open = True
@@ -3229,6 +3295,8 @@ def rep_cre_confirmcreation(
                 infratype_invalid, infraclass_invalid, dmgdinfra_description_invalid,
                 dmgdinfra_qty_invalid, dmgdinfra_qtyunit_invalid, dmgdinfra_type_invalid,
                 dmgdinfra_loc_invalid,
+                # Button href
+                view_href
             ]
         else: raise PreventUpdate
     else: raise PreventUpdate
@@ -3244,9 +3312,15 @@ def rep_cre_confirmcreation(
         # Input validation
         Output('rep_cre_input_password', 'invalid'),
         Output('rep_cre_input_password', 'valid'),
-        # New report and version id
-        Output('rep_cre_sto_newreport_id', 'data'),
-        Output('rep_cre_sto_newversion_id', 'data')
+        # Button visibility
+        Output('rep_cre_col_repeat', 'class_name'),
+        Output('rep_cre_col_view', 'class_name'),
+        Output('rep_cre_col_return', 'class_name'),
+        Output('rep_cre_col_confirm', 'class_name'),
+        # Modal dissmisability
+        Output('rep_cre_modal_confirm', 'backdrop'),
+        # Password field visibility
+        Output('rep_cre_row_password', 'class_name')
     ],
     [
         Input('rep_cre_btn_confirm', 'n_clicks')
@@ -3260,6 +3334,9 @@ def rep_cre_confirmcreation(
         State('app_region_id', 'data'),
         State('app_province_id', 'data'),
         State('app_citymun_id', 'data'),
+        # New report and version id
+        State('rep_cre_sto_newreport_id', 'data'),
+        State('rep_cre_sto_newversion_id', 'data'),
         # Common information
         State('rep_cre_input_brgy_id', 'value'),
         State('rep_cre_input_event_id', 'value'),
@@ -3333,6 +3410,7 @@ def rep_cre_confirmcreation(
 def rep_cre_submitcreation(
     btn, password,
     user_id, region_id, province_id, citymun_id,
+    newreport_id, newversion_id,
 
     # Common information
     brgy_id, event, type, purok, date,
@@ -3383,9 +3461,19 @@ def rep_cre_submitcreation(
             # Password validation
             password_invalid = False
             password_valid = False
-            # New report id
-            newreport_id = 1
-            newversion_id = 1
+            # Button visibility
+            vis_none = 'd-none'
+            #vis_inline = 'd-inline'
+            vis_block = 'd-block'
+            common_class = ' align-self-center col-12 p-0'
+            class_repeat = vis_none + common_class
+            class_view = vis_none + common_class
+            class_return = vis_none + common_class
+            class_confirm = vis_block + common_class + ' col-md-auto'
+            # Modal dissmisability
+            modal_backdrop = True
+            # Password visibility
+            class_password = row_m + ' ' + vis_block
 
             if not(password):
                 alert_open = True
@@ -3417,20 +3505,14 @@ def rep_cre_submitcreation(
                     if df.shape[0] > 0: event_report_id = int(df['event_report_id'][0]) + 1
 
                     # Actual report creation
-                    sql = """INSERT INTO reports.report(event_id, event_report_id,
+                    sql = """INSERT INTO reports.report(id, event_id, event_report_id,
                     region_id, province_id, citymun_id, brgy_id,
                     type_id, purok)
-                    VALUES(%s, %s,
+                    VALUES(%s, %s, %s,
                     %s, %s, %s, %s,
                     %s, %s);"""
-                    values = [event, event_report_id, region_id, province_id, citymun_id, brgy_id, type, purok]
+                    values = [newreport_id, event, event_report_id, region_id, province_id, citymun_id, brgy_id, type, purok]
                     db.modifydatabase(sql, values)
-
-                    # Get index of latest report
-                    sql = """SELECT id FROM reports.report ORDER BY id DESC LIMIT 1;"""
-                    values = []
-                    cols = ['id']
-                    newreport_id = int(db.querydatafromdatabase(sql, values, cols)['id'][0])
 
                     # Setting up time
                     time = None
@@ -3440,13 +3522,6 @@ def rep_cre_submitcreation(
                         if ampm == 'PM':
                             hh += 12
                         time = '{:02d}'.format(hh) + '{:02d}'.format(mm) + '{:02d}'.format(ss) + '+08'
-
-                    # Get index of latest report version
-                    sql = """SELECT id FROM reports.reportversion WHERE report_id = %s ORDER BY id DESC LIMIT 1;"""
-                    values = [newreport_id]
-                    cols = ['id']
-                    df = db.querydatafromdatabase(sql, values, cols)
-                    if df.shape[0] > 0: newversion_id = int(df['id'][0]) + 1
 
                     # New version creation
                     sql = """INSERT INTO reports.reportversion(id, report_id, occurrence_date, occurrence_time,
@@ -3524,11 +3599,11 @@ def rep_cre_submitcreation(
                             dmgdinfra_type, dmgdinfra_loc, dmgdinfra_loc_gps
                         ]
                         db.modifydatabase(sql, values)
-
+                    
+                    # Open alert
                     alert_open = True
                     alert_class_name = 'mb-3'
                     alert_color = 'success'
-                    password_valid = True
                     alert_col_text = [
                         "Nahimo na an report.",
                         html.Br(),
@@ -3537,6 +3612,17 @@ def rep_cre_submitcreation(
                             className = 'text-muted'
                         ),
                     ]
+                    # Password validity
+                    password_valid = True
+                    # Button visibility
+                    class_repeat = vis_block + common_class + ' mb-2'
+                    class_view = vis_block + common_class + ' mb-2 mt-2'
+                    class_return = vis_block + common_class + ' mt-2'
+                    class_confirm = vis_none + common_class
+                    # Modal dissmisability
+                    modal_backdrop = 'static'
+                    # Password visibility
+                    class_password = row_m + ' ' + vis_none
                 else:
                     alert_open = True
                     alert_class_name = 'mb-3'
@@ -3553,7 +3639,8 @@ def rep_cre_submitcreation(
             return [
                 alert_open, alert_class_name, alert_color, alert_col_text,
                 password_invalid, password_valid,
-                newreport_id, newversion_id
+                class_repeat, class_view, class_return, class_confirm,
+                modal_backdrop, class_password
             ]
         else: raise PreventUpdate
     else: raise PreventUpdate

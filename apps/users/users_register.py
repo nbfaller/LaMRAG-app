@@ -29,7 +29,7 @@ footer_m = 'mt-3'
 
 layout = html.Div(
     [
-        dcc.Store(id = 'usr_reg_sto_newuser_id', data = False, storage_type = 'session'),
+        dcc.Store(id = 'usr_reg_sto_newuser_id', storage_type = 'session'),
         dbc.Row(
             [
                 dbc.Col(
@@ -1057,7 +1057,7 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Button(
                                                 [
-                                                    html.I(className = 'bi bi-arrow-return-left me-2'),
+                                                    html.I(className = 'bi bi-file-earmark-person me-2'),
                                                     "Abriha an profile (View profile)"
                                                 ],
                                                 id = 'usr_reg_btn_profile',
@@ -1201,30 +1201,12 @@ layout = html.Div(
 
 usr_reg_url_pathname = '/users/register'
 
-# Callback for determining next user id
-@app.callback(
-    [
-        Output('usr_reg_sto_newuser_id', 'data')
-    ],
-    [
-        Input('url', 'pathname')
-    ]
-)
-
-def usr_reg_setnewid(pathname):
-    if pathname == usr_reg_url_pathname:
-        sql = """SELECT id FROM users.user ORDER BY id DESC LIMIT 1;"""
-        values = []
-        cols = ['id']
-        df = db.querydatafromdatabase(sql, values, cols)
-        if df.shape[0]:
-            return [int(df['id'][0]) + 1]
-        else: raise PreventUpdate
-    else: raise PreventUpdate
-
 # Callback for populating regions and other basic dropdown menus
 @app.callback(
     [
+        # New user id
+        Output('usr_reg_sto_newuser_id', 'data'),
+        # Dropdowns
         Output('usr_reg_input_present_region_id', 'options'),
         Output('usr_reg_input_permanent_region_id', 'options'),
         Output('usr_reg_input_assignedsex_id', 'options'),
@@ -1240,6 +1222,16 @@ def usr_reg_setnewid(pathname):
 def usr_reg_populatedropdowns(pathname):
     if pathname == usr_reg_url_pathname:
         dropdowns = []
+
+        # New user id
+        newuser_id = 1
+        sql = """SELECT id FROM users.user ORDER BY id DESC LIMIT 1;"""
+        values = []
+        cols = ['id']
+        df = db.querydatafromdatabase(sql, values, cols)
+        if df.shape[0]:
+            newuser_id = int(df['id'][0]) + 1
+        dropdowns.append(newuser_id)
 
         # Regions
         sql = """SELECT name as label, id as value
@@ -2123,7 +2115,7 @@ def usr_reg_submitregistration(
                         className = 'text-muted'
                     ),
                 ]
-                # Change validity
+                # Password validity
                 password_initial_valid = True
                 password_confirm_valid = True
                 # Button visibility
@@ -2137,7 +2129,6 @@ def usr_reg_submitregistration(
                 class_password_initial = row_m + ' ' + vis_none
                 class_password_confirm = row_m + ' ' + vis_none
                 
-                regsuccess = True
                 encrypt_string = lambda string: hashlib.sha256(string.encode('utf-8')).hexdigest()
                 sql = """INSERT INTO users.user (id, usertype_id, password,
                     fname, mname, lname, username, birthdate, assignedsex_id,

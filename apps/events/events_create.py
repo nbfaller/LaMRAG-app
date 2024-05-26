@@ -25,6 +25,7 @@ footer_m = 'mt-3'
 
 layout = html.Div(
     [
+        dcc.Store(id = 'eve_cre_sto_newevent_id', data = 1),
         dbc.Row(
             [
                 dbc.Col(
@@ -293,7 +294,7 @@ layout = html.Div(
                                             id = 'eve_cre_row_enddate',
                                             class_name = row_m
                                         ),
-                                        # Event escription
+                                        # Event description
                                         dbc.Row(
                                             [
                                                 dbc.Col(
@@ -316,6 +317,7 @@ layout = html.Div(
                                                             style = {
                                                                 'height' : '15em',
                                                                 'width' : '100%',
+                                                                'white-space' : 'pre-wrap'
                                                             },
                                                         )
                                                     ],
@@ -467,7 +469,9 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = row_m
+                                    ],
+                                    id = 'eve_cre_row_password',
+                                    class_name = row_m
                                 ),
                             ],
                             id = 'eve_cre_modal_confirm_body'
@@ -479,6 +483,33 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Button(
                                                 [
+                                                    html.I(className = 'bi bi-file-calendar-event me-2'),
+                                                    "Abriha an event (View event)"
+                                                ],
+                                                id = 'eve_cre_btn_view',
+                                                style = {'width': ' 100%'},
+                                                external_link = True
+                                            ),
+                                            id = 'eve_cre_col_view',
+                                            class_name = 'd-none align-self-center col-12 p-0'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
+                                                    html.I(className = 'bi bi-arrow-return-left me-2'),
+                                                    "Balik sa dashboard (Return to dashboard)"
+                                                ],
+                                                id = 'eve_cre_btn_return',
+                                                style = {'width': ' 100%'},
+                                                href = '/dashboard',
+                                                external_link = True
+                                            ),
+                                            id = 'eve_cre_col_return',
+                                            class_name = 'd-none align-self-center col-12 p-0'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
                                                     html.I(className = 'bi bi-check-circle-fill me-2'),
                                                     "I-kumpirma (Confirm)"
                                                 ],
@@ -486,6 +517,7 @@ layout = html.Div(
                                                 style = {'width': ' 100%'},
                                                 type = 'submit'
                                             ),
+                                            id = 'eve_cre_col_confirm',
                                             class_name = 'align-self-center col-12 col-md-auto'
                                         )
                                     ],
@@ -512,6 +544,9 @@ eve_cre_url_pathname = '/events/create'
 # Callback for populating basic dropdown menus
 @app.callback(
     [
+        # New event id
+        Output('eve_cre_sto_newevent_id', 'data'),
+        # Dropdowns
         Output('eve_cre_input_type_id', 'options'),
         Output('eve_cre_input_brgy_id', 'options'),
     ],
@@ -528,6 +563,16 @@ eve_cre_url_pathname = '/events/create'
 def eve_cre_populatedropdowns(pathname, region, province, citymun):
     if pathname == eve_cre_url_pathname:
         dropdowns = []
+
+        # New event id
+        event_id = 1
+        sql = """SELECT id FROM events.event ORDER BY id DESC LIMIT 1;"""
+        values = []
+        cols = ['id']
+        df = db.querydatafromdatabase(sql, values, cols)
+        if df.shape[0]:
+            event_id = int(df['id'][0]) + 1
+        dropdowns.append(event_id)
 
         # Event types
         sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
@@ -554,7 +599,7 @@ def eve_cre_populatedropdowns(pathname, region, province, citymun):
         return dropdowns
     else: raise PreventUpdate
 
-# Callback for setting min_date_allowed end date field
+# Callback for setting min_date_allowed of end date field
 @app.callback(
     [
         Output('eve_cre_row_enddate', 'class_name'),
@@ -598,6 +643,8 @@ def eve_cre_selectallbrgys(switch):
         Output('eve_cre_alert_inputvalidation', 'is_open'),
         Output('eve_cre_alert_inputvalidation', 'class_name'),
         Output('eve_cre_alert_inputvalidation_span_missing', 'children'),
+        # Button href
+        Output('eve_cre_btn_view', 'href'),
     ],
     [
         Input('eve_cre_btn_submit', 'n_clicks')
@@ -607,10 +654,11 @@ def eve_cre_selectallbrgys(switch):
         State('eve_cre_input_brgy_id', 'value'),
         State('eve_cre_input_selectallbrgys', 'value'),
         State('eve_cre_input_startdate', 'date'),
+        State('eve_cre_sto_newevent_id', 'data')
     ]
 )
 
-def eve_cre_confirmcreation(btn, type_id, brgy, selectallbrgys, startdate):
+def eve_cre_confirmcreation(btn, type_id, brgy, selectallbrgys, startdate, newevent_id):
     ctx = dash.callback_context
     if ctx.triggered:
         eventid = ctx.triggered[0]['prop_id'].split('.')[0]
@@ -621,6 +669,8 @@ def eve_cre_confirmcreation(btn, type_id, brgy, selectallbrgys, startdate):
             alert_open = False
             alert_class_name = None
             alert_span = []
+            # Button href
+            view_href = '/events/event?id=%s' % newevent_id
 
             if (not(type_id) or not(brgy or selectallbrgys) or not(startdate)):
                 alert_open = True
@@ -650,7 +700,7 @@ def eve_cre_confirmcreation(btn, type_id, brgy, selectallbrgys, startdate):
                         ]
                     ))
             else: modal_open = True
-            return [modal_open, alert_open, alert_class_name, alert_span]
+            return [modal_open, alert_open, alert_class_name, alert_span, view_href]
         else: raise PreventUpdate
     else: raise PreventUpdate
 
@@ -663,7 +713,16 @@ def eve_cre_confirmcreation(btn, type_id, brgy, selectallbrgys, startdate):
         Output('eve_cre_alert_passwordvalidation', 'color'),
         Output('eve_cre_alert_passwordvalidation_col_text', 'children'),
         # Input validation
-        Output('eve_cre_input_password', 'invalid')
+        Output('eve_cre_input_password', 'invalid'),
+        Output('eve_cre_input_password', 'valid'),
+        # Button visibility
+        Output('eve_cre_col_view', 'class_name'),
+        Output('eve_cre_col_return', 'class_name'),
+        Output('eve_cre_col_confirm', 'class_name'),
+        # Modal dissmisability
+        Output('eve_cre_modal_confirm', 'backdrop'),
+        # Password field visibility
+        Output('eve_cre_row_password', 'class_name')
     ],
     [
         Input('eve_cre_btn_confirm', 'n_clicks')
@@ -685,6 +744,8 @@ def eve_cre_confirmcreation(btn, type_id, brgy, selectallbrgys, startdate):
         State('app_region_id', 'data'),
         State('app_province_id', 'data'),
         State('app_citymun_id', 'data'),
+        # New event id
+        State('eve_cre_sto_newevent_id', 'data')
     ],
     prevent_initial_call = True
 )
@@ -693,7 +754,8 @@ def eve_cre_submitcreation(
     btn, password,
     type_id, name, brgy_id, selectallbrgys,
     startdate, enddate, description,
-    user_id, region_id, province_id, citymun_id
+    user_id, region_id, province_id, citymun_id,
+    newevent_id
 ):
     ctx = dash.callback_context
     if ctx.triggered:
@@ -706,6 +768,20 @@ def eve_cre_submitcreation(
             alert_col_text = None
             # Password validation
             password_invalid = False
+            password_valid = False
+            # Button visibility
+            vis_none = 'd-none'
+            #vis_inline = 'd-inline'
+            vis_block = 'd-block'
+            common_class = ' align-self-center col-12 p-0'
+            class_view = vis_none + common_class
+            class_return = vis_none + common_class
+            class_confirm = vis_block + common_class + ' col-md-auto'
+            # Modal dissmisability
+            modal_backdrop = True
+            # Password visibility
+            class_password = row_m + ' ' + vis_block
+
             if not(password):
                 alert_open = True
                 alert_class_name = 'mb-3'
@@ -736,31 +812,24 @@ def eve_cre_submitcreation(
                         brgy_id = db.querydatafromdatabase(sql, values, cols)['id'].to_list()
 
                     # Actual event creation
-                    sql = """INSERT INTO events.event(type_id, name, startdate,
-                    enddate, description, creator_id) VALUES(%s, %s,
+                    sql = """INSERT INTO events.event(id, type_id, name, startdate,
+                    enddate, description, creator_id) VALUES(%s, %s, %s,
                     %s, %s, %s, %s)"""
-                    values = [type_id, name, startdate, enddate, description, user_id]
+                    values = [newevent_id, type_id, name, startdate, enddate, description, user_id]
                     db.modifydatabase(sql, values)
-
-                    # Get index of latest event
-                    sql = """SELECT id FROM events.event ORDER BY id DESC LIMIT 1;"""
-                    values = []
-                    cols = ['id']
-                    event_id = int(db.querydatafromdatabase(sql, values, cols)['id'][0])
 
                     # Add entries to eventbrgy table
                     # AS MUCH AS POSSIBLE avoid loops
                     for brgy in brgy_id:
                         sql = """INSERT INTO events.eventbrgy(event_id, region_id,
                         province_id, citymun_id, brgy_id) VALUES(%s, %s, %s, %s, %s)"""
-                        values = [event_id, region_id, province_id, citymun_id, brgy]
+                        values = [newevent_id, region_id, province_id, citymun_id, brgy]
                         db.modifydatabase(sql, values)
                     
                     # Open alert
                     alert_open = True
                     alert_class_name = 'mb-3'
                     alert_color = 'success'
-                    password_invalid = False
                     alert_col_text = [
                         "Nahimo na an event.",
                         html.Br(),
@@ -769,6 +838,17 @@ def eve_cre_submitcreation(
                             className = 'text-muted'
                         ),
                     ]
+                    # Password validity
+                    password_invalid = False
+                    password_valid = True
+                    # Button visibility
+                    class_view = vis_block + common_class + ' mb-2'
+                    class_return = vis_block + common_class + ' mt-2'
+                    class_confirm = vis_none + common_class
+                    # Modal dissmisability
+                    modal_backdrop = 'static'
+                    # Password visibility
+                    class_password = row_m + ' ' + vis_none
                 else:
                     alert_open = True
                     alert_class_name = 'mb-3'
@@ -782,6 +862,11 @@ def eve_cre_submitcreation(
                             className = 'text-muted'
                         ),
                     ]
-            return [alert_open, alert_class_name, alert_color, alert_col_text, password_invalid]
+            return [
+                alert_open, alert_class_name, alert_color, alert_col_text,
+                password_invalid, password_valid,
+                class_view, class_return, class_confirm,
+                modal_backdrop, class_password
+            ]
         else: raise PreventUpdate
     else: raise PreventUpdate

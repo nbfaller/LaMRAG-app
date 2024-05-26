@@ -28,6 +28,8 @@ layout = html.Div(
     [
         dcc.Geolocation(id = 'dat_hou_upl_geoloc'),
         dcc.Store(id = 'dat_hou_upl_sto_rescount', data = 0),
+        dcc.Store(id = 'dat_hou_upl_sto_newhousehold_id', storage_type = 'session'),
+        dcc.Store(id = 'dat_hou_upl_sto_newresident_id', storage_type = 'session'),
         dbc.Row(
             [
                 dbc.Col(
@@ -373,7 +375,9 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = row_m
+                                    ],
+                                    id = 'dat_hou_upl_row_password',
+                                    class_name = row_m
                                 ),
                             ],
                             id = 'dat_hou_upl_modal_confirm_body'
@@ -385,6 +389,34 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Button(
                                                 [
+                                                    html.I(className = 'bi bi-arrow-clockwise me-2'),
+                                                    "Mag-upload pa (Upload another household)"
+                                                ],
+                                                id = 'dat_hou_upl_btn_repeat',
+                                                style = {'width': ' 100%'},
+                                                href = '/data/household/upload',
+                                                external_link = True
+                                            ),
+                                            id = 'dat_hou_upl_col_repeat',
+                                            class_name = 'd-none align-self-center col-12 p-0'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
+                                                    html.I(className = 'bi bi-arrow-return-left me-2'),
+                                                    "Balik sa dashboard (Return to dashboard)"
+                                                ],
+                                                id = 'dat_hou_upl_btn_return',
+                                                style = {'width': ' 100%'},
+                                                href = '/dashboard',
+                                                external_link = True
+                                            ),
+                                            id = 'dat_hou_upl_col_return',
+                                            class_name = 'd-none align-self-center col-12 p-0'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
                                                     html.I(className = 'bi bi-check-circle-fill me-2'),
                                                     "I-kumpirma (Confirm)"
                                                 ],
@@ -392,6 +424,7 @@ layout = html.Div(
                                                 style = {'width': ' 100%'},
                                                 type = 'submit'
                                             ),
+                                            id = 'dat_hou_upl_col_confirm',
                                             class_name = 'align-self-center col-12 col-md-auto'
                                         )
                                     ],
@@ -471,6 +504,10 @@ def dat_hou_upl_geolocset(selectgps, pos, date):
 # Callback for populating basic dropdown menus
 @app.callback(
     [
+        # New household id
+        Output('dat_hou_upl_sto_newhousehold_id', 'data'),
+        Output('dat_hou_upl_sto_newresident_id', 'data'),
+        # New resident id
         # Dropdowns
         Output('dat_hou_upl_input_brgy_id', 'options'),
         Output('dat_hou_upl_input_brgy_id', 'value'),
@@ -489,6 +526,24 @@ def dat_hou_upl_geolocset(selectgps, pos, date):
 def dat_hou_upl_populatedropdowns(pathname, region, province, citymun, brgy):
     if pathname == dat_hou_upl_pathname:
         dropdowns = []
+
+        # New household id
+        newhousehold_id = 1
+        sql = """SELECT id FROM data.household ORDER BY id DESC LIMIT 1;"""
+        values = []
+        cols = ['id']
+        df = db.querydatafromdatabase(sql, values, cols)
+        if df.shape[0]:
+            newhousehold_id = int(df['id'][0]) + 1
+        dropdowns.append(newhousehold_id)
+
+        # New resident id
+        newresident_id = 1
+        sql = """SELECT id FROM data.resident ORDER BY id DESC LIMIT 1;"""
+        df = db.querydatafromdatabase(sql, values, cols)
+        if df.shape[0]:
+            newresident_id = int(df['id'][0]) + 1
+        dropdowns.append(newresident_id)
 
         # Barangays
         sql = """SELECT name as label, id as value
@@ -1018,7 +1073,16 @@ def dat_hou_upl_confirmcreation(btn, rescount, fnames, lnames, birthdates, assig
         Output('dat_hou_upl_alert_passwordvalidation', 'color'),
         Output('dat_hou_upl_alert_passwordvalidation_col_text', 'children'),
         # Input validation
-        Output('dat_hou_upl_input_password', 'invalid')
+        Output('dat_hou_upl_input_password', 'invalid'),
+        Output('dat_hou_upl_input_password', 'valid'),
+        # Button visibility
+        Output('dat_hou_upl_col_repeat', 'class_name'),
+        Output('dat_hou_upl_col_return', 'class_name'),
+        Output('dat_hou_upl_col_confirm', 'class_name'),
+        # Modal dissmisability
+        Output('dat_hou_upl_modal_confirm', 'backdrop'),
+        # Password field visibility
+        Output('dat_hou_upl_row_password', 'class_name')
     ],
     [
         Input('dat_hou_upl_btn_confirm', 'n_clicks')
@@ -1053,6 +1117,9 @@ def dat_hou_upl_confirmcreation(btn, rescount, fnames, lnames, birthdates, assig
         # Sectors and needs
         State({'type' : 'dat_hou_upl_input_demographicsector', 'index' : ALL}, 'value'),
         State({'type' : 'dat_hou_upl_input_demographicneed', 'index' : ALL}, 'value'),
+        # New household id
+        State('dat_hou_upl_sto_newhousehold_id', 'data'),
+        State('dat_hou_upl_sto_newresident_id', 'data'),
     ],
     prevent_initial_call = True
 )
@@ -1063,7 +1130,8 @@ def dat_hou_upl_submitcreation(
     rescount,
     fnames, mnames, lnames, birthdates, assignedsexes,
     livednames, honorifics, pronouns,
-    sectors, needs
+    sectors, needs,
+    newhousehold_id, newresident_id
 ):
     ctx = dash.callback_context
     if ctx.triggered:
@@ -1076,6 +1144,20 @@ def dat_hou_upl_submitcreation(
             alert_col_text = None
             # Password validation
             password_invalid = False
+            password_valid = False
+            # Button visibility
+            vis_none = 'd-none'
+            #vis_inline = 'd-inline'
+            vis_block = 'd-block'
+            common_class = ' align-self-center col-12 p-0'
+            class_repeat = vis_none + common_class
+            class_return = vis_none + common_class
+            class_confirm = vis_block + common_class + ' col-md-auto'
+            # Modal dissmisability
+            modal_backdrop = True
+            # Password visibility
+            class_password = row_m + ' ' + vis_block
+
             if not(password):
                 alert_open = True
                 alert_class_name = 'mb-3'
@@ -1102,36 +1184,23 @@ def dat_hou_upl_submitcreation(
                         loc_gps = "(%s,%s)" % (geoloc['lat'], geoloc['lon'])
 
                     # Household creation
-                    sql = """INSERT INTO data.household(region_id, province_id, citymun_id,
+                    sql = """INSERT INTO data.household(id, region_id, province_id, citymun_id,
                     brgy_id, purok, loc_text, loc_gps, creator_id)
-                    VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"""
-                    values = [region, province, citymun, brgy, purok, loc, loc_gps, user_id]
+                    VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                    values = [newhousehold_id, region, province, citymun, brgy, purok, loc, loc_gps, user_id]
                     db.modifydatabase(sql, values)
-
-                    # Get index of latest household
-                    sql = """SELECT id FROM data.household ORDER BY id DESC LIMIT 1;"""
-                    values = []
-                    cols = ['id']
-                    household_id = int(db.querydatafromdatabase(sql, values, cols)['id'][0])
-
-                    # Get index of latest resident, if any
-                    new_resident_id = 1
-                    sql = """SELECT id FROM data.resident ORDER BY id DESC LIMIT 1;"""
-                    values = []
-                    cols = ['id']
-                    df = db.querydatafromdatabase(sql, values, cols)
-                    if df.shape[0]: new_resident_id = int(df['id'][0]) + 1
                     
                     for i in range(0, rescount):
+                        if mnames[i] == None or mnames[i] == '': mnames[i] = ''
                         # Resident creation
-                        sql = """INSERT INTO data.resident(household_id,
+                        sql = """INSERT INTO data.resident(id, household_id,
                         fname, mname, lname, birthdate, assignedsex_id,
                         livedname, honorific, pronouns)
-                        VALUES(%s,
+                        VALUES(%s, %s,
                         %s, %s, %s, %s, %s,
                         %s, %s, %s);"""
                         values = [
-                            household_id,
+                            newresident_id, newhousehold_id,
                             fnames[i], mnames[i], lnames[i], birthdates[i], assignedsexes[i],
                             livednames[i], honorifics[i], pronouns[i]
                         ]
@@ -1142,23 +1211,22 @@ def dat_hou_upl_submitcreation(
                                 # Attaching sectors per resident, if any
                                 sql = """INSERT INTO data.residentsector(resident_id, sector_id)
                                 VALUES(%s, %s);"""
-                                values = [new_resident_id, j]
+                                values = [newresident_id, j]
                                 db.modifydatabase(sql, values)
                         if needs[i]:
                             for j in needs[i]:
                                 # Attaching needs per resident, if any
                                 sql = """INSERT INTO data.residentneed(resident_id, need_id)
                                 VALUES(%s, %s);"""
-                                values = [new_resident_id, j]
+                                values = [newresident_id, j]
                                 db.modifydatabase(sql, values)
                         
-                        new_resident_id += 1
+                        newresident_id += 1
                     
                     # Open alert
                     alert_open = True
                     alert_class_name = 'mb-3'
                     alert_color = 'success'
-                    password_invalid = False
                     alert_col_text = [
                         "Nasumite na an profile sini nga panimalay.",
                         html.Br(),
@@ -1167,6 +1235,16 @@ def dat_hou_upl_submitcreation(
                             className = 'text-muted'
                         ),
                     ]
+                    password_invalid = False
+                    password_valid = True
+                    # Button visibility
+                    class_repeat = vis_block + common_class + ' mb-2'
+                    class_return = vis_block + common_class + ' mt-2'
+                    class_confirm = vis_none + common_class
+                    # Modal dissmisability
+                    modal_backdrop = 'static'
+                    # Password visibility
+                    class_password = row_m + ' ' + vis_none
                 else:
                     alert_open = True
                     alert_class_name = 'mb-3'
@@ -1180,6 +1258,11 @@ def dat_hou_upl_submitcreation(
                             className = 'text-muted'
                         ),
                     ]
-            return [alert_open, alert_class_name, alert_color, alert_col_text, password_invalid]
+            return [
+                alert_open, alert_class_name, alert_color, alert_col_text,
+                password_invalid, password_valid,
+                class_repeat, class_return, class_confirm,
+                modal_backdrop, class_password
+            ]
         else: raise PreventUpdate
     else: raise PreventUpdate

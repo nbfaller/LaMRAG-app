@@ -282,20 +282,20 @@ sidebar = dbc.Offcanvas(
         # Main buttons
         html.Div(
             [
-                dbc.Button(
-                    dbc.Row(
-                        dbc.Col(
-                            [
-                                html.I(className = 'bi bi-house me-2'),
-                                "Home"
-                            ],
-                            width = sidebar_btn_col_width
-                        ), class_name = sidebar_btn_row_class_name
-                    ),
-                    href = '/',
-                    external_link = True,
-                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
-                ),
+                #dbc.Button(
+                #    dbc.Row(
+                #        dbc.Col(
+                #            [
+                #                html.I(className = 'bi bi-house me-2'),
+                #                "Home"
+                #            ],
+                #            width = sidebar_btn_col_width
+                #        ), class_name = sidebar_btn_row_class_name
+                #    ),
+                #    href = '/',
+                #    external_link = True,
+                #    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
+                #),
                 dbc.Button(
                     dbc.Row(
                         dbc.Col(
@@ -383,20 +383,6 @@ sidebar = dbc.Offcanvas(
                         ), class_name = sidebar_btn_row_class_name
                     ),
                     href = '/reports',
-                    external_link = True,
-                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
-                ),
-                dbc.Button(
-                    dbc.Row(
-                        dbc.Col(
-                            [
-                                html.I(className = 'bi bi-pencil-square me-2'),
-                                "Update a report"
-                            ],
-                            width = sidebar_btn_col_width
-                        ), class_name = sidebar_btn_row_class_name
-                    ),
-                    href = '/reports/update',
                     external_link = True,
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
@@ -531,20 +517,6 @@ sidebar = dbc.Offcanvas(
                     dbc.Row(
                         dbc.Col(
                             [
-                                html.I(className = 'bi bi-toggle-on me-2'),
-                                "Activate community profiling"
-                            ],
-                            width = sidebar_btn_col_width
-                        ), class_name = sidebar_btn_row_class_name
-                    ),
-                    href = '/data/activate',
-                    external_link = True,
-                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
-                ),
-                dbc.Button(
-                    dbc.Row(
-                        dbc.Col(
-                            [
                                 html.I(className = 'bi bi-map me-2'),
                                 "Submit barangay profile"
                             ],
@@ -573,6 +545,20 @@ sidebar = dbc.Offcanvas(
                         'width' : '100%',
                         'border-width' : '0px'
                     }
+                ),
+                dbc.Button(
+                    dbc.Row(
+                        dbc.Col(
+                            [
+                                html.I(className = 'bi bi-toggle-on me-2'),
+                                "Activate community profiling"
+                            ],
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
+                    href = '/data/activate',
+                    external_link = True,
+                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
             ], className = 'mb-3',
         ),

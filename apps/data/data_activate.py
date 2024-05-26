@@ -26,7 +26,7 @@ footer_m = 'mt-3'
 
 layout = html.Div(
     [
-        dcc.Store(id = 'dat_ena_sto_window_id'),
+        dcc.Store(id = 'dat_ena_sto_newwindow_id'),
         dbc.Row(
             [
                 dbc.Col(
@@ -147,7 +147,8 @@ layout = html.Div(
                                                             #month_format = 'MMM Do, YYYY',
                                                             clearable = True,
                                                             #style = {'width' : '100%'}
-                                                            className = 'w-100'
+                                                            className = 'w-100',
+                                                            disabled = True
                                                         ),
                                                         #dbc.FormText(
                                                         #    """Kinihanglan himuan san maglain nga event an mga panhitabó nga konektado,
@@ -398,7 +399,9 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = row_m
+                                    ],
+                                    id = 'dat_ena_row_password',
+                                    class_name = row_m
                                 ),
                             ],
                             id = 'dat_ena_modal_confirm_body'
@@ -410,6 +413,33 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Button(
                                                 [
+                                                    html.I(className = 'bi bi-calendar-range me-2'),
+                                                    "Basaha utro an mga detalye (Review details)"
+                                                ],
+                                                id = 'dat_ena_btn_review',
+                                                style = {'width': ' 100%'},
+                                                external_link = True
+                                            ),
+                                            id = 'dat_ena_col_review',
+                                            class_name = 'd-none align-self-center col-12 p-0'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
+                                                    html.I(className = 'bi bi-arrow-return-left me-2'),
+                                                    "Balik sa dashboard (Return to dashboard)"
+                                                ],
+                                                id = 'dat_ena_btn_return',
+                                                style = {'width': ' 100%'},
+                                                href = '/dashboard',
+                                                external_link = True
+                                            ),
+                                            id = 'dat_ena_col_return',
+                                            class_name = 'd-none align-self-center col-12 p-0'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
                                                     html.I(className = 'bi bi-check-circle-fill me-2'),
                                                     "I-kumpirma (Confirm)"
                                                 ],
@@ -417,6 +447,7 @@ layout = html.Div(
                                                 style = {'width': ' 100%'},
                                                 type = 'submit'
                                             ),
+                                            id = 'dat_ena_col_confirm',
                                             class_name = 'align-self-center col-12 col-md-auto'
                                         )
                                     ],
@@ -443,9 +474,10 @@ dat_ena_url_pathname = '/data/activate'
 # Callback for populating basic dropdown menus and other restrictions
 @app.callback(
     [
+        # New window id
+        Output('dat_ena_sto_newwindow_id', 'data'),
         Output('dat_ena_input_brgy_id', 'options'),
         Output('dat_ena_input_startdate', 'min_date_allowed'),
-        Output('dat_ena_input_enddate', 'min_date_allowed')
     ],
     [
         Input('url', 'pathname')
@@ -461,6 +493,16 @@ def dat_ena_populatedropdowns(pathname, region, province, citymun):
     if pathname == dat_ena_url_pathname:
         dropdowns = []
 
+        # New window id
+        window_id = 1
+        sql = """SELECT id FROM data.profilingwindow ORDER BY id DESC LIMIT 1;"""
+        values = []
+        cols = ['id']
+        df = db.querydatafromdatabase(sql, values, cols)
+        if df.shape[0]:
+            window_id = int(df['id'][0]) + 1
+        dropdowns.append(window_id)
+
         # Barangays
         sql = """SELECT name AS label, id AS value
         FROM utilities.addressbrgy WHERE region_id = %s AND province_id = %s AND citymun_id = %s;
@@ -474,11 +516,28 @@ def dat_ena_populatedropdowns(pathname, region, province, citymun):
 
         # Minimum date
         dropdowns.append(datetime.today())
-        dropdowns.append(datetime.today() + timedelta(1)) # Date tomorrow
 
         return dropdowns
     else: raise PreventUpdate
 
+# Callback for setting min_date_allowed of end date field
+@app.callback(
+    [
+        Output('dat_ena_input_enddate', 'min_date_allowed'),
+        Output('dat_ena_input_enddate', 'disabled')
+    ],
+    [
+        Input('dat_ena_input_startdate', 'date')
+    ]
+)
+
+def dat_ena_setminenddate(startdate):
+    min_date = datetime.today() + timedelta(1) # Date tomorrow
+    disabled = True
+    if startdate:
+        min_date = startdate
+        disabled = False
+    return [min_date, disabled]
 
 # Callback for disabling barangay selection when "select all" is selected
 @app.callback(
@@ -509,6 +568,8 @@ def dat_ena_selectallbrgys(switch):
         Output('dat_ena_alert_inputvalidation', 'is_open'),
         Output('dat_ena_alert_inputvalidation', 'class_name'),
         Output('dat_ena_alert_inputvalidation_span_missing', 'children'),
+        # Button href
+        Output('dat_ena_btn_review', 'href')
     ],
     [
         Input('dat_ena_btn_submit', 'n_clicks')
@@ -518,10 +579,11 @@ def dat_ena_selectallbrgys(switch):
         State('dat_ena_input_enddate', 'date'),
         State('dat_ena_input_brgy_id', 'value'),
         State('dat_ena_input_selectallbrgys', 'value'),
+        State('dat_ena_sto_newwindow_id', 'data')
     ]
 )
 
-def dat_ena_confirmcreation(btn, startdate, enddate, brgys, selectallbrgys):
+def dat_ena_confirmcreation(btn, startdate, enddate, brgys, selectallbrgys, newwindow_id):
     ctx = dash.callback_context
     if ctx.triggered:
         eventid = ctx.triggered[0]['prop_id'].split('.')[0]
@@ -532,6 +594,8 @@ def dat_ena_confirmcreation(btn, startdate, enddate, brgys, selectallbrgys):
             alert_open = False
             alert_class_name = None
             alert_span = []
+            # Button href
+            review_href = '/data/window?id=%s' % newwindow_id
 
             conditions = [
                 not(startdate),
@@ -571,7 +635,7 @@ def dat_ena_confirmcreation(btn, startdate, enddate, brgys, selectallbrgys):
                         ]
                     ))
             else: modal_open = True
-            return [modal_open, alert_open, alert_class_name, alert_span]
+            return [modal_open, alert_open, alert_class_name, alert_span, review_href]
         else: raise PreventUpdate
     else: raise PreventUpdate
 
@@ -585,8 +649,15 @@ def dat_ena_confirmcreation(btn, startdate, enddate, brgys, selectallbrgys):
         Output('dat_ena_alert_passwordvalidation_col_text', 'children'),
         # Input validation
         Output('dat_ena_input_password', 'invalid'),
-        # New window id
-        Output('dat_ena_sto_window_id', 'data')
+        Output('dat_ena_input_password', 'valid'),
+        # Button visibility
+        Output('dat_ena_col_review', 'class_name'),
+        Output('dat_ena_col_return', 'class_name'),
+        Output('dat_ena_col_confirm', 'class_name'),
+        # Modal dissmisability
+        Output('dat_ena_modal_confirm', 'backdrop'),
+        # Password field visibility
+        Output('dat_ena_row_password', 'class_name')
     ],
     [
         Input('dat_ena_btn_confirm', 'n_clicks')
@@ -606,6 +677,8 @@ def dat_ena_confirmcreation(btn, startdate, enddate, brgys, selectallbrgys):
         State('dat_ena_input_brgy_id', 'value'),
         State('dat_ena_input_selectallbrgys', 'value'),
         State('dat_ena_input_remarks', 'value'),
+        # New window id
+        State('dat_ena_sto_newwindow_id', 'data')
     ],
     prevent_initial_call = True
 )
@@ -613,7 +686,8 @@ def dat_ena_confirmcreation(btn, startdate, enddate, brgys, selectallbrgys):
 def dat_ena_submitcreation(
     btn, user_id, password,
     region_id, province_id, citymun_id,
-    startdate, enddate, brgy_id, selectallbrgys, remarks
+    startdate, enddate, brgy_id, selectallbrgys, remarks,
+    newwindow_id
 ):
     ctx = dash.callback_context
     if ctx.triggered:
@@ -626,7 +700,20 @@ def dat_ena_submitcreation(
             alert_col_text = None
             # Password validation
             password_invalid = False
-            window_id = None
+            password_valid = False
+            # Button visibility
+            vis_none = 'd-none'
+            #vis_inline = 'd-inline'
+            vis_block = 'd-block'
+            common_class = ' align-self-center col-12 p-0'
+            class_review = vis_none + common_class
+            class_return = vis_none + common_class
+            class_confirm = vis_block + common_class + ' col-md-auto'
+            # Modal dissmisability
+            modal_backdrop = True
+            # Password visibility
+            class_password = row_m + ' ' + vis_block
+
             if not(password):
                 alert_open = True
                 alert_class_name = 'mb-3'
@@ -657,30 +744,23 @@ def dat_ena_submitcreation(
                         brgy_id = db.querydatafromdatabase(sql, values, cols)['id'].to_list()
 
                     # Actual window creation
-                    sql = """INSERT INTO data.profilingwindow(startdate, enddate, remarks, creator_id)
-                    VALUES(%s, %s, %s, %s);"""
-                    values = [startdate, enddate, remarks, user_id]
+                    sql = """INSERT INTO data.profilingwindow(id, startdate, enddate, remarks, creator_id)
+                    VALUES(%s, %s, %s, %s, %s);"""
+                    values = [newwindow_id, startdate, enddate, remarks, user_id]
                     db.modifydatabase(sql, values)
-
-                    # Get index of latest window
-                    sql = """SELECT id FROM data.profilingwindow ORDER BY id DESC LIMIT 1;"""
-                    values = []
-                    cols = ['id']
-                    window_id = int(db.querydatafromdatabase(sql, values, cols)['id'][0])
 
                     # Add entries to eventbrgy table
                     # AS MUCH AS POSSIBLE avoid loops
                     for brgy in brgy_id:
                         sql = """INSERT INTO data.windowbrgy(window_id, region_id,
                         province_id, citymun_id, brgy_id) VALUES(%s, %s, %s, %s, %s)"""
-                        values = [window_id, region_id, province_id, citymun_id, brgy]
+                        values = [newwindow_id, region_id, province_id, citymun_id, brgy]
                         db.modifydatabase(sql, values)
                     
                     # Open alert
                     alert_open = True
                     alert_class_name = 'mb-3'
                     alert_color = 'success'
-                    password_invalid = False
                     alert_col_text = [
                         "Na-aktibar na an community profiling.",
                         html.Br(),
@@ -689,6 +769,17 @@ def dat_ena_submitcreation(
                             className = 'text-muted'
                         ),
                     ]
+                    # Password validity
+                    password_invalid = False
+                    password_valid = True
+                    # Button visibility
+                    class_review = vis_block + common_class + ' mb-2'
+                    class_return = vis_block + common_class + ' mt-2'
+                    class_confirm = vis_none + common_class
+                    # Modal dissmisability
+                    modal_backdrop = 'static'
+                    # Password visibility
+                    class_password = row_m + ' ' + vis_none
                 else:
                     alert_open = True
                     alert_class_name = 'mb-3'
@@ -702,6 +793,11 @@ def dat_ena_submitcreation(
                             className = 'text-muted'
                         ),
                     ]
-            return [alert_open, alert_class_name, alert_color, alert_col_text, password_invalid, window_id]
+            return [
+                alert_open, alert_class_name, alert_color, alert_col_text,
+                password_invalid, password_valid,
+                class_review, class_return, class_confirm,
+                modal_backdrop, class_password
+            ]
         else: raise PreventUpdate
     else: raise PreventUpdate

@@ -55,10 +55,6 @@ layout = html.Div(
                                             "Event profile",
                                             id = 'eve_pro_h1_header'
                                         ),
-                                        html.P(
-                                            id = 'eve_pro_htp_description',
-                                            className = p_m
-                                        )
                                     ],
                                     class_name = row_m,
                                 )
@@ -104,6 +100,37 @@ layout = html.Div(
                             ],
                             id = 'eve_pro_div_basicinfo',
                             className = div_m
+                        ),
+                        html.Hr(),
+                        html.Div(
+                            [
+                                dbc.Row(
+                                    [
+                                        html.H4(
+                                            [
+                                                html.I(className = 'bi bi-body-text me-2'),
+                                                "Deskripsiyon",
+                                                #html.Br(),
+                                                html.Small(" (Description)", className = 'text-muted')
+                                            ]
+                                        ),
+                                    ], class_name = row_m
+                                ),
+                                dbc.Row(
+                                    [
+                                        html.P(
+                                            id = 'eve_pro_htp_description',
+                                            className = p_m,
+                                            style = {
+                                                'white-space' : 'pre-wrap'
+                                            }
+                                        )
+                                    ],
+                                    class_name = row_m,
+                                )
+                            ],
+                            id = 'eve_pro_div_description',
+                            className = div_m + ' d-block'
                         ),
                         html.Hr(),
                         html.Div(
@@ -171,6 +198,7 @@ eve_pro_url_pathname = '/events/event'
     [
         Output('eve_pro_h1_header', 'children'),
         Output('eve_pro_htp_description', 'children'),
+        Output('eve_pro_div_description', 'className'),
         Output('eve_pro_col_basicinfo', 'children'),
     ],
     [
@@ -185,6 +213,7 @@ def eve_pro_setevent(pathname, search):
     if pathname == eve_pro_url_pathname:
         to_return = []
         event_header = "Event profile"
+        description_class = 'd-none'
         parsed = urlparse(search)
         if parse_qs(parsed.query):
             event_id = parse_qs(parsed.query)['id'][0]
@@ -214,6 +243,9 @@ def eve_pro_setevent(pathname, search):
                 to_return.append(df['Name'][0])
                 # Description
                 to_return.append(df['Deskripsiyon (Description)'][0])
+                if df['Deskripsiyon (Description)'][0]:
+                    description_class = div_m + ' d-block'
+                to_return.append(description_class)
 
                 # Basic information table
                 table_df = df[['Klase (Type)', 'Petsa san pagtikang (Start date)', 'Petsa san pagtapos (End date)', 'Naghimo (Creator)', 'Oras san paghimo (Creation time)', 'Kamutangan (Status)', 'Oras san kamutangan (Status time)']].transpose()

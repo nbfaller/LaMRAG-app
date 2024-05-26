@@ -351,7 +351,7 @@ layout = html.Div(
                                             dbc.Button(
                                                 [
                                                     html.I(className = 'bi bi-arrow-clockwise me-2'),
-                                                    "Basahon utro an report (Review report)"
+                                                    "Basaha utro an report (Review report)"
                                                 ],
                                                 id = 'rep_rep_btn_review',
                                                 style = {'width': ' 100%'},
@@ -372,6 +372,20 @@ layout = html.Div(
                                                 external_link = True
                                             ),
                                             id = 'rep_rep_col_return',
+                                            class_name = 'd-none align-self-center col-12 p-0'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Button(
+                                                [
+                                                    html.I(className = 'bi bi-arrow-return-left me-2'),
+                                                    "Balik sa dashboard (Return to dashboard)"
+                                                ],
+                                                id = 'rep_rep_btn_tohome',
+                                                style = {'width': ' 100%'},
+                                                href = '/dashboard',
+                                                external_link = True
+                                            ),
+                                            id = 'rep_rep_col_tohome',
                                             class_name = 'd-none align-self-center col-12 p-0'
                                         ),
                                         dbc.Col(
@@ -521,7 +535,7 @@ def rep_rep_setreport(pathname, search):
                     hover = False,
                     size = 'sm',
                     borderless = True,
-                    style = {'margin' : '0px'}
+                    style = {'margin' : '0px'},
                 )
                 to_return.append(table)
             else: raise PreventUpdate
@@ -896,6 +910,7 @@ def rep_rep_confirmcreation(btn, reportversion):
         # Button visibility
         Output('rep_rep_col_review', 'class_name'),
         Output('rep_rep_col_return', 'class_name'),
+        Output('rep_rep_col_tohome', 'class_name'),
         Output('rep_rep_col_confirm', 'class_name'),
         # Modal dissmisability
         Output('rep_rep_modal_confirm', 'backdrop'),
@@ -939,6 +954,7 @@ def rep_rep_submitcreation(
             common_class = ' align-self-center col-12 p-0'
             class_review = vis_none + common_class
             class_return = vis_none + common_class
+            class_tohome = vis_none + common_class
             class_confirm = vis_block + common_class + ' col-md-auto'
             # Modal dissmisability
             modal_backdrop = True
@@ -989,7 +1005,8 @@ def rep_rep_submitcreation(
                     password_valid = True
                     # Button visibility
                     class_review = vis_block + common_class + ' mb-2'
-                    class_return = vis_block + common_class + ' mt-2'
+                    class_return = vis_block + common_class + ' mb-2 mt-2'
+                    class_tohome = vis_block + common_class + ' mt-2'
                     class_confirm = vis_none + common_class
                     # Modal dissmisability
                     modal_backdrop = 'static'
@@ -1020,7 +1037,7 @@ def rep_rep_submitcreation(
             return [
                 alert_open, alert_class_name, alert_color, alert_col_text,
                 password_invalid, password_valid,
-                class_review, class_return, class_confirm,
+                class_review, class_return, class_confirm, class_tohome,
                 modal_backdrop,
                 class_password
             ]
