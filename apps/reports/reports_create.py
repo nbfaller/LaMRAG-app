@@ -237,7 +237,8 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Purok san panhitabó", tag_required, html.Br(),
+                                                            "Purok san panhitabó", #tag_required,
+                                                            html.Br(),
                                                             html.Small(" (Purok of occurrence)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_purok',
@@ -311,30 +312,30 @@ layout = html.Div(
                                                     [
                                                         dbc.InputGroup(
                                                             [
-                                                                dbc.Input(
+                                                                dbc.Select(
                                                                     id = 'rep_cre_input_time_hh',
                                                                     placeholder = 'HH',
-                                                                    type = 'number',
-                                                                    min = 1,
-                                                                    max = 12,
+                                                                    #type = 'number',
+                                                                    #min = 1,
+                                                                    #max = 12,
                                                                     invalid = False
                                                                 ),
                                                                 dbc.InputGroupText(":"),
-                                                                dbc.Input(
+                                                                dbc.Select(
                                                                     id = 'rep_cre_input_time_mm',
                                                                     placeholder = 'MM',
-                                                                    type = 'number',
-                                                                    min = 0,
-                                                                    max = 59,
+                                                                    #type = 'number',
+                                                                    #min = 0,
+                                                                    #max = 59,
                                                                     invalid = False
                                                                 ),
                                                                 dbc.InputGroupText(":"),
-                                                                dbc.Input(
+                                                                dbc.Select(
                                                                     id = 'rep_cre_input_time_ss',
                                                                     placeholder = 'SS',
-                                                                    type = 'number',
-                                                                    min = 0,
-                                                                    max = 59,
+                                                                    #type = 'number',
+                                                                    #min = 0,
+                                                                    #max = 59,
                                                                     invalid = False
                                                                 ),
                                                                 dbc.Select(
@@ -344,12 +345,12 @@ layout = html.Div(
                                                                 )
                                                             ]
                                                         ),
-                                                        dbc.FormText(
-                                                            """Awtomátikó nga ginkukuha san LáMRAG an oras yana komo oras san panhitabó. Alayon pagbalyo sini kun sa iba nga oras nahitabó an imo ginhihimuan report.
-                                                            (LáMRAG automatically sets the current time as the time of occurrence. Please change this if the event you are reporting occurred at a different time.)""",
-                                                            color = 'secondary',
-                                                            class_name = ftext_m
-                                                        ),
+                                                        #dbc.FormText(
+                                                        #    """Awtomátikó nga ginkukuha san LáMRAG an oras yana komo oras san panhitabó. Alayon pagbalyo sini kun sa iba nga oras nahitabó an imo ginhihimuan report.
+                                                        #    (LáMRAG automatically sets the current time as the time of occurrence. Please change this if the event you are reporting occurred at a different time.)""",
+                                                        #    color = 'secondary',
+                                                        #    class_name = ftext_m
+                                                        #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 ),
@@ -1113,32 +1114,32 @@ layout = html.Div(
                                                     [
                                                         dbc.InputGroup(
                                                             [
-                                                                dbc.Input(
+                                                                dbc.Select(
                                                                     id = 'rep_cre_input_pubutilint_int_time_hh',
                                                                     placeholder = 'HH',
-                                                                    type = 'number',
-                                                                    min = 1,
-                                                                    max = 12,
+                                                                    #type = 'number',
+                                                                    #min = 1,
+                                                                    #max = 12,
                                                                     invalid = False,
                                                                     disabled = True
                                                                 ),
                                                                 dbc.InputGroupText(":"),
-                                                                dbc.Input(
+                                                                dbc.Select(
                                                                     id = 'rep_cre_input_pubutilint_int_time_mm',
                                                                     placeholder = 'MM',
-                                                                    type = 'number',
-                                                                    min = 0,
-                                                                    max = 59,
+                                                                    #type = 'number',
+                                                                    #min = 0,
+                                                                    #max = 59,
                                                                     invalid = False,
                                                                     disabled = True
                                                                 ),
                                                                 dbc.InputGroupText(":"),
-                                                                dbc.Input(
+                                                                dbc.Select(
                                                                     id = 'rep_cre_input_pubutilint_int_time_ss',
                                                                     placeholder = 'SS',
-                                                                    type = 'number',
-                                                                    min = 0,
-                                                                    max = 59,
+                                                                    #type = 'number',
+                                                                    #min = 0,
+                                                                    #max = 59,
                                                                     invalid = False,
                                                                     disabled = True
                                                                 ),
@@ -1208,30 +1209,30 @@ layout = html.Div(
                                                     [
                                                         dbc.InputGroup(
                                                             [
-                                                                dbc.Input(
+                                                                dbc.Select(
                                                                     id = 'rep_cre_input_pubutilint_res_time_hh',
                                                                     placeholder = 'HH',
-                                                                    type = 'number',
-                                                                    min = 1,
-                                                                    max = 12,
+                                                                    #type = 'number',
+                                                                    #min = 1,
+                                                                    #max = 12,
                                                                     invalid = False
                                                                 ),
                                                                 dbc.InputGroupText(":"),
-                                                                dbc.Input(
+                                                                dbc.Select(
                                                                     id = 'rep_cre_input_pubutilint_res_time_mm',
                                                                     placeholder = 'MM',
-                                                                    type = 'number',
-                                                                    min = 0,
-                                                                    max = 59,
+                                                                    #type = 'number',
+                                                                    #min = 0,
+                                                                    #max = 59,
                                                                     invalid = False
                                                                 ),
                                                                 dbc.InputGroupText(":"),
-                                                                dbc.Input(
+                                                                dbc.Select(
                                                                     id = 'rep_cre_input_pubutilint_res_time_ss',
                                                                     placeholder = 'SS',
-                                                                    type = 'number',
-                                                                    min = 0,
-                                                                    max = 59,
+                                                                    #type = 'number',
+                                                                    #min = 0,
+                                                                    #max = 59,
                                                                     invalid = False
                                                                 ),
                                                                 dbc.Select(
@@ -2053,6 +2054,17 @@ def rep_cre_geolocset(housegps, infragps, pos, date):
         Output('rep_cre_input_event_id', 'disabled'),
         # Date of occurrence
         Output('rep_cre_input_date', 'date'),
+        # Hours of occurrence
+        Output('rep_cre_input_time_hh', 'options'),
+        Output('rep_cre_input_pubutilint_int_time_hh', 'options'),
+        Output('rep_cre_input_pubutilint_res_time_hh', 'options'),
+        # Minutes/seconds of occurrence
+        Output('rep_cre_input_time_mm', 'options'),
+        Output('rep_cre_input_pubutilint_int_time_mm', 'options'),
+        Output('rep_cre_input_pubutilint_res_time_mm', 'options'),
+        Output('rep_cre_input_time_ss', 'options'),
+        Output('rep_cre_input_pubutilint_int_time_ss', 'options'),
+        Output('rep_cre_input_pubutilint_res_time_ss', 'options'),
         # Barangay
         Output('rep_cre_input_brgy_id', 'options'),
         Output('rep_cre_input_brgy_id', 'value'),
@@ -2222,6 +2234,30 @@ def rep_cre_populatedropdowns(
         dropdowns.append(date_value)
 
         # Time of occurrence
+        sql = """SELECT label, value
+        FROM utilities.time_hh
+        ORDER BY value ASC;
+        """
+        values = []
+        df = db.querydatafromdatabase(sql, values, cols)
+        hh = df.to_dict('records')
+        dropdowns.append(hh)
+        dropdowns.append(hh)
+        dropdowns.append(hh)
+
+        sql = """SELECT label, value
+        FROM utilities.time_mmss
+        ORDER BY value ASC;
+        """
+        values = []
+        df = db.querydatafromdatabase(sql, values, cols)
+        mmss = df.to_dict('records')
+        dropdowns.append(mmss)
+        dropdowns.append(mmss)
+        dropdowns.append(mmss)
+        dropdowns.append(mmss)
+        dropdowns.append(mmss)
+        dropdowns.append(mmss)
 
         # Barangays
         sql = """SELECT name AS label, id AS value
@@ -2483,13 +2519,13 @@ def rep_cre_populatedropdowns(
         Input('rep_cre_input_brgy_id', 'value'),
         Input('rep_cre_input_event_id', 'value'),
         Input('rep_cre_input_reporttype_id', 'value'),
-        Input('rep_cre_input_purok', 'value'),
+        #Input('rep_cre_input_purok', 'value'),
         Input('rep_cre_input_date', 'date'),
     ]
 )
 
-def rep_cre_showreportform(brgy, event, type, purok, date):
-    conditions = [brgy, event, type, purok, date]
+def rep_cre_showreportform(brgy, event, type, date):
+    conditions = [brgy, event, type, date]
     disp_none = {'display' : 'none'}
     disp_show = {'display' : 'block'}
     style_submit = disp_none
@@ -2736,6 +2772,10 @@ def rep_cre_setpubutilintdatetime(date, hh, mm, ss, ampm):
         Output('rep_cre_alert_inputvalidation', 'is_open'),
         Output('rep_cre_alert_inputvalidation', 'class_name'),
         Output('rep_cre_alert_inputvalidation_span_missing', 'children'),
+        # Common information validation
+        Output('rep_cre_input_time_hh', 'invalid'),
+        Output('rep_cre_input_time_mm', 'invalid'),
+        Output('rep_cre_input_time_ampm', 'invalid'),
         # Report type 1 (Related incident) input validation
         Output('rep_cre_input_relinctype_id', 'invalid'),
         Output('rep_cre_input_relinc_qty', 'invalid'),
@@ -2781,13 +2821,13 @@ def rep_cre_setpubutilintdatetime(date, hh, mm, ss, ampm):
         State('rep_cre_input_brgy_id', 'value'),
         State('rep_cre_input_event_id', 'value'),
         State('rep_cre_input_reporttype_id', 'value'),
-        State('rep_cre_input_purok', 'value'),
+        #State('rep_cre_input_purok', 'value'),
         State('rep_cre_input_date', 'date'),
             # OPTIONAL
-            #State('rep_cre_input_time_hh', 'value'),
-            #State('rep_cre_input_time_mm', 'value'),
+            State('rep_cre_input_time_hh', 'value'),
+            State('rep_cre_input_time_mm', 'value'),
             #State('rep_cre_input_time_ss', 'value'),
-            #State('rep_cre_input_time_ampm', 'value'),
+            State('rep_cre_input_time_ampm', 'value'),
             #State('rep_cre_input_remarks', 'value'),
         # Report type 1: Related incidents
         State('rep_cre_input_relinctype_id', 'value'),
@@ -2850,9 +2890,12 @@ def rep_cre_confirmcreation(
     btn, report_id, version_id,
 
     # Common information
-    brgy, event, type, purok, date,
+    brgy, event, type, date,
         # OPTIONAL, no need for input validation
-        #hh, mm, ss, ampm, remarks,
+        hh, mm,
+        #ss,
+        ampm,
+        #remarks,
     
     # Report type 1: Related incidents
     relinc_type, relinc_qty, relinc_status,
@@ -2895,6 +2938,10 @@ def rep_cre_confirmcreation(
             alert_open = False
             alert_class_name = None
             alert_span = []
+            # Common information validation
+            time_hh_invalid = False
+            time_mm_invalid = False
+            time_ampm_invalid = False
             # Report type 1 (Related incident) input validation
             relinc_type_invalid = False
             relinc_qty_invalid = False
@@ -2929,7 +2976,10 @@ def rep_cre_confirmcreation(
             # Button href
             view_href = '/reports/report?id=%s&v=%s' % (report_id, version_id)
 
-            if (not(brgy) or not(event) or not(type) or not (purok) or not (date)):
+            time_values = [hh, mm, ampm]
+            time_invalid = [not(hh), not(mm), not(ampm)]
+
+            if (not(brgy) or not(event) or not(type) or not (date) or (any(time_values) and any(time_invalid))):
                 alert_open = True
                 alert_class_name = 'mb-3'
                 if not(brgy):
@@ -2969,6 +3019,36 @@ def rep_cre_confirmcreation(
                             [
                                 "Petsa san panhitabó", html.Br(),
                                 html.Small(" (Date of occurrence)", className = 'ms-3 text-muted'),
+                            ]
+                        )
+                    )
+                if not(hh):
+                    time_hh_invalid = True
+                    alert_span.append(
+                        html.Li(
+                            [
+                                "Oras san panhitabó", html.Br(),
+                                html.Small(" (Hour of occurrence)", className = 'ms-3 text-muted'),
+                            ]
+                        )
+                    )
+                if not(mm):
+                    time_mm_invalid = True
+                    alert_span.append(
+                        html.Li(
+                            [
+                                "Minuto san panhitabó", html.Br(),
+                                html.Small(" (Minute of occurrence)", className = 'ms-3 text-muted'),
+                            ]
+                        )
+                    )
+                if not(ampm):
+                    time_ampm_invalid = True
+                    alert_span.append(
+                        html.Li(
+                            [
+                                "Kun aga (AM) o kulop/gabi (PM) an panhitabó", html.Br(),
+                                html.Small(" (AM/PM of occurrence)", className = 'ms-3 text-muted'),
                             ]
                         )
                     )
@@ -3280,6 +3360,8 @@ def rep_cre_confirmcreation(
                 modal_open,
                 # Overall validation alert
                 alert_open, alert_class_name, alert_span,
+                # Common information validation
+                time_hh_invalid, time_mm_invalid, time_ampm_invalid,
                 # Report type 1 (Related incident) input validation
                 relinc_type_invalid, relinc_qty_invalid, relinc_status_invalid,
                 # Report type 2 (Casualty) input validation
@@ -3516,7 +3598,12 @@ def rep_cre_submitcreation(
 
                     # Setting up time
                     time = None
-                    if hh and mm and ss and ampm:
+                    if hh: hh = int(hh)
+                    if mm: mm = int(mm)
+                    if ss: ss = int(ss)
+                    if hh and mm and ampm:
+                        if not(ss):
+                            ss = 0
                         if hh == 12:
                             hh = 0
                         if ampm == 'PM':
@@ -3555,7 +3642,12 @@ def rep_cre_submitcreation(
                     elif type == 3:
                         # Setting up restoration time
                         pubutilres_time = None
-                        if pubutilres_time_hh and pubutilres_time_mm and pubutilres_time_ss and pubutilres_time_ampm:
+                        if pubutilres_time_hh: pubutilres_time_hh = int(pubutilres_time_hh)
+                        if pubutilres_time_mm: pubutilres_time_mm = int(pubutilres_time_mm)
+                        if pubutilres_time_ss: pubutilres_time_ss = int(pubutilres_time_ss)
+                        if pubutilres_time_hh and pubutilres_time_mm and pubutilres_time_ampm:
+                            if not(pubutilres_time_ss):
+                                pubutilres_time_ss = 0
                             if pubutilres_time_hh == 12:
                                 pubutilres_time_hh = 0
                             if pubutilres_time_ampm == 'PM':
