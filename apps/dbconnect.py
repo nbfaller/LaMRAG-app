@@ -7,7 +7,7 @@ class dbcreds:
         host = 'localhost',
         database = 'lamrag-database',
         user = 'postgres',
-        port = 5432,
+        port = 5433,
         password = 'password'
     )
     #heroku = dict(

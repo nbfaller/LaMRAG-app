@@ -10,13 +10,19 @@ from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import hashlib
 from datetime import datetime, timedelta
+import plotly.express as px
+import plotly.graph_objects as go
+import pandas as pd
 # App definition
 from app import app
 from apps import dbconnect as db
 
 tag_required = html.Sup("*", className = 'text-danger')
-
-
+card_style = {
+    'border-radius' : '0.75rem',
+    'overflow' : 'hidden',
+    'box-shadow' : '0 0 32px 4px rgba(135, 113, 90, 0.2)'
+}
 
 # Default margins and spacing settings
 header_m = 'mb-3'
@@ -46,6 +52,26 @@ layout = html.Div(
                                         ),
                                     ],
                                     class_name = row_m,
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                dbc.Card(
+                                                    dbc.CardBody(
+                                                        dcc.Graph(
+                                                            id = 'usr_src_gra_logins',
+                                                            animate = True,
+                                                            #style = {'max-height' : '15em'}
+                                                        )
+                                                    ),
+                                                    style = card_style
+                                                )
+                                            ]
+                                        )
+                                    ],
+                                    id = 'usr_src_row_logins',
+                                    class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -246,4 +272,60 @@ def usr_src_loadsearchresults(pathname, search, usertype, office):
         )
 
         return [table]
+    else: raise PreventUpdate
+
+# Callback for generating logins graph
+@app.callback(
+    [
+        Output('usr_src_gra_logins', 'figure'),
+    ],
+    [
+        Input('url', 'pathname')
+    ]
+)
+
+def sandbox_generatehistogram(pathname):
+    if pathname == usr_src_url_pathname:
+        sql = """SELECT al.login_time
+        FROM logs.accesslog AS al;
+        """
+        values = []
+        cols = ['Login time']
+        df = db.querydatafromdatabase(sql, values, cols)
+        #print(df)
+        df['Login time'] = pd.to_datetime(df['Login time'])
+        #df = df.groupby([df['Creation time'].dt.date, 'Event']).size().unstack(fill_value=0).cumsum().reset_index()
+        df.columns.name = None
+        #print(df)
+
+        traces = []
+        traces.append(
+            go.Scatter(
+                x = df['Login time'],
+                #y = df[event],
+                mode = 'lines',
+                #name = 'Cumulative log-ins',
+                #stackgroup ='one'  # This parameter makes it a stacked area chart
+            )
+        )
+
+        layout = go.Layout(
+            {
+                'plot_bgcolor' : 'rgba(0, 0, 0, 0)',
+                'paper_bgcolor' : 'rgba(0, 0, 0, 0)'
+            },
+            title = 'Cumulative user logins',
+            xaxis = {
+                'title': 'Petsa (Date)'
+            },
+            yaxis = {
+                'title': 'Log-ins'
+            },
+            font_family = "DM Sans",
+            showlegend = False,
+            template = 'plotly_white',
+        )
+
+        fig = {'data': traces, 'layout': layout}
+        return [fig]
     else: raise PreventUpdate
