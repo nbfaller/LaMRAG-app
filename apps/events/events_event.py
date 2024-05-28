@@ -377,11 +377,11 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
                 LEFT JOIN utilities.reporttype AS rt ON r.type_id = rt.id
                 WHERE e.is_active
                 AND (r.region_id = %s AND r.province_id = %s
-                AND r.citymun_id = %s AND r.brgy_id = %s)
+                AND r.citymun_id = %s)
                 AND e.id = %s
-                /*AND rv.status_id = 2*/;
+                AND rv.status_id = 2;
                 """
-                values = [region, province, citymun, brgy, event_id]
+                values = [region, province, citymun, event_id]
                 cols = ['Validation time', 'Report type']
                 df = db.querydatafromdatabase(sql, values, cols)
                 #print(df)
@@ -445,11 +445,11 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
                 LEFT JOIN utilities.reportstatus AS rs ON rv.status_id = rs.id
                 WHERE e.is_active
                 AND (r.region_id = %s AND r.province_id = %s
-                AND r.citymun_id = %s AND r.brgy_id = %s)
+                AND r.citymun_id = %s)
                 AND e.id = %s
                 GROUP BY status;
                 """
-                values = [region, province, citymun, brgy, event_id]
+                values = [region, province, citymun, event_id]
                 cols = ['Validation status', 'Reports']
                 df = db.querydatafromdatabase(sql, values, cols)
                 #print(df)
