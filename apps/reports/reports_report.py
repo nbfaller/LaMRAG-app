@@ -601,10 +601,11 @@ def rep_rep_populatereports(report_id, type):
     [
         State('rep_rep_sto_report_id', 'data'),
         State('rep_rep_sto_reporttype_id', 'data'),
+        State('app_currentuser_id', 'data'),
     ]
 )
 
-def rep_rep_populatereports(version, report_id, type):
+def rep_rep_populatereports(version, report_id, type, currentuser_id):
     content = []
     creator_name = "-"
     creation_datetime = "-"
@@ -729,6 +730,7 @@ def rep_rep_populatereports(version, report_id, type):
         sql += """ rv.remarks,
         rs.id,
         CONCAT(us.lname, ', ', us.fname, ' ', LEFT(us.mname, 1), ' (', us.username, ')') AS status_updater,
+        rv.status_updater_id,
         CONCAT(rs.label_war, ' (', rs.label_en, ')') AS status,
         TO_CHAR(rv.status_time::timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Manila', 'Month dd, yyyy at HH:MI:SS AM TZ'),
         rs.color,
@@ -743,6 +745,7 @@ def rep_rep_populatereports(version, report_id, type):
             'Iba pa nga komento (Remarks)',
             'status_id',
             'Nag-update (Updated by)',
+            'status_updater_id',
             'Kamutangan san report (Report status)',
             'Oras san pagbag-o san kamutangan (Time of report status)',
             'Status color',
@@ -820,13 +823,14 @@ def rep_rep_populatereports(version, report_id, type):
 
         # Show validation button depending on report status
         status_id = df['status_id'][0]
-        if status_id == 2:
+        status_updater_id = df['status_updater_id'][0]
+        if status_id == 2 or status_updater_id == currentuser_id:
             validate_class_name = 'd-none align-self-center mt-2 mt-md-0 col-12 col-md-6 col-xl-auto'
             validate_div_class = 'd-inline'
 
         # Remove last five columns
-        df = df.iloc[:, :-7]
-        cols = cols[:-7]
+        df = df.iloc[:, :-8]
+        cols = cols[:-8]
 
         label_rows = []
         for i in cols[1:]:

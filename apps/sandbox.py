@@ -79,11 +79,15 @@ sandbox_url = '/sandbox'
         Input('url', 'pathname')
     ],
     [
-        State('sandbox_event_id', 'data')
+        State('sandbox_event_id', 'data'),
+        State('app_region_id', 'data'),
+        State('app_province_id', 'data'),
+        State('app_citymun_id', 'data'),
+        State('app_brgy_id', 'data')
     ]
 )
 
-def sandbox_generatehistogram(pathname, data):
+def sandbox_generatehistogram(pathname, data, region, province, citymun, brgy):
     fig = None
     if pathname == sandbox_url:
         sql = """SELECT rv.create_time,
@@ -91,9 +95,11 @@ def sandbox_generatehistogram(pathname, data):
         FROM reports.reportversion AS rv
         LEFT JOIN reports.report AS r ON rv.report_id = r.id
         LEFT JOIN events.event AS e ON r.event_id = e.id
-        WHERE e.is_active;
+        WHERE e.is_active
+        AND (r.region_id = %s AND r.province_id = %s
+        AND r.citymun_id = %s AND r.brgy_id = %s);
         """
-        values = []
+        values = [region, province, citymun, brgy]
         cols = ['Creation time', 'Event']
         df = db.querydatafromdatabase(sql, values, cols)
         #print(df)

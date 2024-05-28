@@ -6,6 +6,9 @@ from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import hashlib
 from datetime import datetime, timedelta
+import plotly.express as px
+import plotly.graph_objects as go
+import pandas as pd
 # App definition
 from app import app
 from apps import dbconnect as db
@@ -136,6 +139,39 @@ layout = html.Div(
                                 'max-width' : '100%',
                                 'overflow' : 'scroll'
                             }
+                        ),
+                        html.Div(
+                            [
+                                html.Hr(),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.H4(
+                                                    [
+                                                        html.I(className = 'bi bi-graph-up me-2'),
+                                                        "Kadamo san nasumite nga mga report",
+                                                        #html.Br(),
+                                                        html.Small(" (Number of reports filed)", className = 'text-muted')
+                                                    ]
+                                                ),
+                                            ]
+                                        )
+                                    ], class_name = row_m
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dcc.Graph(
+                                                id = 'rep_vie_gra_reportsfiled'
+                                            )
+                                        )
+                                    ],
+                                    class_name = row_m
+                                )
+                            ],
+                            id = 'rep_vie_div_chart',
+                            className = footer_m
                         )
                     ],
                     class_name = 'col-md-10'
@@ -152,7 +188,8 @@ layout = html.Div(
         Output('rep_vie_input_brgy_id', 'options'),
         Output('rep_vie_input_brgy_id', 'value'),
         Output('rep_vie_input_reporttype_id', 'options'),
-        Output('rep_vie_input_event_id', 'options')
+        Output('rep_vie_input_event_id', 'options'),
+        Output('rep_vie_gra_reportsfiled', 'figure')
     ],
     [
         Input('url', 'pathname')
@@ -209,6 +246,73 @@ def rep_vie_populatedropdowns(pathname, region, province, citymun, brgy):
         events = df.to_dict('records')
         dropdowns.append(events)
 
+        # Stacked area chart of reports filed
+        fig = None
+        sql = """SELECT rv.create_time,
+        e.name AS event
+        FROM reports.reportversion AS rv
+        LEFT JOIN reports.report AS r ON rv.report_id = r.id
+        LEFT JOIN events.event AS e ON r.event_id = e.id
+        WHERE e.is_active
+        AND (r.region_id = %s AND r.province_id = %s
+        AND r.citymun_id = %s AND r.brgy_id = %s);
+        """
+        #values = [region, province, citymun, brgy]
+        cols = ['Creation time', 'Event']
+        df = db.querydatafromdatabase(sql, values, cols)
+        
+        if df.shape[0]:
+            df['Creation time'] = pd.to_datetime(df['Creation time'])
+            df = df.groupby([df['Creation time'], 'Event']).size().unstack(fill_value = 0).cumsum().reset_index()
+            df.columns.name = None
+            #print(df)
+
+            traces = []
+            for event in df.columns[1:]:
+                traces.append(
+                    go.Scatter(
+                        x = df['Creation time'],
+                        y = df[event],
+                        mode = 'lines',
+                        name = event,
+                        stackgroup = 'one',  # This parameter makes it a stacked area chart
+                        #line = {'shape': 'spline', 'smoothing': 1.3}
+                    )
+                )
+
+            layout = go.Layout(
+                {
+                    'plot_bgcolor' : 'rgba(0, 0, 0, 0)',
+                    'paper_bgcolor' : 'rgba(0, 0, 0, 0)'
+                },
+                #title = 'Cumulative reports filed over time',
+                xaxis = {
+                    'title': 'Petsa (Date)'
+                },
+                yaxis = {
+                    'title': 'Mga ginhimo nga report (Reports filed)'
+                },
+                font_family = "DM Sans",
+                legend = {
+                    'orientation' : 'h',
+                    'xanchor' : 'left',
+                    'yanchor' : 'top',
+                    'x' : 0.00,
+                    'y' : -0.25
+                },
+                showlegend = True,
+                template = 'plotly_white',
+                margin = {
+                    't' : 0,
+                    'b' : 0,
+                    'l' : 0,
+                    'r' : 0,
+                    'pad' : 0
+                }
+            )
+            fig = {'data': traces, 'layout': layout}
+
+        dropdowns.append(fig)
         return dropdowns
     else: raise PreventUpdate
 

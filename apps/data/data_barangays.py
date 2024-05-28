@@ -754,7 +754,7 @@ def dat_bar_setbrgyinfo(brgy, region, province, citymun, info_cols, censusyear):
             margin = dict(l = 0, r = 0, t = 0, b = 0),
             xaxis_title = "Tuig (year)",
             yaxis_title = None,
-            yaxis_range=[0, 10000]
+            yaxis_range = [0, 10000]
         )
         #fig.update_yaxes(
         #    autorangeoptions_minallowed = 0

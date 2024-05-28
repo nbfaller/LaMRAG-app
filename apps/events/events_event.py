@@ -6,7 +6,7 @@ from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import plotly.express as px
 import plotly.graph_objects as go
-import plotly.io as pio
+import pandas as pd
 from urllib.parse import urlparse, parse_qs
 # App definition
 from app import app
@@ -53,13 +53,13 @@ layout = html.Div(
                                     [
                                         html.H1(
                                             "Event profile",
-                                            id = 'eve_pro_h1_header'
+                                            id = 'eve_eve_h1_header'
                                         ),
                                     ],
                                     class_name = row_m,
                                 )
                             ],
-                            id = 'eve_pro_div_header',
+                            id = 'eve_eve_div_header',
                             className = header_m
                         ),
                         html.Hr(),
@@ -84,7 +84,7 @@ layout = html.Div(
                                             dbc.Row(
                                                 [
                                                     dbc.Col(
-                                                        id = 'eve_pro_col_basicinfo',
+                                                        id = 'eve_eve_col_basicinfo',
                                                         #class_name = 'table-responsive',
                                                         style = {
                                                             'max-width' : '100%',
@@ -98,7 +98,7 @@ layout = html.Div(
                                     #style = card_style
                                 #)
                             ],
-                            id = 'eve_pro_div_basicinfo',
+                            id = 'eve_eve_div_basicinfo',
                             className = div_m
                         ),
                         html.Hr(),
@@ -119,7 +119,7 @@ layout = html.Div(
                                 dbc.Row(
                                     [
                                         html.P(
-                                            id = 'eve_pro_htp_description',
+                                            id = 'eve_eve_htp_description',
                                             className = p_m,
                                             style = {
                                                 'white-space' : 'pre-wrap'
@@ -129,7 +129,7 @@ layout = html.Div(
                                     class_name = row_m,
                                 )
                             ],
-                            id = 'eve_pro_div_description',
+                            id = 'eve_eve_div_description',
                             className = div_m + ' d-block'
                         ),
                         html.Hr(),
@@ -145,10 +145,20 @@ layout = html.Div(
                                                 #html.Small(" (Generated consolidated reports)", className = 'text-muted')
                                             ]
                                         ),
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dcc.Graph(
+                                                        id = 'eve_eve_gra_reportsfiled'
+                                                    )
+                                                )
+                                            ],
+                                            class_name = row_m
+                                        )
                                     ], class_name = row_m
                                 ),
                             ],
-                            id = 'eve_pro_div_data',
+                            id = 'eve_eve_div_data',
                             className = div_m
                         ),
                         html.Hr(),
@@ -169,17 +179,17 @@ layout = html.Div(
                                 dbc.Row(
                                     [
                                         dbc.Col(
-                                            id = 'eve_pro_col_reportsgraph',
+                                            id = 'eve_eve_col_reportsgraph',
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-4'
                                         ),
                                         dbc.Col(
-                                            id = 'eve_pro_col_reportsgraph',
+                                            id = 'eve_eve_col_reportsgraph',
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-8'
                                         )
                                     ]
                                 ),
                             ],
-                            id = 'eve_pro_div_reports',
+                            id = 'eve_eve_div_reports',
                             className = div_m
                         )
                     ],
@@ -191,26 +201,31 @@ layout = html.Div(
     ]
 )
 
-eve_pro_url_pathname = '/events/event'
+eve_eve_url_pathname = '/events/event'
 
 # Callback for displaying event details
 @app.callback(
     [
-        Output('eve_pro_h1_header', 'children'),
-        Output('eve_pro_htp_description', 'children'),
-        Output('eve_pro_div_description', 'className'),
-        Output('eve_pro_col_basicinfo', 'children'),
+        Output('eve_eve_h1_header', 'children'),
+        Output('eve_eve_htp_description', 'children'),
+        Output('eve_eve_div_description', 'className'),
+        Output('eve_eve_col_basicinfo', 'children'),
+        Output('eve_eve_gra_reportsfiled', 'figure'),
     ],
     [
         Input('url', 'pathname')
     ],
     [
-        State('url', 'search')
+        State('url', 'search'),
+        State('app_region_id', 'data'),
+        State('app_province_id', 'data'),
+        State('app_citymun_id', 'data'),
+        State('app_brgy_id', 'data')
     ]
 )
 
-def eve_pro_setevent(pathname, search):
-    if pathname == eve_pro_url_pathname:
+def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
+    if pathname == eve_eve_url_pathname:
         to_return = []
         event_header = "Event profile"
         description_class = 'd-none'
@@ -316,6 +331,76 @@ def eve_pro_setevent(pathname, search):
                     style = {'margin' : '0px'}
                 )
                 to_return.append(table)
+
+                # Stacked area chart of reports filed
+                fig = None
+                sql = """SELECT rv.status_time,
+                CONCAT(rt.symbol, ' ', rt.label_war, ' (', rt.label_en, ')') AS report_type
+                FROM reports.reportversion AS rv
+                LEFT JOIN reports.report AS r ON rv.report_id = r.id
+                LEFT JOIN events.event AS e ON r.event_id = e.id
+                LEFT JOIN utilities.reporttype AS rt ON r.type_id = rt.id
+                WHERE e.is_active
+                AND (r.region_id = %s AND r.province_id = %s
+                AND r.citymun_id = %s AND r.brgy_id = %s)
+                AND e.id = %s
+                /*AND rv.status_id = 2*/;
+                """
+                values = [region, province, citymun, brgy, event_id]
+                cols = ['Validation time', 'Report type']
+                df = db.querydatafromdatabase(sql, values, cols)
+                #print(df)
+                df['Validation time'] = pd.to_datetime(df['Validation time'])
+                df = df.groupby([df['Validation time'], 'Report type']).size().unstack(fill_value = 0).cumsum().reset_index()
+                df.columns.name = None
+                #print(df)
+
+                traces = []
+                for event in df.columns[1:]:
+                    traces.append(
+                        go.Scatter(
+                            x = df['Validation time'],
+                            y = df[event],
+                            mode = 'lines',
+                            name = event,
+                            stackgroup = 'one',  # This parameter makes it a stacked area chart
+                            #line = {'shape': 'spline', 'smoothing': 1.3}
+                        )
+                    )
+
+                layout = go.Layout(
+                    {
+                        'plot_bgcolor' : 'rgba(0, 0, 0, 0)',
+                        'paper_bgcolor' : 'rgba(0, 0, 0, 0)'
+                    },
+                    #title = 'Cumulative reports filed over time',
+                    xaxis = {
+                        'title': 'Petsa (Date)'
+                    },
+                    yaxis = {
+                        'title': 'Mga ginhimo nga report (Reports filed)'
+                    },
+                    font_family = "DM Sans",
+                    showlegend = True,
+                    legend = {
+                        'orientation' : 'h',
+                        'xanchor' : 'left',
+                        'yanchor' : 'top',
+                        'x' : 0.00,
+                        'y' : -0.25
+                    },
+                    template = 'plotly_white',
+                    margin = {
+                        't' : 0,
+                        'b' : 0,
+                        'l' : 0,
+                        'r' : 0,
+                        'pad' : 0
+                    }
+                )
+
+                to_return.append({'data': traces, 'layout': layout})
+
             else: raise PreventUpdate
         else: raise PreventUpdate
         return to_return
