@@ -140,8 +140,8 @@ def displaypage(pathname, search, sessionlogout, user_id, usertype_id):
             # Decide sessionlogout value
             logout_conditions = [
                 pathname in ['/', '/logout'],
-                user_id == -1,
-                not user_id
+                user_id == -1 or usertype_id == -1,
+                not(user_id) or not(usertype_id)
             ]
             sessionlogout = any(logout_conditions)
 

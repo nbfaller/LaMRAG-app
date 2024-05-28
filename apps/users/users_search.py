@@ -56,26 +56,6 @@ layout = html.Div(
                                 dbc.Row(
                                     [
                                         dbc.Col(
-                                            [
-                                                dbc.Card(
-                                                    dbc.CardBody(
-                                                        dcc.Graph(
-                                                            id = 'usr_src_gra_logins',
-                                                            animate = True,
-                                                            #style = {'max-height' : '15em'}
-                                                        )
-                                                    ),
-                                                    style = card_style
-                                                )
-                                            ]
-                                        )
-                                    ],
-                                    id = 'usr_src_row_logins',
-                                    class_name = row_m
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
                                             dbc.Input(
                                                 id = 'usr_src_input_search',
                                                 type = 'text',
@@ -136,6 +116,48 @@ layout = html.Div(
                                 'max-width' : '100%',
                                 'overflow' : 'scroll'
                             }
+                        ),
+                        html.Div(
+                            [
+                                html.Hr(),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.H4(
+                                                    [
+                                                        html.I(className = 'bi bi-key me-2'),
+                                                        "Kabug-osan nga kadamo san nag-login",
+                                                        #html.Br(),
+                                                        html.Small(" (Cumulative number of log-ins)", className = 'text-muted')
+                                                    ]
+                                                ),
+                                            ]
+                                        )
+                                    ], class_name = row_m
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                #dbc.Card(
+                                                    #dbc.CardBody(
+                                                        dcc.Graph(
+                                                            id = 'usr_src_gra_logins',
+                                                            animate = True,
+                                                            #style = {'max-height' : '15em'}
+                                                        )
+                                                    #),
+                                                    #style = card_style
+                                                #)
+                                            ]
+                                        )
+                                    ],
+                                    id = 'usr_src_row_logins',
+                                    class_name = row_m
+                                ),
+                            ],
+                            id = 'usr_src_div_logchart'
                         )
                     ],
                     class_name = 'col-md-10'
@@ -286,35 +308,39 @@ def usr_src_loadsearchresults(pathname, search, usertype, office):
 
 def sandbox_generatehistogram(pathname):
     if pathname == usr_src_url_pathname:
-        sql = """SELECT al.login_time
-        FROM logs.accesslog AS al;
+        sql = """SELECT al.login_time,
+        ut.label
+        FROM logs.accesslog AS al
+        INNER JOIN users.user AS u ON al.user_id = u.id
+        LEFT JOIN utilities.usertype AS ut ON u.usertype_id = ut.id;
         """
         values = []
-        cols = ['Login time']
+        cols = ['Login time', 'User type']
         df = db.querydatafromdatabase(sql, values, cols)
-        #print(df)
+        print(df)
         df['Login time'] = pd.to_datetime(df['Login time'])
-        #df = df.groupby([df['Creation time'].dt.date, 'Event']).size().unstack(fill_value=0).cumsum().reset_index()
+        df = df.groupby([df['Login time'], 'User type']).size().unstack(fill_value = 0).cumsum().reset_index()
         df.columns.name = None
         #print(df)
 
         traces = []
-        traces.append(
-            go.Scatter(
-                x = df['Login time'],
-                #y = df[event],
-                mode = 'lines',
-                #name = 'Cumulative log-ins',
-                #stackgroup ='one'  # This parameter makes it a stacked area chart
+        for type in df.columns[1:]:
+            traces.append(
+                go.Scatter(
+                    x = df['Login time'],
+                    y = df[type],
+                    mode = 'lines',
+                    name = type,
+                    stackgroup ='one'  # This parameter makes it a stacked area chart
+                )
             )
-        )
 
         layout = go.Layout(
             {
                 'plot_bgcolor' : 'rgba(0, 0, 0, 0)',
                 'paper_bgcolor' : 'rgba(0, 0, 0, 0)'
             },
-            title = 'Cumulative user logins',
+            #title = 'Cumulative user logins',
             xaxis = {
                 'title': 'Petsa (Date)'
             },
@@ -322,8 +348,15 @@ def sandbox_generatehistogram(pathname):
                 'title': 'Log-ins'
             },
             font_family = "DM Sans",
-            showlegend = False,
+            showlegend = True,
             template = 'plotly_white',
+            margin = {
+                't' : 0,
+                'b' : 0,
+                'l' : 0,
+                'r' : 0,
+                'pad' : 0
+            }
         )
 
         fig = {'data': traces, 'layout': layout}

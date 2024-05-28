@@ -128,6 +128,19 @@ layout = html.Div(
                                                                 )
                                                             ], class_name = 'mt-3 mb-3'
                                                         ),
+                                                        #dbc.Row(
+                                                        #    [
+                                                        #        dbc.Col(
+                                                        #            dbc.Checkbox(
+                                                        #                label = [
+                                                        #                    'Ibilin la ako nga naka log-in',
+                                                        #                    html.Small(" (Keep me logged in)", className = 'text-muted')
+                                                        #                ],
+                                                        #                id = 'com_hom_cbox_logintype'
+                                                        #            )
+                                                        #        )
+                                                        #    ], class_name = 'mt-3 mb-3'
+                                                        #),
                                                         dbc.Row(
                                                             [
                                                                 dbc.Col(
