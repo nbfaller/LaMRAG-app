@@ -317,7 +317,7 @@ def sandbox_generatehistogram(pathname):
         values = []
         cols = ['Login time', 'User type']
         df = db.querydatafromdatabase(sql, values, cols)
-        print(df)
+        #print(df)
         df['Login time'] = pd.to_datetime(df['Login time'])
         df = df.groupby([df['Login time'], 'User type']).size().unstack(fill_value = 0).cumsum().reset_index()
         df.columns.name = None

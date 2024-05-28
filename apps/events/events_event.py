@@ -145,17 +145,60 @@ layout = html.Div(
                                                 #html.Small(" (Generated consolidated reports)", className = 'text-muted')
                                             ]
                                         ),
-                                        dbc.Row(
-                                            [
-                                                dbc.Col(
-                                                    dcc.Graph(
-                                                        id = 'eve_eve_gra_reportsfiled'
+                                    ],
+                                    class_name = row_m
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            dbc.Card(
+                                                [
+                                                    dbc.CardBody(
+                                                        [
+                                                            html.H5(
+                                                                [
+                                                                    html.I(className = 'bi bi-tag me-2'),
+                                                                    "Mga nasumite nga kada klase san report",
+                                                                    #html.Br(),
+                                                                    html.Small(" (Submitted reports per type)", className = 'text-muted')
+                                                                ],
+                                                                #className = 'm-0'
+                                                            ),
+                                                            dcc.Graph(
+                                                                id = 'eve_eve_gra_reportsfiled'
+                                                            )
+                                                        ]
                                                     )
-                                                )
-                                            ],
-                                            class_name = row_m
+                                                ],
+                                                style = card_style
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-7 col-lg-8'
+                                        ),
+                                        dbc.Col(
+                                            dbc.Card(
+                                                [
+                                                    dbc.CardBody(
+                                                        [
+                                                            html.H5(
+                                                                [
+                                                                    html.I(className = 'bi bi-check-circle me-2'),
+                                                                    "Proporsiyon san mga naprubaran nga report",
+                                                                    html.Br(),
+                                                                    html.Small(" (Proportion of verified reports)", className = 'text-muted')
+                                                                ],
+                                                                #className = 'm-0'
+                                                            ),
+                                                            dcc.Graph(
+                                                                id = 'eve_eve_gra_verifiedpiechart'
+                                                            )
+                                                        ]
+                                                    )
+                                                ],
+                                                style = card_style
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-5 col-lg-4'
                                         )
-                                    ], class_name = row_m
+                                    ]
                                 ),
                             ],
                             id = 'eve_eve_div_data',
@@ -178,15 +221,7 @@ layout = html.Div(
                                 ),
                                 dbc.Row(
                                     [
-                                        dbc.Col(
-                                            id = 'eve_eve_col_reportsgraph',
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-4'
-                                        ),
-                                        dbc.Col(
-                                            id = 'eve_eve_col_reportsgraph',
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-8'
-                                        )
-                                    ]
+                                    ], class_name = row_m
                                 ),
                             ],
                             id = 'eve_eve_div_reports',
@@ -211,6 +246,7 @@ eve_eve_url_pathname = '/events/event'
         Output('eve_eve_div_description', 'className'),
         Output('eve_eve_col_basicinfo', 'children'),
         Output('eve_eve_gra_reportsfiled', 'figure'),
+        Output('eve_eve_gra_verifiedpiechart', 'figure'),
     ],
     [
         Input('url', 'pathname')
@@ -333,7 +369,6 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
                 to_return.append(table)
 
                 # Stacked area chart of reports filed
-                fig = None
                 sql = """SELECT rv.status_time,
                 CONCAT(rt.symbol, ' ', rt.label_war, ' (', rt.label_en, ')') AS report_type
                 FROM reports.reportversion AS rv
@@ -400,6 +435,59 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
                 )
 
                 to_return.append({'data': traces, 'layout': layout})
+
+                # Pie chart of reports validation
+                sql = """SELECT CONCAT(rs.label_war, ' (', rs.label_en, ')') AS status,
+                COUNT(*) as count
+                FROM reports.reportversion AS rv
+                LEFT JOIN reports.report AS r ON rv.report_id = r.id
+                LEFT JOIN events.event AS e ON r.event_id = e.id
+                LEFT JOIN utilities.reportstatus AS rs ON rv.status_id = rs.id
+                WHERE e.is_active
+                AND (r.region_id = %s AND r.province_id = %s
+                AND r.citymun_id = %s AND r.brgy_id = %s)
+                AND e.id = %s
+                GROUP BY status;
+                """
+                values = [region, province, citymun, brgy, event_id]
+                cols = ['Validation status', 'Reports']
+                df = db.querydatafromdatabase(sql, values, cols)
+                #print(df)
+
+                slices = [
+                    go.Pie(
+                        labels = df['Validation status'],
+                        values = df['Reports'],
+                        hole = .3
+                    )
+                ]
+
+                layout = go.Layout(
+                    {
+                        'plot_bgcolor' : 'rgba(0, 0, 0, 0)',
+                        'paper_bgcolor' : 'rgba(0, 0, 0, 0)'
+                    },
+                    #title = 'Distribution of reports by status',
+                    font_family = "DM Sans",
+                    showlegend = True,
+                    legend = {
+                        'orientation' : 'h',
+                        'xanchor' : 'left',
+                        'yanchor' : 'top',
+                        'x' : 0.00,
+                        'y' : 0.00
+                    },
+                    template = 'plotly_white',
+                    margin = {
+                        't' : 0,
+                        'b' : 0,
+                        'l' : 0,
+                        'r' : 0,
+                        'pad' : 0
+                    }
+                )
+
+                to_return.append({'data': slices, 'layout': layout})
 
             else: raise PreventUpdate
         else: raise PreventUpdate

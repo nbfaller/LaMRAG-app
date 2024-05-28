@@ -7,6 +7,7 @@ from dash.exceptions import PreventUpdate
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio
+from datetime import datetime, timedelta
 # App definition
 from app import app
 from apps import dbconnect as db
@@ -724,7 +725,8 @@ def dat_bar_setbrgyinfo(brgy, region, province, citymun, info_cols, censusyear):
         toreturn.append(df['label_en_stormsurge'][0])
 
         # Minimum population calculator year
-        toreturn.append(censusyear + 1)
+        currentyear = datetime.now().year
+        toreturn.append(currentyear + 1)
         toreturn.append(None)
 
         # Graph
@@ -764,7 +766,7 @@ def dat_bar_setbrgyinfo(brgy, region, province, citymun, info_cols, censusyear):
         # Current pop
         currentpop = int(pop_df.tail(1).values[0])
         pctchange = pop_df.pct_change().mean().values[0]
-        possibpop = currentpop * (1 + pctchange)
+        possibpop = currentpop * (1 + pctchange) ** (currentyear - censusyear + 1)
         toreturn.append(currentpop)
         toreturn.append(currentpop)
         toreturn.append(currentpop)
