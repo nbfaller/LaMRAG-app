@@ -172,18 +172,19 @@ def eve_vie_loadsearchresults(pathname, search, type, isactive):
         pathname == '/events/view'
     ]
     if any(eve_vie_url_pathname):
-        # Retrieve users as dataframe
+        # Retrieve events as dataframe
         sql = """SELECT
         e.id AS id,
         e.name AS name,
         CONCAT(et.symbol, ' ', et.label_war, ' (', et.label_en, ')') AS eventtype,
         TO_CHAR(e.startdate, 'Month dd, yyyy') AS startdate,
-        TO_CHAR(e.enddate, 'Month dd, yyyy') AS enddate
+        TO_CHAR(e.enddate, 'Month dd, yyyy') AS enddate,
+        e.is_active
         FROM events.event AS e
         LEFT JOIN utilities.eventtype AS et ON e.type_id = et.id
         """
         values = []
-        cols = ['ID No.', 'Name', 'Event type', 'Start date', 'End date']
+        cols = ['ID No.', 'Name', 'Event type', 'Start date', 'End date', 'Active?']
 
         if isactive:
             #print(isactive)
@@ -220,7 +221,7 @@ def eve_vie_loadsearchresults(pathname, search, type, isactive):
                 href = '/events/event?id=%s' % df['ID No.'][i],
             )
 
-        df = df[['Name', 'Event type', 'Start date', 'End date']]
+        df = df[['Name', 'Event type', 'Start date', 'End date', 'Active?']]
 
         table = dbc.Table.from_dataframe(
             df,

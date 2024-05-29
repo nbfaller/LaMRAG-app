@@ -15,6 +15,7 @@ class dbcreds:
     #)
 
 def getdblocation():
+    #local = True
     local = False
     if local:
         # Define connection details
