@@ -648,10 +648,10 @@ def rep_rep_populatereports(version, report_id, type, currentuser_id):
             CONCAT(rv_casualty.lname, ', ', rv_casualty.fname, ' ', rv_casualty.mname),
             rv_casualty.age,
             CONCAT(rv_casualty_assignedsex.symbol, ' ', rv_casualty_assignedsex.label_war, ' (', rv_casualty_assignedsex.label_en, ')'),
-            rv_casualty.region_id,
-            rv_casualty.province_id,
-            rv_casualty.citymun_id,
-            rv_casualty.brgy_id,
+            ar.name,
+            ap.name,
+            acm.name,
+            ab.name,
             rv_casualty.street,
             rv_casualty.cause,
             rv_casualty.infosource,
@@ -774,6 +774,14 @@ def rep_rep_populatereports(version, report_id, type, currentuser_id):
                     rv_casualty.status_id = rv_casualty_status.id)
                 LEFT JOIN utilities.assignedsex AS rv_casualty_assignedsex ON (
                     rv_casualty.assignedsex_id = rv_casualty_assignedsex.id)
+                INNER JOIN utilities.addressregion AS ar ON (
+                    rv_casualty.region_id = ar.id)
+                INNER JOIN utilities.addressprovince AS ap ON (
+                    rv_casualty.region_id = ap.region_id AND rv_casualty.province_id = ap.id)
+                INNER JOIN utilities.addresscitymun AS acm ON (
+                    rv_casualty.region_id = acm.region_id AND rv_casualty.province_id = acm.province_id AND rv_casualty.citymun_id = acm.id)
+                INNER JOIN utilities.addressbrgy AS ab ON (
+                    rv_casualty.region_id = ab.region_id AND rv_casualty.province_id = ab.province_id AND rv_casualty.citymun_id = ab.citymun_id AND rv_casualty.brgy_id = ab.id)
             """
         elif type == 3:
             sql += """ LEFT JOIN reports.pubutilint AS rv_pubutilint ON (
