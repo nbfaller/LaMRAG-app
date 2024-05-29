@@ -349,6 +349,13 @@ def sandbox_generatehistogram(pathname):
             },
             font_family = "DM Sans",
             showlegend = True,
+            legend = {
+                'orientation' : 'h',
+                'xanchor' : 'left',
+                'yanchor' : 'top',
+                'x' : 0.00,
+                'y' : -0.25
+            },
             template = 'plotly_white',
             margin = {
                 't' : 0,
