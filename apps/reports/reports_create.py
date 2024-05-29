@@ -2048,10 +2048,6 @@ def rep_cre_geolocset(housegps, infragps, pos, date):
         # Purok
         Output('rep_cre_input_purok', 'value'),
         Output('rep_cre_input_purok', 'disabled'),
-        # Event
-        Output('rep_cre_input_event_id', 'options'),
-        Output('rep_cre_input_event_id', 'value'),
-        Output('rep_cre_input_event_id', 'disabled'),
         # Date of occurrence
         Output('rep_cre_input_date', 'date'),
         # Hours of occurrence
@@ -2195,26 +2191,6 @@ def rep_cre_populatedropdowns(
         dropdowns.append(purok_value)
         dropdowns.append(purok_disabled)
 
-        # Events
-        event_value = None
-        event_disabled = False
-        sql = """SELECT event.name AS label, event.id AS value
-        FROM events.event
-        INNER JOIN events.eventbrgy ON event.id = eventbrgy.event_id
-        LEFT JOIN utilities.eventtype ON event.type_id = eventtype.id
-        WHERE eventbrgy.region_id = %s AND eventbrgy.province_id = %s AND eventbrgy.citymun_id = %s AND eventbrgy.brgy_id = %s;
-        """
-        values = [region, province, citymun, brgy]
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        events = df.to_dict('records')
-        dropdowns.append(events)
-        if existing_df.shape[0]:
-            event_value = existing_df['event_id'][0]
-            event_disabled = True
-        dropdowns.append(event_value)
-        dropdowns.append(event_disabled)
-
         # Date of occurrence
         date_value = None
         hh_value = None
@@ -2270,12 +2246,13 @@ def rep_cre_populatedropdowns(
         brgys = df.to_dict('records')
         dropdowns.append(brgys)
 
-        if brgy:
-            dropdowns.append(brgy)
-            dropdowns.append(True)
-        else:
-            dropdowns.append(None)
-            dropdowns.append(False)
+        brgys_value = None
+        brgys_disabled = False
+        if brgy and brgy > 0:
+            brgys_value = brgy
+            brgys_disabled = True
+        dropdowns.append(brgys_value)
+        dropdowns.append(brgys_disabled)
 
         # Related incident types
         sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
@@ -2504,6 +2481,64 @@ def rep_cre_populatedropdowns(
 
         return dropdowns
     else: raise PreventUpdate
+
+# Callback for populating events based on selected barangay
+@app.callback(
+    [
+        # Event
+        Output('rep_cre_input_event_id', 'options'),
+        Output('rep_cre_input_event_id', 'value'),
+        Output('rep_cre_input_event_id', 'disabled'),
+    ],
+    [
+        Input('rep_cre_input_brgy_id', 'value'),
+        Input('rep_cre_sto_mode', 'data')
+    ],
+    [
+        State('app_region_id', 'data'),
+        State('app_province_id', 'data'),
+        State('app_citymun_id', 'data'),
+        State('rep_cre_sto_newreport_id', 'data')
+    ],
+    prevent_initial_call = True
+)
+
+def rep_cre_populateevents(brgy, mode, region, province, citymun, report_id):
+    options = {}
+    value = None
+    disabled = True
+    if brgy and int(brgy) > 0:
+        brgy = int(brgy)
+        # Events
+        sql = """SELECT event.name AS label, event.id AS value
+        FROM events.event
+        INNER JOIN events.eventbrgy ON event.id = eventbrgy.event_id
+        LEFT JOIN utilities.eventtype ON event.type_id = eventtype.id
+        WHERE eventbrgy.region_id = %s AND eventbrgy.province_id = %s AND eventbrgy.citymun_id = %s AND eventbrgy.brgy_id = %s;
+        """
+        values = [region, province, citymun, brgy]
+        cols = ['label', 'value']
+        df = db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        events = df.to_dict('records')
+        options = events
+        disabled = False
+        if mode == 'update':
+            sql = """SELECT r.event_id FROM reports.reportversion AS rv
+            LEFT JOIN reports.report AS r ON rv.report_id = r.id
+            WHERE rv.report_id = %s
+            ORDER BY version_id DESC LIMIT 1;
+            """
+            values = [report_id - 1]
+            cols = ['event_id']
+            df = db.querydatafromdatabase(sql, values, cols)
+            value = df['event_id'][0]
+            disabled = True
+        #    event_value = existing_df['event_id'][0]
+        #    event_disabled = True
+        #dropdowns.append(event_value)
+        #dropdowns.append(event_disabled)
+    return [options, value, disabled]
 
 # Callback for showing report forms based on type
 @app.callback(

@@ -171,7 +171,7 @@ layout = html.Div(
                                 )
                             ],
                             id = 'rep_vie_div_chart',
-                            className = footer_m
+                            className = footer_m + ' d-block'
                         )
                     ],
                     class_name = 'col-md-10'
@@ -187,9 +187,9 @@ layout = html.Div(
     [
         Output('rep_vie_input_brgy_id', 'options'),
         Output('rep_vie_input_brgy_id', 'value'),
+        Output('rep_vie_input_brgy_id', 'disabled'),
         Output('rep_vie_input_reporttype_id', 'options'),
         Output('rep_vie_input_event_id', 'options'),
-        Output('rep_vie_gra_reportsfiled', 'figure')
     ],
     [
         Input('url', 'pathname')
@@ -221,7 +221,14 @@ def rep_vie_populatedropdowns(pathname, region, province, citymun, brgy):
         df = df.sort_values('value')
         brgys = df.to_dict('records')
         dropdowns.append(brgys)
-        dropdowns.append(brgy)
+
+        brgy_value = None
+        brgy_disabled = False
+        if brgy and int(brgy) > 0:
+            brgy_value = brgy
+            brgy_disabled = True
+        dropdowns.append(brgy_value)
+        dropdowns.append(brgy_disabled)
         
         # Report types
         sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
@@ -245,9 +252,145 @@ def rep_vie_populatedropdowns(pathname, region, province, citymun, brgy):
         df = df.sort_values('value')
         events = df.to_dict('records')
         dropdowns.append(events)
+        return dropdowns
+    else: raise PreventUpdate
 
+# Callback for searching reports
+@app.callback(
+    [
+        Output('rep_vie_div_results', 'children')
+    ],
+    [
+        Input('url', 'pathname'),
+        Input('rep_vie_input_brgy_id', 'value'),
+        Input('rep_vie_input_reporttype_id', 'value'),
+        Input('rep_vie_input_event_id', 'value'),
+        Input('rep_vie_input_purok', 'value')
+    ],
+    [
+        State('app_region_id', 'data'),
+        State('app_province_id', 'data'),
+        State('app_citymun_id', 'data'),
+    ]
+)
+
+def rep_vie_loadsearchresults(pathname, brgy, type, event, purok, region, province, citymun):
+    conditions = [
+        pathname == '/reports',
+        pathname == '/reports/view'
+    ]
+    if any(conditions):
+        # Retrieve users as dataframe
+        sql = """SELECT
+        r.id AS report_id,
+		e.name AS event_name,
+        CONCAT(rt.symbol, ' ', rt.label_war, ' (', rt.label_en, ')') as reporttype_id,
+        r.purok
+        FROM reports.report AS r
+        LEFT JOIN utilities.reporttype AS rt ON r.type_id = rt.id
+		LEFT JOIN events.event AS e ON r.event_id = e.id
+        WHERE (region_id = %s AND province_id = %s AND citymun_id = %s
+        """
+        values = [region, province, citymun]
+        cols = ['No.', 'Event', 'Report type', 'Purok']
+
+        if brgy and int(brgy) > 0:
+            sql += """ AND brgy_id = %s"""
+            values += [int(brgy)]
+        sql += ")"
+            
+        if type:
+            c = 1
+            sql += """ AND ("""
+            for i in type:
+                sql += """ r.type_id = %s"""
+                if c < len(type): sql += """ OR"""
+                values += [i]
+                c += 1
+            sql += """)"""
+            
+        if event:
+            c = 1
+            sql += """ AND ("""
+            for i in event:
+                sql += """ r.event_id = %s"""
+                if c < len(event): sql += """ OR"""
+                values += [i]
+                c += 1
+            sql += """)"""
+        
+        if purok and purok > 0:
+            sql += """ AND (r.purok = %s)"""
+            values += [purok]
+        
+        sql += """ ORDER BY r.id DESC;"""
+        df = db.querydatafromdatabase(sql, values, cols)
+
+        results = dbc.Row(
+            [
+                dbc.Col(
+                    [
+                        html.H3(
+                            [
+                                html.I(className = 'bi bi-search me-2'),
+                                html.Br(),
+                                "Waray report para sini nga barangay, purok, klase san report, o panhitabó.",
+                                html.Br(),
+                                html.Small("(There's no report for this barangay, purok, report type, or event.)")
+                            ],
+                            className = 'mb-0 text-center text-muted'
+                        ),
+                    ]
+                )
+            ],
+            #class_name = row_m
+        ),
+
+        if df.shape[0]:
+            for i in df.index:
+                # Names as hyperlinks
+                df.loc[i, 'Report type'] = html.A(
+                    df['Report type'][i],
+                    href = '/reports/report?id=%s' % df['No.'][i]
+                )
+
+            results = dbc.Table.from_dataframe(
+                df,
+                striped = False,
+                bordered = False,
+                hover = True,
+                size = 'sm'
+            )
+
+        return [results]
+    else: raise PreventUpdate
+
+# Callback for generating reports graph
+@app.callback(
+    [
+        Output('rep_vie_gra_reportsfiled', 'figure'),
+        Output('rep_vie_div_chart', 'className')
+    ],
+    [
+        Input('url', 'pathname'),
+        Input('rep_vie_input_brgy_id', 'value')
+    ],
+    [
+        State('app_region_id', 'data'),
+        State('app_province_id', 'data'),
+        State('app_citymun_id', 'data'),
+    ]
+)
+
+def rep_vie_generatereportsgraph(pathname, brgy, region, province, citymun):
+    fig = None
+    class_name = footer_m + ' d-block'
+    conditions = [
+        pathname == '/reports',
+        pathname == '/reports/view'
+    ]
+    if any(conditions):
         # Stacked area chart of reports filed
-        fig = None
         sql = """SELECT rv.create_time,
         e.name AS event
         FROM reports.reportversion AS rv
@@ -255,17 +398,22 @@ def rep_vie_populatedropdowns(pathname, region, province, citymun, brgy):
         LEFT JOIN events.event AS e ON r.event_id = e.id
         WHERE e.is_active
         AND (r.region_id = %s AND r.province_id = %s
-        AND r.citymun_id = %s AND r.brgy_id = %s);
+        AND r.citymun_id = %s
         """
-        #values = [region, province, citymun, brgy]
+        values = [region, province, citymun]
         cols = ['Creation time', 'Event']
+
+        if brgy:
+            sql += " AND r.brgy_id = %s"
+            values += [brgy]
+
+        sql += ");"
         df = db.querydatafromdatabase(sql, values, cols)
         
         if df.shape[0]:
             df['Creation time'] = pd.to_datetime(df['Creation time'])
             df = df.groupby([df['Creation time'], 'Event']).size().unstack(fill_value = 0).cumsum().reset_index()
             df.columns.name = None
-            #print(df)
 
             traces = []
             for event in df.columns[1:]:
@@ -311,95 +459,6 @@ def rep_vie_populatedropdowns(pathname, region, province, citymun, brgy):
                 }
             )
             fig = {'data': traces, 'layout': layout}
-
-        dropdowns.append(fig)
-        return dropdowns
-    else: raise PreventUpdate
-
-# Callback for searching reports
-@app.callback(
-    [
-        Output('rep_vie_div_results', 'children')
-    ],
-    [
-        Input('url', 'pathname'),
-        Input('rep_vie_input_reporttype_id', 'value'),
-        Input('rep_vie_input_event_id', 'value'),
-        Input('rep_vie_input_purok', 'value')
-    ],
-    [
-        State('app_region_id', 'data'),
-        State('app_province_id', 'data'),
-        State('app_citymun_id', 'data'),
-        State('app_brgy_id', 'data')
-    ]
-)
-
-def rep_vie_loadsearchresults(pathname, type, event, purok, region, province, citymun, brgy):
-    conditions = [
-        pathname == '/reports',
-        pathname == '/reports/view'
-    ]
-    if any(conditions):
-        # Retrieve users as dataframe
-        sql = """SELECT
-        r.id AS report_id,
-		e.name AS event_name,
-        CONCAT(rt.symbol, ' ', rt.label_war, ' (', rt.label_en, ')') as reporttype_id,
-        r.purok
-        FROM reports.report AS r
-        LEFT JOIN utilities.reporttype AS rt ON r.type_id = rt.id
-		LEFT JOIN events.event AS e ON r.event_id = e.id
-        WHERE (region_id = %s AND province_id = %s AND citymun_id = %s
-        """
-        values = [region, province, citymun]
-        cols = ['No.', 'Event', 'Report type', 'Purok']
-
-        if brgy:
-            sql += """ AND brgy_id = %s)"""
-            values += [brgy]
-            
-        if type:
-            c = 1
-            sql += """ AND ("""
-            for i in type:
-                sql += """ r.type_id = %s"""
-                if c < len(type): sql += """ OR"""
-                values += [i]
-                c += 1
-            sql += """)"""
-            
-        if event:
-            c = 1
-            sql += """ AND ("""
-            for i in event:
-                sql += """ r.event_id = %s"""
-                if c < len(event): sql += """ OR"""
-                values += [i]
-                c += 1
-            sql += """)"""
-        
-        if purok and purok > 0:
-            sql += """ AND (r.purok = %s)"""
-            values += [purok]
-        
-        sql += """ ORDER BY r.id DESC;"""
-        df = db.querydatafromdatabase(sql, values, cols)
-
-        for i in df.index:
-            # Names as hyperlinks
-            df.loc[i, 'Report type'] = html.A(
-                df['Report type'][i],
-                href = '/reports/report?id=%s' % df['No.'][i]
-            )
-
-        table = dbc.Table.from_dataframe(
-            df,
-            striped = False,
-            bordered = False,
-            hover = True,
-            size = 'sm'
-        )
-
-        return [table]
-    else: raise PreventUpdate
+        else: 
+            class_name = 'd-none'
+    return [fig, class_name]

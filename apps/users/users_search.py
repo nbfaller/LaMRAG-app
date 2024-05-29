@@ -156,6 +156,58 @@ layout = html.Div(
                                     id = 'usr_src_row_logins',
                                     class_name = row_m
                                 ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                dbc.Alert(
+                                                    dbc.Row(
+                                                        [
+                                                            dbc.Col(
+                                                                html.I(className = 'bi bi-exclamation-circle-fill me-2'),
+                                                                width = 'auto',
+                                                                class_name = alert_i_m
+                                                            ),
+                                                            dbc.Col(
+                                                                [
+                                                                    html.H5(
+                                                                        [
+                                                                            "Panano ko dapat basahon ini nga chart?",
+                                                                            html.Small(" (How should I read this chart?)", className = 'text-muted')
+                                                                        ]
+                                                                    ),
+                                                                    """An stacked bar chart in usa nga klase san chart nga nagpapakita san
+                                                                    pagbabag-o sa kadamo san usa nga kantidad nga puwede matunga sa iba-iba nga
+                                                                    mga grupo o klasipikasiyon. Gamit sini nga chart, makikit-an naton an
+                                                                    pagdamo san mga nagla-log in sa LáMRAG. Labaw sini, makikit-an naton an kadamo
+                                                                    san mga log-in base sa iba-iba nga klase san mga nagamit pinaagi san iba-iba
+                                                                    nga mga kolor (kun regular user, administrator, o superadministrator sira).""",
+                                                                    html.Br(),
+                                                                    html.Small(
+                                                                        """(Stacked bar charts are used to show the change in value of a quantity that
+                                                                        can be divided into classifications or parts. Using this specific chart, we can
+                                                                        see the number of people who log into LáMRAG as time passes. Beyond this, however,
+                                                                        we can see the number of log-ins for each type of user, whether they be regular
+                                                                        users, administrators, or superadministrators, hence the variety of colors.)""",
+                                                                        className = 'text-muted'
+                                                                    ),
+                                                                    #html.Span(id = 'rep_cre_alert_inputvalidation_span_missing')
+                                                                ]
+                                                            )
+                                                        ]
+                                                    ),
+                                                    is_open = True,
+                                                    color = 'info',
+                                                    class_name = label_m,
+                                                    dismissable = False,
+                                                    #fade = True,
+                                                )
+                                            ]
+                                        )
+                                    ],
+                                    style = {'display' : 'none'}
+                                    #class_name = row_m
+                                ),
                             ],
                             id = 'usr_src_div_logchart'
                         )

@@ -10,7 +10,8 @@ import webbrowser
 from urllib.parse import urlparse, parse_qs
 # App definition
 from app import app
-from apps import dashboard, home, commonmodules as cm, error, sandbox, about
+from apps import dbconnect as db
+from apps import dashboard, home, commonmodules as cm, error, sandbox, about, forbidden
 from apps.users import users_register, users_search
 from apps.reports import reports_create, reports_view, reports_report
 from apps.events import events_create, events_event, events_view
@@ -42,7 +43,7 @@ app.layout = html.Div(
         dcc.Store(id = 'app_region_id', data = 8, storage_type = 'session'),
         dcc.Store(id = 'app_province_id', data = 60, storage_type = 'session'),
         dcc.Store(id = 'app_citymun_id', data = 3, storage_type = 'session'),
-        dcc.Store(id = 'app_brgy_id', data = 138, storage_type = 'memory'), # CHANGE
+        dcc.Store(id = 'app_brgy_id', data = -1, storage_type = 'session'), # CHANGE
         # Auxiliary store variables for data retrieval
         dcc.Store(id = 'app_brgyinfo_cols', data = ['name', 2000, 2007, 2010, 2015, 2020], storage_type = 'memory'),
         dcc.Store(id = 'app_latestcensusyear', data = 2020, storage_type = 'memory'),
@@ -76,14 +77,15 @@ server = app.server
         Input('url', 'pathname')
     ],
     [
-        Input('url', 'search'),
+        State('url', 'search'),
         State('app_sessionlogout', 'data'),
         State('app_currentuser_id', 'data'),
-        State('app_usertype_id', 'data')
+        State('app_usertype_id', 'data'),
+        State('app_brgy_id', 'data')
     ]
 )
 
-def displaypage(pathname, search, sessionlogout, user_id, usertype_id):
+def displaypage(pathname, search, sessionlogout, user_id, usertype_id, brgy_id):
     ctx = dash.callback_context
     if ctx.triggered:
         eventid = ctx.triggered[0]['prop_id'].split('.')[0]
@@ -120,7 +122,22 @@ def displaypage(pathname, search, sessionlogout, user_id, usertype_id):
                 elif pathname == '/reports/create':
                     returnlayout = reports_create.layout
                 elif pathname == '/reports/report':
-                    returnlayout = reports_report.layout
+                    if brgy_id > 0:
+                        parsed = urlparse(search)
+                        if parse_qs(parsed.query)['id'][0]:
+                            report_id = parse_qs(parsed.query)['id'][0]
+                            sql = """SELECT brgy_id FROM reports.report WHERE id = %s;"""
+                            values = [report_id]
+                            cols = ['brgy_id']
+                            df = db.querydatafromdatabase(sql, values, cols)
+                            if int(df['brgy_id'][0]) == brgy_id:
+                                returnlayout = reports_report.layout
+                            else:
+                                returnlayout = forbidden.layout
+                        else:
+                            returnlayout = error.layout
+                    else:
+                        returnlayout = reports_report.layout
                 elif pathname == '/events' or pathname == '/events/view':
                     returnlayout = events_view.layout
                 elif pathname == '/events/create':
@@ -147,7 +164,7 @@ def displaypage(pathname, search, sessionlogout, user_id, usertype_id):
             sessionlogout = any(logout_conditions)
 
         else: raise PreventUpdate
-        print(sessionlogout, user_id, usertype_id)
+        print(sessionlogout, user_id, usertype_id, brgy_id)
         return [returnlayout, sessionlogout]
     else: raise PreventUpdate
 

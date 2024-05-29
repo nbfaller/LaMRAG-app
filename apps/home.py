@@ -190,6 +190,7 @@ layout = html.Div(
         Output('com_hom_alert_passwordvalidation_col_text', 'children'),
         Output('app_currentuser_id', 'data'),
         Output('app_usertype_id', 'data'),
+        Output('app_brgy_id', 'data'),
     ],
     [
         Input('com_hom_btn_login', 'n_clicks'), # Begin login query via button click
@@ -201,6 +202,7 @@ layout = html.Div(
         State('app_sessionlogout', 'data'),
         State('app_currentuser_id', 'data'),
         State('app_usertype_id', 'data'),
+        State('app_brgy_id', 'data'),
         State('url', 'pathname'),
     ],
     prevent_initial_call = True
@@ -208,7 +210,7 @@ layout = html.Div(
 
 def com_home_loginprocess(btn, sessionlogout_time,
     username, password, sessionlogout, user_id,
-    usertype_id, pathname):
+    usertype_id, brgy_id, pathname):
     
     ctx = dash.callback_context
 
@@ -222,16 +224,20 @@ def com_home_loginprocess(btn, sessionlogout_time,
     if eventid == 'com_hom_btn_login': # Trigger for login process
         if btn:
             if username and password:
-                sql = """SELECT id, usertype_id FROM users.user
+                sql = """SELECT u.id, u.usertype_id, o.brgy_id
+                    FROM users.user AS u
+                    LEFT JOIN utilities.office AS o ON u.office_id = o.id
                     WHERE username = %s AND password = %s AND is_active;"""
                 # We match the encrypted input to the encrypted password in the database
                 encrypt_string = lambda string: hashlib.sha256(string.encode('utf-8')).hexdigest()
                 values = [username, encrypt_string(password)]
-                cols = ['id', 'usertype_id']
+                cols = ['id', 'usertype_id', 'brgy_id']
                 df = db.querydatafromdatabase(sql, values, cols)
+                #print(df)
                 if df.shape[0]: # If the query returns rows
                     user_id = int(df['id'][0])
                     usertype_id = int(df['usertype_id'][0])
+                    if df['brgy_id'][0]: brgy_id = int(df['brgy_id'][0])
                     # Update user access log
                     sql = """INSERT INTO logs.accesslog(user_id) VALUES(%s);"""
                     values = [int(user_id)]
@@ -239,6 +245,7 @@ def com_home_loginprocess(btn, sessionlogout_time,
                 else:
                     user_id = -1
                     usertype_id = -1
+                    brgy_id = -1
                     alert_open = True
                     alert_row_class = 'mt-3 mb-3'
                     alert_col_text = [
@@ -282,11 +289,12 @@ def com_home_loginprocess(btn, sessionlogout_time,
     elif eventid == 'app_sessionlogout' and pathname == '/logout': # Reset the user_id and usertype_id if logged out
         user_id = -1
         usertype_id = -1
+        brgy_id = -1
     else:
         raise PreventUpdate
     # Maybe the login glitch is caused by the fact that this callback
     # (or the one that produces the value for app_sessionlogout) will always return values?
-    return [alert_open, alert_row_class, alert_col_text, user_id, usertype_id]
+    return [alert_open, alert_row_class, alert_col_text, user_id, usertype_id, brgy_id]
 
 # Callback for routing login
 @app.callback(

@@ -77,7 +77,7 @@ layout = html.Div(
                                             dcc.Dropdown(
                                                 id = 'dat_bar_input_brgy_id',
                                                 clearable = True,
-                                                #value = 1
+                                                value = 1
                                                ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-10'
                                         ),
@@ -597,10 +597,11 @@ layout = html.Div(
         State('app_province_id', 'data'),
         State('app_citymun_id', 'data'),
         State('app_brgy_id', 'data'),
+        State('dat_bar_input_brgy_id', 'value'),
     ]
 )
 
-def dat_bar_populatedropdowns(pathname, region, province, citymun, brgy):
+def dat_bar_populatedropdowns(pathname, region, province, citymun, brgy, selectedbrgy):
     if pathname == '/data/barangays':
         dropdowns = []
 
@@ -614,7 +615,9 @@ def dat_bar_populatedropdowns(pathname, region, province, citymun, brgy):
         df = df.sort_values('value')
         brgys = df.to_dict('records')
         dropdowns.append(brgys)
-        dropdowns.append(brgy)
+
+        if brgy > 0: dropdowns.append(brgy)
+        else: dropdowns.append(selectedbrgy)
 
         return dropdowns
     else: raise PreventUpdate

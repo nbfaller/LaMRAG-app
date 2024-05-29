@@ -14,14 +14,14 @@ layout = html.Div(
     [
         dbc.Row(
             dbc.Col(
-                html.H1(html.I(className = 'bi bi-patch-question')),
+                html.H1(html.I(className = 'bi bi-sign-stop')),
                 width = error_width
             ),
             justify = error_justify
         ),
         dbc.Row(
             dbc.Col(
-                html.H1("Hala, waray man? 🤔"),
+                html.H1("Oops, bawal! 😭"),
                 width = error_width
             ),
             justify = error_justify
@@ -30,8 +30,8 @@ layout = html.Div(
             dbc.Col(
                 html.P(
                     [
-                        "Rubat o nawawara an imo ginbibiling dinhi. Alayon pag-contact san administrator para mabuligan ka.", html.Br(),
-                        html.Small("(The page you are looking for is either broken or does not exist. Please contact the administrator for assistance.)", className = 'text-muted')
+                        "Diri ka awtorisado nga mag-abri sini nga page. Kun pamati mo nga sayop ini, alayon pag-contact san administrator.", html.Br(),
+                        html.Small("(You're not authorized to view this page. Please contact the administrator if you think this is a mistake.)", className = 'text-muted')
                     ]
                 ),
                 width = error_width
@@ -41,7 +41,7 @@ layout = html.Div(
         dbc.Row(
             dbc.Col(
                 dbc.Badge(
-                    "ERROR 404: PAGE NOT FOUND",
+                    "ERROR 403: FORBIDDEN",
                     #color = 'danger'
                 ),
                 width = error_width
