@@ -666,10 +666,10 @@ footer = html.Footer(
                             [
                                 html.P(
                                     [
-                                        html.A(html.Small([html.I(className = 'bi bi-patch-question me-2'), "Mga pirmi ginpapakiana (Frequently asked questions)"]), href = '/faq', target = '_blank'), html.Br(),
-                                        html.A(html.Small([html.I(className = 'bi bi-shield-lock me-2'), "Polisiya hiúnong san pribasidad (Privacy policy)"]), href = '/privacy', target = '_blank'), html.Br(),
-                                        html.A(html.Small([html.I(className = 'bi bi-megaphone me-2'), "Pagpaabot komento/suhestiyon (Feedback form)"]), href = '/feedback', target = '_blank'), html.Br(),
-                                        html.A(html.Small([html.I(className = 'bi bi-info-circle me-2'), "Hiúnong san LáMRAG (About LáMRAG)"]), href = '/about-lamrag', target = '_blank')
+                                        html.A(html.Small([html.I(className = 'bi bi-patch-question me-2'), "Mga pirmi ginpapakiana (Frequently asked questions)"]), href = '/faq'), html.Br(),
+                                        html.A(html.Small([html.I(className = 'bi bi-shield-lock me-2'), "Polisiya hiúnong san pribasidad (Privacy policy)"]), href = '/privacy'), html.Br(),
+                                        html.A(html.Small([html.I(className = 'bi bi-megaphone me-2'), "Pagpaabot komento/suhestiyon (Feedback form)"]), href = '/feedback'), html.Br(),
+                                        html.A(html.Small([html.I(className = 'bi bi-info-circle me-2'), "Hiúnong san LáMRAG (About LáMRAG)"]), href = '/about-lamrag')
                                     ],
                                 className = 'mb-0')
                             ], className = 'mb-3'

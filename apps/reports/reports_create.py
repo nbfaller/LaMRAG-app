@@ -2061,6 +2061,11 @@ def rep_cre_geolocset(housegps, infragps, pos, date):
         Output('rep_cre_input_time_ss', 'options'),
         Output('rep_cre_input_pubutilint_int_time_ss', 'options'),
         Output('rep_cre_input_pubutilint_res_time_ss', 'options'),
+        # Value if mode is update
+        Output('rep_cre_input_time_hh', 'value'),
+        Output('rep_cre_input_time_mm', 'value'),
+        Output('rep_cre_input_time_ss', 'value'),
+        Output('rep_cre_input_time_ampm', 'value'),
         # Barangay
         Output('rep_cre_input_brgy_id', 'options'),
         Output('rep_cre_input_brgy_id', 'value'),
@@ -2176,6 +2181,7 @@ def rep_cre_populatedropdowns(
         df = df.sort_values('value')
         reporttypes = df.to_dict('records')
         dropdowns.append(reporttypes)
+        # Set value if report creation mode is 'update'
         if existing_df.shape[0]:
             type_value = existing_df['type_id'][0]
             type_disabled = True
@@ -2185,6 +2191,7 @@ def rep_cre_populatedropdowns(
         # Purok
         purok_value = None
         purok_disabled = False
+        # Set value if report creation mode is 'update'
         if existing_df.shape[0]:
             purok_value = existing_df['purok'][0]
             purok_disabled = True
@@ -2193,20 +2200,9 @@ def rep_cre_populatedropdowns(
 
         # Date of occurrence
         date_value = None
-        hh_value = None
-        mm_value = None
-        ss_value = None
-        ampm_value = "AM"
+        # Set value if report creation mode is 'update'
         if existing_df.shape[0]:
             date_value = existing_df['occurrence_date'][0]
-            if existing_df['occurrence_time'][0]:
-                hh_value = int(str(existing_df['occurrence_time'][0]).split('+')[0].split(":")[0])
-                if hh_value > 12:
-                    hh_value -= 12
-                    ampm_value = "PM"
-                mm_value = int(str(existing_df['occurrence_time'][0]).split('+')[0].split(":")[1])
-                ss_value = int(str(existing_df['occurrence_time'][0]).split('+')[0].split(":")[2])
-                print(hh_value, mm_value, ss_value)
         dropdowns.append(date_value)
 
         # Time of occurrence
@@ -2235,6 +2231,24 @@ def rep_cre_populatedropdowns(
         dropdowns.append(mmss)
         dropdowns.append(mmss)
 
+        existing_hh = None
+        existing_mm = None
+        existing_ss = None
+        existing_ampm = 'AM'
+        # Set value if report creation mode is 'update'
+        if existing_df.shape[0] and existing_df['occurrence_time'][0]:
+            existing_time = str(existing_df['occurrence_time'][0]).split('+')[0]
+            existing_hh = int(existing_time.split(':')[0])
+            existing_mm = int(existing_time.split(':')[1])
+            existing_ss = int(existing_time.split(':')[2])
+            if existing_hh > 12:
+                existing_hh -= 12
+                existing_ampm = 'PM'
+        dropdowns.append(existing_hh)
+        dropdowns.append(existing_mm)
+        dropdowns.append(existing_ss)
+        dropdowns.append(existing_ampm)
+
         # Barangays
         sql = """SELECT name AS label, id AS value
         FROM utilities.addressbrgy
@@ -2248,8 +2262,11 @@ def rep_cre_populatedropdowns(
 
         brgys_value = None
         brgys_disabled = False
-        if brgy and brgy > 0:
+        if brgy and int(brgy) > 0:
             brgys_value = brgy
+            brgys_disabled = True
+        elif existing_df.shape[0]:
+            brgys_value = int(existing_df['brgy_id'][0])
             brgys_disabled = True
         dropdowns.append(brgys_value)
         dropdowns.append(brgys_disabled)
@@ -2509,6 +2526,7 @@ def rep_cre_populateevents(brgy, mode, region, province, citymun, report_id):
     disabled = True
     if brgy and int(brgy) > 0:
         brgy = int(brgy)
+        report_id = int(report_id)
         # Events
         sql = """SELECT event.name AS label, event.id AS value
         FROM events.event
@@ -2527,7 +2545,7 @@ def rep_cre_populateevents(brgy, mode, region, province, citymun, report_id):
             sql = """SELECT r.event_id FROM reports.reportversion AS rv
             LEFT JOIN reports.report AS r ON rv.report_id = r.id
             WHERE rv.report_id = %s
-            ORDER BY version_id DESC LIMIT 1;
+            ORDER BY event_id DESC LIMIT 1;
             """
             values = [report_id - 1]
             cols = ['event_id']
