@@ -32,6 +32,7 @@ footer_m = 'mt-3'
 
 layout = html.Div(
     [
+        dcc.Store(id = 'eve_eve_sto_eventid', data = -1, storage_type = 'memory'),
         dbc.Row(
             [
                 dbc.Col(
@@ -221,6 +222,13 @@ layout = html.Div(
                                 ),
                                 dbc.Row(
                                     [
+                                        dbc.Col(
+                                            [
+                                                dbc.Accordion(
+                                                    id = 'eve_eve_acc_reports'
+                                                )
+                                            ]
+                                        )
                                     ], class_name = row_m
                                 ),
                             ],
@@ -241,6 +249,7 @@ eve_eve_url_pathname = '/events/event'
 # Callback for displaying event details
 @app.callback(
     [
+        Output('eve_eve_sto_eventid', 'data'),
         Output('eve_eve_h1_header', 'children'),
         Output('eve_eve_htp_description', 'children'),
         Output('eve_eve_div_description', 'className'),
@@ -269,6 +278,7 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
         if parse_qs(parsed.query):
             event_id = parse_qs(parsed.query)['id'][0]
             if event_id:
+                to_return.append(event_id)
                 sql = """SELECT e.name,
                 CONCAT(et.symbol, ' ', et.label_war, ' (', et.label_en, ')'),
                 TO_CHAR(e.startdate, 'Month dd, yyyy'), TO_CHAR(e.enddate, 'Month dd, yyyy'),
@@ -493,3 +503,36 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
         else: raise PreventUpdate
         return to_return
     else: raise PreventUpdate
+
+# Callback for generating consolidated reports
+@app.callback(
+    [
+        Output('eve_eve_acc_reports', 'children')
+    ],
+    [
+        Input('eve_eve_sto_eventid', 'modified_timestamp')
+    ],
+    [
+        State('eve_eve_sto_eventid', 'data')
+    ]
+)
+
+def eve_eve_generatereports(modified_timestamp, event_id):
+    accordion = []
+    sql = """SELECT id, CONCAT(symbol, ' ', label_war, ' (', label_en, ')'), table_nm
+        FROM utilities.reporttype
+        ORDER BY id ASC;"""
+    values = []
+    cols = ['id', 'label', 'table']
+    df = db.querydatafromdatabase(sql, values, cols)
+    
+    for i, row in df.iterrows():
+        #sql2 = """SELECT * FROM reports.reportversion
+        #    LEFT JOIN reports.%s ON reportversion."""
+        accordion.append(
+            dbc.AccordionItem(
+                title = row['label']
+            )
+        )
+
+    return [accordion]

@@ -2072,6 +2072,13 @@ def rep_cre_geolocset(housegps, infragps, pos, date):
         Output('rep_cre_input_brgy_id', 'disabled'),
         # Related incident
         Output('rep_cre_input_relinctype_id', 'options'),
+        #Output('rep_cre_input_relinctype_id', 'value'),
+        #Output('rep_cre_input_relinctype_id', 'disabled'),
+        # Update values for related incident
+            #Output('rep_cre_input_relinc_qty', 'value'),
+            #Output('rep_cre_input_relinc_description', 'value'),
+            #Output('rep_cre_input_relinc_actions', 'value'),
+            #Output('rep_cre_input_relincstatus_id', 'value'),
         # Assigned sex at birth
         Output('rep_cre_input_casualty_assignedsex_id', 'options'),
         Output('rep_cre_input_dmgdhouse_assignedsex_id', 'options'),
@@ -2280,6 +2287,18 @@ def rep_cre_populatedropdowns(
         df = df.sort_values('value')
         relinctypes = df.to_dict('records')
         dropdowns.append(relinctypes)
+        if existing_df.shape[0] and int(existing_df['type_id'][0]) == 1:
+            sql2 = """SELECT
+                type_id,
+                qty,
+                description,
+                actions_taken,
+                status_id
+                FROM reports.relinc
+                WHERE report_id = %s AND version_id = %s;"""
+            values2 = [int(report_id), int(version_id) - 1]
+            cols2 = ['type_id', 'qty', 'description', 'actions_taken', 'status_id']
+            existing_relinc = db.querydatafromdatabase(sql2, values2, cols2)
 
         # Assgined sex
         sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
