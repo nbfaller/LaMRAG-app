@@ -227,7 +227,7 @@ navbar = dbc.Navbar(
                         dbc.DropdownMenuItem(divider = True),
                         dbc.DropdownMenuItem("Dashboard", href = '/dashboard', external_link = nav_external_link),
                         dbc.DropdownMenuItem("Profile", href = '/users/profile', external_link = nav_external_link),
-                        dbc.DropdownMenuItem("Change password", href = '', external_link = nav_external_link),
+                        dbc.DropdownMenuItem("Change password", id = 'cm_btn_createnewpassword'),
                         dbc.DropdownMenuItem("Log-out", href = '/logout', external_link = nav_external_link, id = 'com_mod_dmi_logout'),
                     ],
                     id = 'com_mod_ddm_navbarmenu',
@@ -623,7 +623,6 @@ sidebar = dbc.Offcanvas(
 )
 
 # Footer
-
 footer = html.Footer(
     [
         dbc.Row(
@@ -790,4 +789,164 @@ footer = html.Footer(
         #'bottom' : '0'
     },
     className = 'text-muted'
+)
+
+# Callback for opening change password modal
+@app.callback(
+    [
+        Output('cm_modal_confirmnewpassword', 'is_open')
+    ],
+    [
+        Input('cm_btn_createnewpassword', 'n_clicks')
+    ]
+)
+
+def cm_changepassword(btn):
+    ctx = dash.callback_context
+    if ctx.triggered:
+        eventid = ctx.triggered[0]['prop_id'].split('.')[0]
+        if eventid == 'cm_btn_createnewpassword' and btn:
+            return [True]
+        else: raise PreventUpdate
+    else: raise PreventUpdate
+
+# Change password modal
+change_password = dbc.Modal(
+    [
+        dbc.Form(
+            [
+                dbc.ModalBody(
+                    [
+                        dbc.Row(
+                            [
+                                dbc.Col(
+                                    [
+                                        html.H4(
+                                            [
+                                                "Balyo password",
+                                                html.Small(" (Change password)", className = 'text-muted')
+                                            ]
+                                        ),
+                                        html.P(
+                                            [
+                                                """Alayon pagbutang san imo password nga gingagamit yana sa una nga patlang,
+                                                ug an imo karuyag nga bag-o nga password sa sunod nga duha nga patlang.""",
+                                                html.Br(),
+                                                html.Small(
+                                                    """Please input your current password in the topmost field, followed
+                                                    by your new password in the next two fields.""",
+                                                    className = 'text-muted'
+                                                )
+                                            ], className = p_m
+                                        )
+                                    ]
+                                )
+                            ], class_name = row_m
+                        ),
+                        dbc.Row(
+                            [
+                                dbc.Col(
+                                    [
+                                        dbc.Alert(
+                                            dbc.Row(
+                                                [
+                                                    dbc.Col(
+                                                        html.I(className = 'bi bi-exclamation-circle-fill me-2'),
+                                                        width = 'auto',
+                                                        class_name = alert_i_m
+                                                    ),
+                                                    dbc.Col(
+                                                        id = 'cm_alert_paswordvalidation_col_text'
+                                                    )
+                                                ]
+                                            ),
+                                            id = 'cm_alert_passwordvalidation',
+                                            is_open = False,
+                                            color = 'warning',
+                                            class_name = label_m,
+                                            dismissable = True 
+                                        )
+                                    ]
+                                )
+                            ]
+                        ),
+                        dbc.Row(
+                            [
+                                dbc.Col(
+                                    [
+                                        dbc.Input(
+                                            type = 'password',
+                                            id = 'cm_input_existingpassword',
+                                            placeholder = "Enter current password",
+                                        )
+                                    ]
+                                )
+                            ],
+                            id = 'cm_row_existingpassword',
+                            class_name = row_m + ' d-block'
+                        ),
+                        dbc.Row(
+                            [
+                                dbc.Col(
+                                    [
+                                        dbc.Input(
+                                            type = 'password',
+                                            id = 'cm_input_newpassword_initial',
+                                            placeholder = "Enter new password",
+                                        )
+                                    ]
+                                )
+                            ],
+                            id = 'cm_row_newpassword_initial',
+                            class_name = row_m + ' d-block'
+                        ),
+                        dbc.Row(
+                            [
+                                dbc.Col(
+                                    [
+                                        dbc.Input(
+                                            type = 'password',
+                                            id = 'cm_input_newpassword_verification',
+                                            placeholder = "Enter new password",
+                                        )
+                                    ]
+                                )
+                            ],
+                            id = 'cm_row_newpassword_verification',
+                            class_name = row_m + ' d-block'
+                        ),
+                    ]
+                ),
+                dbc.ModalFooter(
+                    [
+                        dbc.Row(
+                            [
+                                dbc.Col(
+                                    dbc.Button(
+                                        [
+                                            html.I(className = 'bi bi-check-circle-fill me-2'),
+                                            "I-kumpirma (Confirm)",
+                                        ],
+                                        id = 'cm_btn_confirmnewpassword',
+                                        style = {'width': ' 100%'},
+                                        type = 'submit'
+                                    ),
+                                    id = 'cm_col_confirm',
+                                    class_name = 'd-inline align-self-center col-12 col-md-auto'
+                                )
+                            ],
+                            class_name = 'justify-content-end'
+                        )
+                    ],
+                    id = 'cm_modal_confirmnewpassword_footer'
+                )
+            ]
+        )
+    ],
+    id = 'cm_modal_confirmnewpassword',
+    is_open = False,
+    centered = True,
+    scrollable = True,
+    backdrop = True,
+    #size = 'lg',
 )

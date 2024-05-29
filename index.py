@@ -56,6 +56,7 @@ app.layout = html.Div(
             #style = CONTENT_STYLE,
             className = 'mt-6 mb-3 mx-3 mx-md-4pt5 p-2 p-md-3'
         ),
+        cm.change_password,
         # Footer
         cm.footer
     ]
