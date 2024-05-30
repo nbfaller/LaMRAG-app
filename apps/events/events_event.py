@@ -246,30 +246,14 @@ layout = html.Div(
                                     [
                                         dbc.Col(
                                             [
-                                                dbc.Accordion(
-                                                    id = 'eve_eve_acc_reports'
+                                                html.Div(
+                                                    id = 'eve_eve_div_reports'
                                                 ),
-                                                html.Small(
-                                                    [
-                                                        """Ungod ug sakto ini nga consolidated report yana nga """,
-                                                        html.Span(id = 'eve_eve_spa_reporttimestamp_war'),
-                                                        """. Diri api sini nga mga ihap an mga report nga puprubaran pa.""",
-                                                        html.Small(
-                                                            [
-                                                                """ (This consolidated report is true and correct as of """,
-                                                                html.Span(id = 'eve_eve_spa_reporttimestamp_en'),
-                                                                """. Unverified reports are not included in these tallies.)"""
-                                                            ]
-                                                        )
-                                                    ],
-                                                    className = 'text-muted'
-                                                )
                                             ]
                                         )
                                     ], class_name = row_m
                                 ),
                             ],
-                            id = 'eve_eve_div_reports',
                             className = div_m
                         )
                     ],
@@ -546,7 +530,7 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
 # Callback for generating consolidated reports
 @app.callback(
     [
-        Output('eve_eve_acc_reports', 'children')
+        Output('eve_eve_div_reports', 'children')
     ],
     [
         Input('eve_eve_sto_eventid', 'modified_timestamp')
@@ -591,11 +575,11 @@ def eve_eve_generatereports(modified_timestamp, event_id):
         if type_id == 1:
             #continue
             sql += """,
-                rv_relinc.type_id AS relinc_type,
+                CONCAT(rv_relinc_type.symbol, ' ', rv_relinc_type.label_war, ' (', rv_relinc_type.label_en, ')') AS relinc_type,
                 rv_relinc.qty AS relinc_qty,
                 rv_relinc.description AS relinc_desc,
                 rv_relinc.actions_taken AS relinc_actions,
-                rv_relinc.status_id AS relinc_status
+                CONCAT(rv_relinc_status.label_war, ' (', rv_relinc_status.label_en, ')') AS relinc_status
                 """
             cols += [
                 'Type',
@@ -605,19 +589,23 @@ def eve_eve_generatereports(modified_timestamp, event_id):
                 'Status'
             ]
             sql_join = """ INNER JOIN reports.relinc AS rv_relinc
-                ON (lv.report_id = rv_relinc.report_id
-                AND lv.version_id = rv_relinc.version_id);"""
+                    ON (lv.report_id = rv_relinc.report_id
+                    AND lv.version_id = rv_relinc.version_id)
+                INNER JOIN utilities.relinctype AS rv_relinc_type
+                    ON rv_relinc.type_id = rv_relinc_type.id
+                INNER JOIN utilities.relincstatus AS rv_relinc_status
+                    ON (rv_relinc.status_id = rv_relinc_status.id AND rv_relinc.type_id = rv_relinc_status.relinctype_id);"""
         # Report type 2: Casualty
         elif type_id == 2:
             #continue
             sql += """,
-                rv_casualty.type_id AS casualty_type,
+                CONCAT(rv_casualty_type.symbol, ' ', rv_casualty_type.label_war, ' (', rv_casualty_type.label_en, ')') AS casualty_type,
                 CONCAT(rv_casualty.lname, ', ', rv_casualty.fname, ' ', rv_casualty.mname) AS casualty_name,
                 rv_casualty.age AS casualty_age,
-                rv_casualty.assignedsex_id AS casualty_assignedsex,
+                CONCAT(rv_casualty_assignedsex.symbol, ' ', rv_casualty_assignedsex.label_war, ' (', rv_casualty_assignedsex.label_en, ')') AS casualty_assignedsex,
                 rv_casualty.cause AS casualty_cause,
                 rv_casualty.infosource AS casualty_infosource,
-                rv_casualty.status_id AS casualty_status
+                CONCAT(rv_casualty_status.label_war, ' (', rv_casualty_status.label_en, ')') AS casualty_status
                 """
             cols += [
                 'Type',
@@ -629,14 +617,21 @@ def eve_eve_generatereports(modified_timestamp, event_id):
                 'Status'
             ]
             sql_join = """ INNER JOIN reports.casualty AS rv_casualty
-                ON (lv.report_id = rv_casualty.report_id
-                AND lv.version_id = rv_casualty.version_id);"""
+                    ON (lv.report_id = rv_casualty.report_id
+                    AND lv.version_id = rv_casualty.version_id)
+                INNER JOIN utilities.casualtytype AS rv_casualty_type
+                    ON rv_casualty.type_id = rv_casualty_type.id
+                INNER JOIN utilities.assignedsex AS rv_casualty_assignedsex
+                    ON rv_casualty.assignedsex_id = rv_casualty_assignedsex.id
+                INNER JOIN utilities.casualtystatus AS rv_casualty_status
+                    ON rv_casualty.status_id = rv_casualty_status.id;"""
         # Report type 3: Public utility status
         elif type_id == 3:
             #continue
             sql += """,
-                rv_pubutilint.pubutil_id AS pubutilint_pubutil,
-                rv_pubutilint.inttype_id AS pubutilint_type,
+                rv_pubutilint_pubutil.name AS pubutilint_pubutil,
+                CONCAT(rv_pubutilint_pubutiltype.symbol, ' ', rv_pubutilint_pubutiltype.label_war, ' (', rv_pubutilint_pubutiltype.label_en, ')') AS pubutilint_pubutiltype,
+                CONCAT(rv_pubutilint_pubutilinttype.symbol, ' ', rv_pubutilint_pubutilinttype.label_war, ' (', rv_pubutilint_pubutilinttype.label_en, ')') AS pubutilint_type,
                 rv_pubutilint.int_date AS pubutilint_intdate,
                 rv_pubutilint.int_time AS pubutilint_inttime,
                 rv_pubutilint.res_date AS pubutilint_resdate,
@@ -644,6 +639,7 @@ def eve_eve_generatereports(modified_timestamp, event_id):
                 """
             cols += [
                 'Public utility',
+                'Utility type',
                 'Interruption type',
                 'Interruption date',
                 'Interruption time',
@@ -651,16 +647,22 @@ def eve_eve_generatereports(modified_timestamp, event_id):
                 'Restoration time'
             ]
             sql_join = """ INNER JOIN reports.pubutilint AS rv_pubutilint
-                ON (lv.report_id = rv_pubutilint.report_id
-                AND lv.version_id = rv_pubutilint.version_id);"""
+                    ON (lv.report_id = rv_pubutilint.report_id
+                    AND lv.version_id = rv_pubutilint.version_id)
+                INNER JOIN utilities.pubutil AS rv_pubutilint_pubutil
+                    ON rv_pubutilint.pubutil_id = rv_pubutilint_pubutil.id
+                INNER JOIN utilities.pubutiltype AS rv_pubutilint_pubutiltype
+                    ON rv_pubutilint_pubutil.type_id = rv_pubutilint_pubutiltype.id
+                INNER JOIN utilities.pubutilinttype AS rv_pubutilint_pubutilinttype
+                    ON rv_pubutilint.inttype_id = rv_pubutilint_pubutilinttype.id;"""
         # Report type 4: Damaged house
         elif type_id == 4:
             #continue
             sql += """,
-                rv_dmgdhouse.type_id AS dmgdhouse_type,
+                CONCAT(rv_dmgdhouse_type.symbol, ' ', rv_dmgdhouse_type.label_war, ' (', rv_dmgdhouse_type.label_en, ')') AS dmgdhouse_type,
                 CONCAT(rv_dmgdhouse.lname, ', ', rv_dmgdhouse.fname, ' ', rv_dmgdhouse.mname) AS dmgdhouse_name,
                 rv_dmgdhouse.age AS dmgdhouse_age,
-                rv_dmgdhouse.assignedsex_id AS dmgdhouse_assignedsex,
+                CONCAT(rv_dmgdhouse_assignedsex.symbol, ' ', rv_dmgdhouse_assignedsex.label_war, ' (', rv_dmgdhouse_assignedsex.label_en, ')') AS dmgdhouse_assignedsex,
                 rv_dmgdhouse.loc_text AS dmgdhouse_loctext,
                 rv_dmgdhouse.loc_gps AS dmgdhouse_locgps
                 """
@@ -673,49 +675,73 @@ def eve_eve_generatereports(modified_timestamp, event_id):
                 'GPS coordinates'
             ]
             sql_join = """ INNER JOIN reports.dmgdhouse AS rv_dmgdhouse
-                ON (lv.report_id = rv_dmgdhouse.report_id
-                AND lv.version_id = rv_dmgdhouse.version_id);"""
+                    ON (lv.report_id = rv_dmgdhouse.report_id
+                    AND lv.version_id = rv_dmgdhouse.version_id)
+                INNER JOIN utilities.dmgdinfratype AS rv_dmgdhouse_type
+                    ON rv_dmgdhouse.type_id = rv_dmgdhouse_type.id
+                INNER JOIN utilities.assignedsex AS rv_dmgdhouse_assignedsex
+                    ON rv_dmgdhouse.assignedsex_id = rv_dmgdhouse_assignedsex.id;"""
         # Report type 5: Public infrastructure status
         elif type_id == 5:
             #continue
             sql += """,
-                rv_dmgdinfra.infratype_id AS dmgdinfra_type,
-                rv_dmgdinfra.infraclass_id AS dmgdinfra_class,
+                CONCAT(rv_dmgdinfra_type.symbol, ' ', rv_dmgdinfra_type.label_war, ' (', rv_dmgdinfra_type.label_en, ')') AS dmgdinfra_type,
+                CONCAT(rv_dmgdinfra_class.label_war, ' (', rv_dmgdinfra_class.label_en, ')') AS dmgdinfra_class,
                 rv_dmgdinfra.infraname AS dmgdinfra_name,
-                rv_dmgdinfra.qty AS dmgdinfra_qty,
-                rv_dmgdinfra.qtyunit_id AS dmgdinfra_qtyunit,
-                rv_dmgdinfra.dmgtype_id AS dmgdinfra_dmgtype,
+                CONCAT(rv_dmgdinfra.qty, ' ', rv_dmgdinfra_qtyunit.label_war, ' (', rv_dmgdinfra_qtyunit.label_en, ')') AS dmgdinfra_qty,
+                CONCAT(rv_dmgdinfra_dmgtype.symbol, ' ', rv_dmgdinfra_dmgtype.label_war, ' (', rv_dmgdinfra_dmgtype.label_en, ')') AS dmgdinfra_dmgtype,
                 rv_dmgdinfra.loc_text AS dmgdinfra_loctext,
                 rv_dmgdinfra.loc_gps AS dmgdinfra_locgps,
-                rv_dmgdinfra.infracost AS dmgdinfra_infracost
+                CONCAT('₱', rv_dmgdinfra.infracost) AS dmgdinfra_infracost
                 """
             cols += [
                 'Type',
                 'Class',
                 'Name/description',
                 'Quantity',
-                'Units',
                 'Damage type',
                 'Location',
                 'GPS coordinates',
                 'Cost'
             ]
             sql_join = """ INNER JOIN reports.dmgdinfra AS rv_dmgdinfra
-                ON (lv.report_id = rv_dmgdinfra.report_id
-                AND lv.version_id = rv_dmgdinfra.version_id);"""
+                    ON (lv.report_id = rv_dmgdinfra.report_id
+                    AND lv.version_id = rv_dmgdinfra.version_id)
+                INNER JOIN utilities.infratype AS rv_dmgdinfra_type
+                    ON rv_dmgdinfra.infratype_id = rv_dmgdinfra_type.id
+                INNER JOIN utilities.infraclass AS rv_dmgdinfra_class
+                    ON rv_dmgdinfra.infraclass_id = rv_dmgdinfra_class.id
+                INNER JOIN utilities.qtyunit AS rv_dmgdinfra_qtyunit
+                    ON rv_dmgdinfra.qtyunit_id = rv_dmgdinfra_qtyunit.id
+                INNER JOIN utilities.dmgdinfratype AS rv_dmgdinfra_dmgtype
+                    ON rv_dmgdinfra.dmgtype_id = rv_dmgdinfra_dmgtype.id;"""
         
         sql += """ FROM latest_version lv %s""" % sql_join
         
         values = [int(event_id), int(type_id)]
         #print(sql, values, cols)
         table_df = db.querydatafromdatabase(sql, values, cols)
-        table = dbc.Table.from_dataframe(
-            table_df,
-            striped = False,
-            bordered = False,
-            hover = True,
-            size = 'sm',
-        )
+
+        table = None
+        if table_df.shape[0]:
+            table = dbc.Table.from_dataframe(
+                table_df,
+                striped = False,
+                bordered = False,
+                hover = True,
+                size = 'sm',
+            )
+        else:
+            table = html.H3(
+                [
+                    html.I(className = 'bi bi-search me-2'),
+                    html.Br(),
+                    "Waray report sini nga klase an ginhimo.",
+                    html.Br(),
+                    html.Small("(No reports of this type were made.)")
+                ],
+                className = 'mb-0 text-center text-muted'
+            ),
 
         accordion.append(
             dbc.AccordionItem(
@@ -729,5 +755,27 @@ def eve_eve_generatereports(modified_timestamp, event_id):
                 title = types['label'][type_id - 1],
             )
         )
+    
+    content = [
+        dbc.Accordion( 
+            accordion,
+            start_collapsed = True
+        ),
+        html.Small(
+            [
+                """Ungod ug sakto ini nga consolidated report yana nga """,
+                html.Span(id = 'eve_eve_spa_reporttimestamp_war'),
+                """. Diri api sini nga mga ihap an mga report nga puprubaran pa.""",
+                html.Small(
+                    [
+                        """ (This consolidated report is true and correct as of """,
+                        html.Span(id = 'eve_eve_spa_reporttimestamp_en'),
+                        """. Unverified reports are not included in these tallies.)"""
+                    ]
+                )
+            ],
+            className = 'text-muted'
+        )
+    ]
 
-    return [accordion]
+    return [content]
