@@ -567,12 +567,23 @@ def eve_eve_generatereports(modified_timestamp, event_id):
     types = db.querydatafromdatabase(sql, values, cols)
     
     for type_id in range(1, len(types) + 1):
-        sql = """SELECT
-        r.id AS report_id,
-        rv.id AS version_id,
-        r.purok AS purok,
-        rv.remarks AS remarks"""
-        values = []
+        sql = """WITH latest_version AS (
+                SELECT DISTINCT ON (r.id)
+                    r.id AS report_id,
+                    rv.id AS version_id,
+                    r.purok AS purok,
+                    rv.remarks AS remarks
+                FROM reports.report AS r
+                INNER JOIN reports.reportversion AS rv
+                ON r.id = rv.report_id
+                WHERE r.event_id = %s AND r.type_id = %s
+                ORDER BY r.id, rv.id DESC)
+            SELECT lv.report_id AS id,
+                lv.version_id AS version,
+                lv.purok AS purok,
+                lv.remarks AS remarks
+            """
+        values = [event_id, type_id]
         cols = ['ID', 'Version', 'Purok', 'Remarks']
         sql_join = ""
         #print(i)
@@ -581,53 +592,45 @@ def eve_eve_generatereports(modified_timestamp, event_id):
             #continue
             sql += """,
                 rv_relinc.type_id AS relinc_type,
-                rv_relinc.qty AS reinc_qty,
+                rv_relinc.qty AS relinc_qty,
                 rv_relinc.description AS relinc_desc,
-                rv_relinc.actions_taken AS relinc_actionstaken
+                rv_relinc.actions_taken AS relinc_actions,
+                rv_relinc.status_id AS relinc_status
                 """
             cols += [
-                'Related incident type',
+                'Type',
                 'Quantity',
                 'Description',
-                'Actions taken'
+                'Actions taken',
+                'Status'
             ]
             sql_join = """ INNER JOIN reports.relinc AS rv_relinc
-                ON (rv.report_id = rv_relinc.report_id
-                AND rv.id = rv_relinc.version_id)"""
+                ON (lv.report_id = rv_relinc.report_id
+                AND lv.version_id = rv_relinc.version_id);"""
         # Report type 2: Casualty
         elif type_id == 2:
             #continue
             sql += """,
                 rv_casualty.type_id AS casualty_type,
-                CONCAT(rv_casualty.lname, ', ', rv_casualty.fname, ' ', rv_casualty.mname),
+                CONCAT(rv_casualty.lname, ', ', rv_casualty.fname, ' ', rv_casualty.mname) AS casualty_name,
                 rv_casualty.age AS casualty_age,
                 rv_casualty.assignedsex_id AS casualty_assignedsex,
-                rv_casualty.region_id AS casualty_region,
-                rv_casualty.province_id AS casualty_province,
-                rv_casualty.citymun_id AS casualty_citymun,
-                rv_casualty.brgy_id AS casualty_brgy,
-                rv_casualty.street AS casualty_street,
                 rv_casualty.cause AS casualty_cause,
                 rv_casualty.infosource AS casualty_infosource,
                 rv_casualty.status_id AS casualty_status
                 """
             cols += [
-                'Casualty type',
+                'Type',
                 'Name',
                 'Age',
                 'Assigned sex at birth',
-                'Region',
-                'Province',
-                'City/municipality',
-                'Barangay',
-                'Street address',
                 'Cause',
                 'Source of information',
                 'Status'
             ]
             sql_join = """ INNER JOIN reports.casualty AS rv_casualty
-                ON (rv.report_id = rv_casualty.report_id
-                AND rv.id = rv_casualty.version_id)"""
+                ON (lv.report_id = rv_casualty.report_id
+                AND lv.version_id = rv_casualty.version_id);"""
         # Report type 3: Public utility status
         elif type_id == 3:
             #continue
@@ -648,14 +651,14 @@ def eve_eve_generatereports(modified_timestamp, event_id):
                 'Restoration time'
             ]
             sql_join = """ INNER JOIN reports.pubutilint AS rv_pubutilint
-                ON (rv.report_id = rv_pubutilint.report_id
-                AND rv.id = rv_pubutilint.version_id)"""
+                ON (lv.report_id = rv_pubutilint.report_id
+                AND lv.version_id = rv_pubutilint.version_id);"""
         # Report type 4: Damaged house
         elif type_id == 4:
             #continue
             sql += """,
                 rv_dmgdhouse.type_id AS dmgdhouse_type,
-                CONCAT(rv_dmgdhouse.lname, ', ', rv_dmgdhouse.fname, ' ', rv_dmgdhouse.mname) AS dmgdhouse_owner,
+                CONCAT(rv_dmgdhouse.lname, ', ', rv_dmgdhouse.fname, ' ', rv_dmgdhouse.mname) AS dmgdhouse_name,
                 rv_dmgdhouse.age AS dmgdhouse_age,
                 rv_dmgdhouse.assignedsex_id AS dmgdhouse_assignedsex,
                 rv_dmgdhouse.loc_text AS dmgdhouse_loctext,
@@ -663,15 +666,15 @@ def eve_eve_generatereports(modified_timestamp, event_id):
                 """
             cols += [
                 'Damage type',
-                'Homeowner name',
+                'Name of homeowner',
                 'Age',
                 'Assigned sex at birth',
                 'Location',
-                'GPS coordinates',
+                'GPS coordinates'
             ]
             sql_join = """ INNER JOIN reports.dmgdhouse AS rv_dmgdhouse
-                ON (rv.report_id = rv_dmgdhouse.report_id
-                AND rv.id = rv_dmgdhouse.version_id)"""
+                ON (lv.report_id = rv_dmgdhouse.report_id
+                AND lv.version_id = rv_dmgdhouse.version_id);"""
         # Report type 5: Public infrastructure status
         elif type_id == 5:
             #continue
@@ -684,33 +687,24 @@ def eve_eve_generatereports(modified_timestamp, event_id):
                 rv_dmgdinfra.dmgtype_id AS dmgdinfra_dmgtype,
                 rv_dmgdinfra.loc_text AS dmgdinfra_loctext,
                 rv_dmgdinfra.loc_gps AS dmgdinfra_locgps,
-                rv_dmgdinfra.infracost AS dmgdinfra_cost
+                rv_dmgdinfra.infracost AS dmgdinfra_infracost
                 """
             cols += [
-                'Infrastructure type',
-                'Infrastructure class',
+                'Type',
+                'Class',
                 'Name/description',
                 'Quantity',
                 'Units',
                 'Damage type',
                 'Location',
                 'GPS coordinates',
-                'Cost',
+                'Cost'
             ]
             sql_join = """ INNER JOIN reports.dmgdinfra AS rv_dmgdinfra
-                ON (rv.report_id = rv_dmgdinfra.report_id
-                AND rv.id = rv_dmgdinfra.version_id)"""
+                ON (lv.report_id = rv_dmgdinfra.report_id
+                AND lv.version_id = rv_dmgdinfra.version_id);"""
         
-        sql += """ FROM reports.report AS r
-            INNER JOIN reports.reportversion AS rv
-            ON rv.id = (
-                SELECT id
-                FROM reports.reportversion AS rv
-                WHERE r.id = rv.report_id
-                ORDER BY id DESC LIMIT 1
-            )"""
-        sql += sql_join
-        sql += """ WHERE r.event_id = %s AND r.type_id = %s;"""
+        sql += """ FROM latest_version lv %s""" % sql_join
         
         values = [int(event_id), int(type_id)]
         #print(sql, values, cols)
