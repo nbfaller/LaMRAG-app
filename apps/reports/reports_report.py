@@ -1049,7 +1049,7 @@ def rep_rep_submitcreation(
             return [
                 alert_open, alert_class_name, alert_color, alert_col_text,
                 password_invalid, password_valid,
-                class_review, class_return, class_confirm, class_tohome,
+                class_review, class_return, class_tohome, class_confirm,
                 modal_backdrop,
                 class_password
             ]

@@ -8,6 +8,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 from urllib.parse import urlparse, parse_qs
+from datetime import datetime
+import pytz
 # App definition
 from app import app
 from apps import dbconnect as db
@@ -92,7 +94,27 @@ layout = html.Div(
                                                             'overflow' : 'scroll'
                                                         }
                                                     )
-                                                ], #class_name = row_m
+                                                ], class_name = row_m
+                                            ),
+                                            dbc.Row(
+                                                [
+                                                    dbc.Col(
+                                                        dbc.Button(
+                                                            [
+                                                                html.I(className = 'bi bi-toggle-off me-2'),
+                                                                "Deactivate this event"
+                                                            ],
+                                                            id = 'eve_eve_btn_activate',
+                                                            style = {'width': ' 100%'},
+                                                            color = 'primary',
+                                                            #outline = True,
+                                                            external_link = True
+                                                            #type = 'submit'
+                                                        ),
+                                                        class_name = 'd-inline align-self-center mb-2 mb-md-0 col-12 col-md-6 col-xl-auto'
+                                                    ),
+                                                ],
+                                                class_name = 'justify-content-end'
                                             )
                                         #]
                                     #),
@@ -226,6 +248,21 @@ layout = html.Div(
                                             [
                                                 dbc.Accordion(
                                                     id = 'eve_eve_acc_reports'
+                                                ),
+                                                html.Small(
+                                                    [
+                                                        """Ungod ug sakto ini nga consolidated report yana nga """,
+                                                        html.Span(id = 'eve_eve_spa_reporttimestamp_war'),
+                                                        """. Diri api sini nga mga ihap an mga report nga puprubaran pa.""",
+                                                        html.Small(
+                                                            [
+                                                                """ (This consolidated report is true and correct as of """,
+                                                                html.Span(id = 'eve_eve_spa_reporttimestamp_en'),
+                                                                """. Unverified reports are not included in these tallies.)"""
+                                                            ]
+                                                        )
+                                                    ],
+                                                    className = 'text-muted'
                                                 )
                                             ]
                                         )
@@ -299,6 +336,8 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
                     'Kamutangan (Status)', 'Oras san kamutangan (Status time)'
                 ]
                 df = db.querydatafromdatabase(sql, values, cols)
+
+                df.loc[0, 'Kamutangan (Status)'] = 'Active' if df.loc[0, 'Kamutangan (Status)'] == 'true' else 'Deactivated'
 
                 # Header
                 to_return.append(df['Name'][0])
@@ -379,7 +418,7 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
                 to_return.append(table)
 
                 # Stacked area chart of reports filed
-                sql = """SELECT rv.status_time,
+                sql = """SELECT rv.occurrence_date,
                 CONCAT(rt.symbol, ' ', rt.label_war, ' (', rt.label_en, ')') AS report_type
                 FROM reports.reportversion AS rv
                 LEFT JOIN reports.report AS r ON rv.report_id = r.id
@@ -392,11 +431,11 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
                 AND rv.status_id = 2;
                 """
                 values = [region, province, citymun, event_id]
-                cols = ['Validation time', 'Report type']
+                cols = ['Occurrence date', 'Report type']
                 df = db.querydatafromdatabase(sql, values, cols)
                 #print(df)
-                df['Validation time'] = pd.to_datetime(df['Validation time'])
-                df = df.groupby([df['Validation time'], 'Report type']).size().unstack(fill_value = 0).cumsum().reset_index()
+                #df['Occurrence date'] = pd.to_datetime(df['Validation time'])
+                df = df.groupby([df['Occurrence date'], 'Report type']).size().unstack(fill_value = 0).cumsum().reset_index()
                 df.columns.name = None
                 #print(df)
 
@@ -404,7 +443,7 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
                 for event in df.columns[1:]:
                     traces.append(
                         go.Scatter(
-                            x = df['Validation time'],
+                            x = df['Occurrence date'],
                             y = df[event],
                             mode = 'lines',
                             name = event,
@@ -514,7 +553,8 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
     ],
     [
         State('eve_eve_sto_eventid', 'data')
-    ]
+    ],
+    prevent_initial_call = True
 )
 
 def eve_eve_generatereports(modified_timestamp, event_id):
@@ -524,14 +564,175 @@ def eve_eve_generatereports(modified_timestamp, event_id):
         ORDER BY id ASC;"""
     values = []
     cols = ['id', 'label', 'table']
-    df = db.querydatafromdatabase(sql, values, cols)
+    types = db.querydatafromdatabase(sql, values, cols)
     
-    for i, row in df.iterrows():
-        #sql2 = """SELECT * FROM reports.reportversion
-        #    LEFT JOIN reports.%s ON reportversion."""
+    for type_id in range(1, len(types) + 1):
+        sql = """SELECT
+        r.id AS report_id,
+        rv.id AS version_id,
+        r.purok AS purok,
+        rv.remarks AS remarks"""
+        values = []
+        cols = ['ID', 'Version', 'Purok', 'Remarks']
+        sql_join = ""
+        #print(i)
+        # Report type 1: Related incident
+        if type_id == 1:
+            #continue
+            sql += """,
+                rv_relinc.type_id AS relinc_type,
+                rv_relinc.qty AS reinc_qty,
+                rv_relinc.description AS relinc_desc,
+                rv_relinc.actions_taken AS relinc_actionstaken
+                """
+            cols += [
+                'Related incident type',
+                'Quantity',
+                'Description',
+                'Actions taken'
+            ]
+            sql_join = """ INNER JOIN reports.relinc AS rv_relinc
+                ON (rv.report_id = rv_relinc.report_id
+                AND rv.id = rv_relinc.version_id)"""
+        # Report type 2: Casualty
+        elif type_id == 2:
+            #continue
+            sql += """,
+                rv_casualty.type_id AS casualty_type,
+                CONCAT(rv_casualty.lname, ', ', rv_casualty.fname, ' ', rv_casualty.mname),
+                rv_casualty.age AS casualty_age,
+                rv_casualty.assignedsex_id AS casualty_assignedsex,
+                rv_casualty.region_id AS casualty_region,
+                rv_casualty.province_id AS casualty_province,
+                rv_casualty.citymun_id AS casualty_citymun,
+                rv_casualty.brgy_id AS casualty_brgy,
+                rv_casualty.street AS casualty_street,
+                rv_casualty.cause AS casualty_cause,
+                rv_casualty.infosource AS casualty_infosource,
+                rv_casualty.status_id AS casualty_status
+                """
+            cols += [
+                'Casualty type',
+                'Name',
+                'Age',
+                'Assigned sex at birth',
+                'Region',
+                'Province',
+                'City/municipality',
+                'Barangay',
+                'Street address',
+                'Cause',
+                'Source of information',
+                'Status'
+            ]
+            sql_join = """ INNER JOIN reports.casualty AS rv_casualty
+                ON (rv.report_id = rv_casualty.report_id
+                AND rv.id = rv_casualty.version_id)"""
+        # Report type 3: Public utility status
+        elif type_id == 3:
+            #continue
+            sql += """,
+                rv_pubutilint.pubutil_id AS pubutilint_pubutil,
+                rv_pubutilint.inttype_id AS pubutilint_type,
+                rv_pubutilint.int_date AS pubutilint_intdate,
+                rv_pubutilint.int_time AS pubutilint_inttime,
+                rv_pubutilint.res_date AS pubutilint_resdate,
+                rv_pubutilint.res_time AS pubutilint_restime
+                """
+            cols += [
+                'Public utility',
+                'Interruption type',
+                'Interruption date',
+                'Interruption time',
+                'Restoration date',
+                'Restoration time'
+            ]
+            sql_join = """ INNER JOIN reports.pubutilint AS rv_pubutilint
+                ON (rv.report_id = rv_pubutilint.report_id
+                AND rv.id = rv_pubutilint.version_id)"""
+        # Report type 4: Damaged house
+        elif type_id == 4:
+            #continue
+            sql += """,
+                rv_dmgdhouse.type_id AS dmgdhouse_type,
+                CONCAT(rv_dmgdhouse.lname, ', ', rv_dmgdhouse.fname, ' ', rv_dmgdhouse.mname) AS dmgdhouse_owner,
+                rv_dmgdhouse.age AS dmgdhouse_age,
+                rv_dmgdhouse.assignedsex_id AS dmgdhouse_assignedsex,
+                rv_dmgdhouse.loc_text AS dmgdhouse_loctext,
+                rv_dmgdhouse.loc_gps AS dmgdhouse_locgps
+                """
+            cols += [
+                'Damage type',
+                'Homeowner name',
+                'Age',
+                'Assigned sex at birth',
+                'Location',
+                'GPS coordinates',
+            ]
+            sql_join = """ INNER JOIN reports.dmgdhouse AS rv_dmgdhouse
+                ON (rv.report_id = rv_dmgdhouse.report_id
+                AND rv.id = rv_dmgdhouse.version_id)"""
+        # Report type 5: Public infrastructure status
+        elif type_id == 5:
+            #continue
+            sql += """,
+                rv_dmgdinfra.infratype_id AS dmgdinfra_type,
+                rv_dmgdinfra.infraclass_id AS dmgdinfra_class,
+                rv_dmgdinfra.infraname AS dmgdinfra_name,
+                rv_dmgdinfra.qty AS dmgdinfra_qty,
+                rv_dmgdinfra.qtyunit_id AS dmgdinfra_qtyunit,
+                rv_dmgdinfra.dmgtype_id AS dmgdinfra_dmgtype,
+                rv_dmgdinfra.loc_text AS dmgdinfra_loctext,
+                rv_dmgdinfra.loc_gps AS dmgdinfra_locgps,
+                rv_dmgdinfra.infracost AS dmgdinfra_cost
+                """
+            cols += [
+                'Infrastructure type',
+                'Infrastructure class',
+                'Name/description',
+                'Quantity',
+                'Units',
+                'Damage type',
+                'Location',
+                'GPS coordinates',
+                'Cost',
+            ]
+            sql_join = """ INNER JOIN reports.dmgdinfra AS rv_dmgdinfra
+                ON (rv.report_id = rv_dmgdinfra.report_id
+                AND rv.id = rv_dmgdinfra.version_id)"""
+        
+        sql += """ FROM reports.report AS r
+            INNER JOIN reports.reportversion AS rv
+            ON rv.id = (
+                SELECT id
+                FROM reports.reportversion AS rv
+                WHERE r.id = rv.report_id
+                ORDER BY id DESC LIMIT 1
+            )"""
+        sql += sql_join
+        sql += """ WHERE r.event_id = %s AND r.type_id = %s;"""
+        
+        values = [int(event_id), int(type_id)]
+        #print(sql, values, cols)
+        table_df = db.querydatafromdatabase(sql, values, cols)
+        table = dbc.Table.from_dataframe(
+            table_df,
+            striped = False,
+            bordered = False,
+            hover = True,
+            size = 'sm',
+        )
+
         accordion.append(
             dbc.AccordionItem(
-                title = row['label']
+                html.Div(
+                    table,
+                    style = {
+                        'max-width' : '100%',
+                        'overflow' : 'scroll'
+                    }
+                ),
+                title = types['label'][type_id - 1],
             )
         )
 
