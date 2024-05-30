@@ -759,18 +759,17 @@ def eve_eve_generatereports(modified_timestamp, event_id):
     content = [
         dbc.Accordion( 
             accordion,
-            start_collapsed = True
+            start_collapsed = True,
+            class_name = 'mb-1'
         ),
         html.Small(
             [
-                """Ungod ug sakto ini nga consolidated report yana nga """,
-                html.Span(id = 'eve_eve_spa_reporttimestamp_war'),
-                """. Diri api sini nga mga ihap an mga report nga puprubaran pa.""",
+                """Ungod ug sakto ini nga consolidated report yana nga %s.
+                Diri api sini nga mga ihap an mga report nga puprubaran pa.""" % (datetime.now(pytz.timezone('Asia/Manila')).strftime("%Y-%m-%d, %H:%M:%S")),
                 html.Small(
                     [
-                        """ (This consolidated report is true and correct as of """,
-                        html.Span(id = 'eve_eve_spa_reporttimestamp_en'),
-                        """. Unverified reports are not included in these tallies.)"""
+                        """ (This consolidated report is true and correct as of %s.
+                        Unverified reports are not included in these tallies.)"""  % (datetime.now(pytz.timezone('Asia/Manila')).strftime("%Y-%m-%d at %H:%M:%S"))
                     ]
                 )
             ],

@@ -245,7 +245,7 @@ layout = html.Div(
                                             [
                                                 html.A(
                                                     [
-                                                        html.I(className = 'bi bi-arrow-return-left me-2'),
+                                                        html.I(className = 'bi bi-folder me-2'),
                                                         "Balik sa mga report",
                                                         html.Small(" (Return to reports)", className = 'text-muted')
                                                     ],
