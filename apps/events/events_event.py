@@ -221,7 +221,8 @@ layout = html.Div(
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-5 col-lg-4'
                                         )
-                                    ]
+                                    ],
+                                    class_name = row_m
                                 ),
                                 dbc.Row(
                                     [
@@ -266,6 +267,31 @@ layout = html.Div(
                                 ),
                             ],
                             className = div_m
+                        ),
+                        html.Hr(),
+                        html.Div(
+                            [
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.A(
+                                                    [
+                                                        html.I(className = 'bi bi-arrow-return-left me-2'),
+                                                        "Balik sa mga panhitabó",
+                                                        html.Small(" (Return to events)", className = 'text-muted')
+                                                    ],
+                                                    href = '/events'
+                                                )
+                                            ],
+                                            class_name = 'col-auto'
+                                        )
+                                    ],
+                                    class_name = row_m + ' justify-content-end'
+                                )
+                            ],
+                            id = 'eve_eve_div_footer',
+                            className = footer_m
                         )
                     ],
                     class_name = 'col-md-10'
@@ -547,12 +573,18 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
         Input('eve_eve_sto_eventid', 'modified_timestamp')
     ],
     [
-        State('eve_eve_sto_eventid', 'data')
+        State('eve_eve_sto_eventid', 'data'),
+        State('app_region_id', 'data'),
+        State('app_province_id', 'data'),
+        State('app_citymun_id', 'data'),
     ],
     prevent_initial_call = True
 )
 
-def eve_eve_generateconsreports(modified_timestamp, event_id):
+def eve_eve_generateconsreports(
+    modified_timestamp, event_id,
+    region, province, citymun
+):
     accordion = []
     sql = """SELECT id, CONCAT(symbol, ' ', label_war, ' (', label_en, ')'), table_nm
         FROM utilities.reporttype
@@ -565,23 +597,28 @@ def eve_eve_generateconsreports(modified_timestamp, event_id):
         sql = """WITH latest_version AS (
                 SELECT DISTINCT ON (r.id)
                     r.id AS report_id,
+                    ab.name AS brgy,
                     rv.id AS version_id,
                     r.purok AS purok,
                     rv.remarks AS remarks
                 FROM reports.report AS r
                 INNER JOIN reports.reportversion AS rv
-                ON r.id = rv.report_id
+                    ON r.id = rv.report_id
+                INNER JOIN utilities.addressbrgy AS ab
+                    ON (r.region_id = ab.region_id AND r.province_id = ab.province_id AND r.citymun_id = ab.citymun_id AND r.brgy_id = ab.id)
                 WHERE r.event_id = %s AND r.type_id = %s
                 ORDER BY r.id, rv.id DESC)
             SELECT /*lv.report_id AS id,
                 lv.version_id AS version,*/
+                lv.brgy AS brgy,
                 lv.purok AS purok,
                 lv.remarks AS remarks
             """
-        values = [event_id, type_id]
+        values = [int(event_id), int(type_id)]
         cols = [
             #'ID',
             #'Version',
+            'Barangay',
             'Purok',
             'Remarks']
         sql_join = ""
@@ -733,7 +770,7 @@ def eve_eve_generateconsreports(modified_timestamp, event_id):
         
         sql += """ FROM latest_version lv %s""" % sql_join
         
-        values = [int(event_id), int(type_id)]
+        #values = [int(event_id), int(type_id)]
         #print(sql, values, cols)
         table_df = db.querydatafromdatabase(sql, values, cols)
 
@@ -825,7 +862,130 @@ def eve_eve_generatesumreports(
     types = db.querydatafromdatabase(sql, values, cols)
     
     for type_id in range(1, len(types) + 1):
-        if type_id == 2:
-            """SELECT ab.name AS barangay
-            """
+        sql = """
+            WITH latest_version AS (
+                SELECT DISTINCT ON (r.id)
+                    r.id AS report_id,
+                    rv.id AS version_id,
+                    ab.name AS brgy,
+                    r.purok AS purok,
+                    rv.remarks AS remarks
+                FROM reports.report AS r
+                INNER JOIN reports.reportversion AS rv
+                    ON r.id = rv.report_id
+                LEFT JOIN utilities.addressbrgy AS ab
+                    ON (r.region_id = ab.region_id AND r.province_id = ab.province_id AND r.citymun_id = ab.citymun_id AND r.brgy_id = ab.id)
+                WHERE r.event_id = %s AND r.type_id = %s
+                ORDER BY r.id, rv.id DESC
+            )
+            SELECT /*lv.report_id AS id,
+                lv.version_id AS version,*/
+                lv.brgy AS brgy
+        """
+        values = [int(event_id), int(type_id)]
+        cols = ['Barangay']
+        sql_join = ""
+        
+        # Report type 1: Related incident
+        if type_id == 1:
+            sql2 = """SELECT id, label_en FROM utilities.relinctype;"""
+            values2 = []
+            cols2 = ['id', 'label']
+            df2 = db.querydatafromdatabase(sql2, values2, cols2)
+
+            for i in range(0, len(df2)):
+                sql += """,
+                    COUNT (CASE WHEN rv_relinc.type_id = %s THEN 1 END) AS 
+                    """
+                #if i < len(df2): sql += ""","""
+                sql += "col_" + str(df2['id'][i])
+                values += [int(df2['id'][i])]
+                cols += [df2['label'][i]]
+
+            sql_join = """ INNER JOIN reports.relinc AS rv_relinc
+                    ON (lv.report_id = rv_relinc.report_id
+                    AND lv.version_id = rv_relinc.version_id)"""
+        # Report type 2: Casualty
+        elif type_id == 2:
+            sql2 = """SELECT ucs.id, ucs.label_en, uct.id, uct.label_en
+            FROM utilities.casualtytype AS uct
+            CROSS JOIN utilities.casualtystatus AS ucs
+            ORDER BY ucs.id, uct.id;"""
+            values2 = []
+            cols2 = ['status_id', 'status', 'type_id', 'type']
+            df2 = db.querydatafromdatabase(sql2, values2, cols2)
+
+            for i in range(0, len(df2)):
+                sql += """,
+                    COUNT (CASE WHEN rv_casualty.status_id = %s AND rv_casualty.type_id = %s THEN 1 END) AS 
+                    """
+                #if i < len(df2): sql += ""","""
+                sql += "col_" + str(df2['status_id'][i]) + "_" + str(df2['type_id'][i])
+                values += [int(df2['status_id'][i]), int(df2['type_id'][i])]
+                cols += [df2['status'][i] + ' - ' + df2['type'][i]]
+
+            sql_join = """ INNER JOIN reports.casualty AS rv_casualty
+                    ON (lv.report_id = rv_casualty.report_id
+                    AND lv.version_id = rv_casualty.version_id)"""
+            
+        sql += """ FROM latest_version AS lv %s
+            GROUP BY lv.brgy ORDER BY lv.brgy;
+        """ % sql_join
+        table_df = db.querydatafromdatabase(sql, values, cols)
+
+        table = None
+        if table_df.shape[0]:
+            table = dbc.Table.from_dataframe(
+                table_df,
+                striped = False,
+                bordered = False,
+                hover = True,
+                size = 'sm',
+            )
+        else:
+            table = html.H3(
+                [
+                    html.I(className = 'bi bi-search me-2'),
+                    html.Br(),
+                    "Waray report sini nga klase an ginhimo.",
+                    html.Br(),
+                    html.Small("(No reports of this type were made.)")
+                ],
+                className = 'mb-0 text-center text-muted'
+            ),
+
+        accordion.append(
+            dbc.AccordionItem(
+                html.Div(
+                    table,
+                    style = {
+                        'max-width' : '100%',
+                        'overflow' : 'scroll'
+                    }
+                ),
+                title = types['label'][type_id - 1],
+            )
+        )
+    
+    content = [
+        dbc.Accordion( 
+            accordion,
+            start_collapsed = True,
+            class_name = 'mb-1'
+        ),
+        html.Small(
+            [
+                """Ungod ug sakto ini nga consolidated report yana nga %s.
+                Diri api sini nga mga ihap an mga report nga puprubaran pa.""" % (datetime.now(pytz.timezone('Asia/Manila')).strftime("%Y-%m-%d, %H:%M:%S")),
+                html.Small(
+                    [
+                        """ (This consolidated report is true and correct as of %s.
+                        Unverified reports are not included in these tallies.)"""  % (datetime.now(pytz.timezone('Asia/Manila')).strftime("%Y-%m-%d at %H:%M:%S"))
+                    ]
+                )
+            ],
+            className = 'text-muted'
+        )
+    ]
+    
     return [content]

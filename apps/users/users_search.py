@@ -210,6 +210,31 @@ layout = html.Div(
                                 ),
                             ],
                             id = 'usr_src_div_logchart'
+                        ),
+                        html.Hr(),
+                        html.Div(
+                            [
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.A(
+                                                    [
+                                                        html.I(className = 'bi bi-arrow-return-left me-2'),
+                                                        "Balik sa dashboard",
+                                                        html.Small(" (Return to dashboard)", className = 'text-muted')
+                                                    ],
+                                                    href = '/dashboard'
+                                                )
+                                            ],
+                                            class_name = 'col-auto'
+                                        )
+                                    ],
+                                    class_name = row_m + ' justify-content-end'
+                                )
+                            ],
+                            id = 'usr_src_div_footer',
+                            className = footer_m
                         )
                     ],
                     class_name = 'col-md-10'

@@ -245,7 +245,7 @@ layout = html.Div(
                                             [
                                                 html.A(
                                                     [
-                                                        html.I(className = 'bi bi-folder me-2'),
+                                                        html.I(className = 'bi bi-arrow-return-left me-2'),
                                                         "Balik sa mga report",
                                                         html.Small(" (Return to reports)", className = 'text-muted')
                                                     ],
@@ -363,7 +363,7 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Button(
                                                 [
-                                                    html.I(className = 'bi bi-arrow-return-left me-2'),
+                                                    html.I(className = 'bi bi-folder me-2'),
                                                     "Balik sa reports (Return to reports)"
                                                 ],
                                                 id = 'rep_rep_btn_return',
