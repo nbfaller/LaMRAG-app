@@ -223,6 +223,17 @@ layout = html.Div(
                                         )
                                     ]
                                 ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.Div(
+                                                    id = 'eve_eve_div_sumreports'
+                                                ),
+                                            ]
+                                        )
+                                    ], class_name = row_m
+                                ),
                             ],
                             id = 'eve_eve_div_data',
                             className = div_m
@@ -235,7 +246,7 @@ layout = html.Div(
                                         html.H4(
                                             [
                                                 html.I(className = 'bi bi-clipboard-data-fill me-2'),
-                                                "Mga ginhimo nga consolidated report",
+                                                "Mga consolidated report",
                                                 #html.Br(),
                                                 html.Small(" (Generated consolidated reports)", className = 'text-muted')
                                             ]
@@ -247,7 +258,7 @@ layout = html.Div(
                                         dbc.Col(
                                             [
                                                 html.Div(
-                                                    id = 'eve_eve_div_reports'
+                                                    id = 'eve_eve_div_consreports'
                                                 ),
                                             ]
                                         )
@@ -530,7 +541,7 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
 # Callback for generating consolidated reports
 @app.callback(
     [
-        Output('eve_eve_div_reports', 'children')
+        Output('eve_eve_div_consreports', 'children')
     ],
     [
         Input('eve_eve_sto_eventid', 'modified_timestamp')
@@ -541,7 +552,7 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
     prevent_initial_call = True
 )
 
-def eve_eve_generatereports(modified_timestamp, event_id):
+def eve_eve_generateconsreports(modified_timestamp, event_id):
     accordion = []
     sql = """SELECT id, CONCAT(symbol, ' ', label_war, ' (', label_en, ')'), table_nm
         FROM utilities.reporttype
@@ -562,13 +573,17 @@ def eve_eve_generatereports(modified_timestamp, event_id):
                 ON r.id = rv.report_id
                 WHERE r.event_id = %s AND r.type_id = %s
                 ORDER BY r.id, rv.id DESC)
-            SELECT lv.report_id AS id,
-                lv.version_id AS version,
+            SELECT /*lv.report_id AS id,
+                lv.version_id AS version,*/
                 lv.purok AS purok,
                 lv.remarks AS remarks
             """
         values = [event_id, type_id]
-        cols = ['ID', 'Version', 'Purok', 'Remarks']
+        cols = [
+            #'ID',
+            #'Version',
+            'Purok',
+            'Remarks']
         sql_join = ""
         #print(i)
         # Report type 1: Related incident
@@ -777,4 +792,40 @@ def eve_eve_generatereports(modified_timestamp, event_id):
         )
     ]
 
+    return [content]
+
+# Callback for generating consolidated reports
+@app.callback(
+    [
+        Output('eve_eve_div_sumreports', 'children')
+    ],
+    [
+        Input('eve_eve_sto_eventid', 'modified_timestamp')
+    ],
+    [
+        State('eve_eve_sto_eventid', 'data'),
+        State('app_region_id', 'data'),
+        State('app_province_id', 'data'),
+        State('app_citymun_id', 'data'),
+    ],
+    prevent_initial_call = True
+)
+
+def eve_eve_generatesumreports(
+    modified_timestamp, event_id,
+    region, province, citymun
+):
+    content = []
+    accordion = []
+    sql = """SELECT id, CONCAT(symbol, ' ', label_war, ' (', label_en, ')'), table_nm
+        FROM utilities.reporttype
+        ORDER BY id ASC;"""
+    values = []
+    cols = ['id', 'label', 'table']
+    types = db.querydatafromdatabase(sql, values, cols)
+    
+    for type_id in range(1, len(types) + 1):
+        if type_id == 2:
+            """SELECT ab.name AS barangay
+            """
     return [content]

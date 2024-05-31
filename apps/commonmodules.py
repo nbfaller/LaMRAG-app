@@ -386,34 +386,34 @@ sidebar = dbc.Offcanvas(
                     external_link = True,
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
-                dbc.Button(
-                    dbc.Row(
-                        dbc.Col(
-                            [
-                                html.I(className = 'bi bi-clipboard-plus me-2'),
-                                "Request a report"
-                            ],
-                            width = sidebar_btn_col_width
-                        ), class_name = sidebar_btn_row_class_name
-                    ),
-                    href = '/reports/request',
-                    external_link = True,
-                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
-                ),
-                dbc.Button(
-                    dbc.Row(
-                        dbc.Col(
-                            [
-                                html.I(className = 'bi bi-printer me-2'),
-                                "Generate a consolidated report"
-                            ],
-                            width = sidebar_btn_col_width
-                        ), class_name = sidebar_btn_row_class_name
-                    ),
-                    href = '/reports/generate',
-                    external_link = True,
-                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
-                ),
+                #dbc.Button(
+                #    dbc.Row(
+                #        dbc.Col(
+                #            [
+                #                html.I(className = 'bi bi-clipboard-plus me-2'),
+                #                "Request a report"
+                #            ],
+                #            width = sidebar_btn_col_width
+                #        ), class_name = sidebar_btn_row_class_name
+                #    ),
+                #    href = '/reports/request',
+                #    external_link = True,
+                #    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
+                #),
+                #dbc.Button(
+                #    dbc.Row(
+                #        dbc.Col(
+                #            [
+                #                html.I(className = 'bi bi-printer me-2'),
+                #                "Generate a consolidated report"
+                #            ],
+                #            width = sidebar_btn_col_width
+                #        ), class_name = sidebar_btn_row_class_name
+                #    ),
+                #    href = '/reports/generate',
+                #    external_link = True,
+                #    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
+                #),
             ], className = 'mb-3',
         ),
         # Events Management
@@ -513,20 +513,20 @@ sidebar = dbc.Offcanvas(
                     style = sidebar_header_style,
                     className = 'mt-3 mb-2 text-uppercase'
                 ),
-                dbc.Button(
-                    dbc.Row(
-                        dbc.Col(
-                            [
-                                html.I(className = 'bi bi-map me-2'),
-                                "Submit barangay profile"
-                            ],
-                            width = sidebar_btn_col_width
-                        ), class_name = sidebar_btn_row_class_name
-                    ),
-                    href = '/data/barangay/upload',
-                    external_link = True,
-                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
-                ),
+                #dbc.Button(
+                #    dbc.Row(
+                #        dbc.Col(
+                #            [
+                #                html.I(className = 'bi bi-map me-2'),
+                #                "Submit barangay profile"
+                #            ],
+                #            width = sidebar_btn_col_width
+                #        ), class_name = sidebar_btn_row_class_name
+                #    ),
+                #    href = '/data/barangay/upload',
+                #    external_link = True,
+                #    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
+                #),
                 dbc.Button(
                     dbc.Row(
                         dbc.Col(
