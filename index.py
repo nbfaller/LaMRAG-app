@@ -13,8 +13,8 @@ from app import app
 from apps import dbconnect as db
 from apps import dashboard, home, commonmodules as cm, error, sandbox, about, forbidden
 from apps.users import users_register, users_search
-from apps.reports import reports_create, reports_view, reports_report
-from apps.events import events_create, events_event, events_view
+from apps.reports import reports, reports_create, reports_report
+from apps.events import events, events_create, events_event
 from apps.data import data_activate, data_barangays, data_demographics
 from apps.data.household import data_household_upload
 from apps.data.barangay import data_barangay_upload
@@ -91,36 +91,44 @@ def displaypage(pathname, search, sessionlogout, user_id, usertype_id, brgy_id):
         eventid = ctx.triggered[0]['prop_id'].split('.')[0]
         if eventid == 'url':
             if user_id < 0: # If logged out
+                public_paths = [
+                    '/about',
+                    '/data/barangays',
+                    '/data/demographics',
+                    '/events',
+                    '/events/event'
+                ]
                 if pathname == '/' or pathname == '/home':
                     returnlayout = home.layout
-                elif pathname == '/about' or pathname == '/about-lamrag':
-                    returnlayout = about.layout
-                elif pathname == '/data/barangays':
-                    returnlayout = data_barangays.layout
-                elif pathname == '/data/demographics':
-                    returnlayout = data_demographics.layout
+                elif pathname in public_paths:
+                    returnlayout = eval(pathname.replace('/', '_').replace('-', '_')[1:] + '.layout')
                 else:
                     returnlayout = error.layout
             else:
+                access_control = {
+                    # Public access
+                    '/about': [1, 2, 3],
+                    '/data/barangays' : [1, 2, 3],
+                    '/data/demographics' : [1, 2, 3],
+                    '/events' : [1, 2, 3],
+                    '/events/event' : [1, 2, 3],
+                    # Common access
+                    '/dashboard' : [1, 2, 3],
+                    '/reports' : [1, 2, 3],
+                    '/reports/create' : [1, 2, 3],
+                    '/data/household/upload' : [1, 2, 3],
+                    '/data/barangay/upload' : [1, 2, 3],
+                    # Administrator-restricted
+                    '/users/search' : [2, 3],
+                    # Superadministrator-restricted
+                    '/users/register' : [3],
+                    '/events/create' : [3],
+                    '/data/activate' : [3],
+                    '/sandbox' : [3],
+                }
                 if pathname == '/logout':
                     returnlayout = home.layout
                     sessionlogout = True
-                elif pathname == '/about' or pathname == '/about-lamrag':
-                    returnlayout = about.layout
-                elif pathname == '/data/barangays':
-                    returnlayout = data_barangays.layout
-                elif pathname == '/data/demographics':
-                    returnlayout = data_demographics.layout
-                elif pathname == '/dashboard':
-                    returnlayout = dashboard.layout
-                elif pathname == '/users/register':
-                    returnlayout = users_register.layout
-                elif pathname == '/users/search':
-                    returnlayout = users_search.layout
-                elif pathname == '/reports' or pathname == '/reports/view':
-                    returnlayout = reports_view.layout
-                elif pathname == '/reports/create':
-                    returnlayout = reports_create.layout
                 elif pathname == '/reports/report':
                     if brgy_id > 0:
                         parsed = urlparse(search)
@@ -138,21 +146,11 @@ def displaypage(pathname, search, sessionlogout, user_id, usertype_id, brgy_id):
                             returnlayout = error.layout
                     else:
                         returnlayout = reports_report.layout
-                elif pathname == '/events' or pathname == '/events/view':
-                    returnlayout = events_view.layout
-                elif pathname == '/events/create':
-                    returnlayout = events_create.layout
-                elif pathname == '/events/event':
-                    returnlayout = events_event.layout
-                elif pathname == '/data/activate':
-                    returnlayout = data_activate.layout
-                elif pathname == '/data/household/upload':
-                    returnlayout = data_household_upload.layout
-                elif pathname == '/data/barangay/upload':
-                    returnlayout = data_barangay_upload.layout
-                # SANDBOX PAGE
-                elif pathname == '/sandbox':
-                    returnlayout = sandbox.layout
+                elif pathname in access_control:
+                    if usertype_id in access_control[pathname]:
+                        returnlayout = eval(pathname.replace('/', '_').replace('-', '_')[1:] + '.layout')
+                    else:
+                        returnlayout = forbidden.layout
                 else:
                     returnlayout = error.layout
             # Decide sessionlogout value
