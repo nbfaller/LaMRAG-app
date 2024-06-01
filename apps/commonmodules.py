@@ -64,7 +64,7 @@ def cm_opensidebar(btn):
     ],
 )
 
-def com_mod_setgreeting(sessionlogout, user_id):
+def cm_setgreeting(sessionlogout, user_id):
     # Navbar
     class_name = 'd-none'
     icon_className = None
@@ -269,6 +269,209 @@ navbar = dbc.Navbar(
     }
 )
 
+# Callback for displaying buttons per user type
+@app.callback(
+    [
+        Output('sidebar_div_repmgt', 'children'),
+        Output('sidebar_div_repmgt', 'className'),
+        Output('sidebar_div_evemgt', 'children'),
+        Output('sidebar_div_evemgt', 'className'),
+        Output('sidebar_div_usrmgt', 'children'),
+        Output('sidebar_div_usrmgt', 'className'),
+        Output('sidebar_div_datmgt', 'children'),
+        Output('sidebar_div_datmgt', 'className'),
+    ],
+    [
+        Input('app_sessionlogout', 'data'),
+        Input('app_usertype_id', 'data'),
+    ],
+    prevent_initial_call = True
+)
+
+def cm_setsidebarbtns(sessionlogout, usertype):
+    repmgt = []
+    repmgt_class = 'd-none'
+    evemgt = []
+    evemgt_class = 'd-none'
+    usrmgt = []
+    usrmgt_class = 'd-none'
+    datmgt = []
+    datmgt_class = 'd-none'
+    if not(sessionlogout) and usertype >= 1:
+        repmgt_class = 'mb-3'
+        repmgt = [
+            html.Sup(
+                "Reports Management",
+                style = sidebar_header_style,
+                className = 'mt-3 mb-2 text-uppercase'
+            ),
+            dbc.Button(
+                dbc.Row(
+                    dbc.Col(
+                        [
+                            html.I(className = 'bi bi-clipboard-data me-2'),
+                            "View reports"
+                        ],
+                        width = sidebar_btn_col_width
+                    ), class_name = sidebar_btn_row_class_name
+                ),
+                href = '/reports',
+                external_link = True,
+                color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
+            ),
+            dbc.Button(
+                dbc.Row(
+                    dbc.Col(
+                        [
+                            html.I(className = 'bi bi-send-exclamation me-2'),
+                            "File a report"
+                        ],
+                        width = sidebar_btn_col_width
+                    ), class_name = sidebar_btn_row_class_name
+                ),
+                href = '/reports/create?mode=new',
+                external_link = True,
+                color = 'warning', outline = True,
+                size = sidebar_btn_size,
+                style = {
+                    'width' : '100%',
+                    'border-width' : '0px'
+                }
+            ),
+        ]
+        evemgt_class = 'mb-3'
+        evemgt = [
+            html.Sup(
+                "Events Management",
+                style = sidebar_header_style,
+                className = 'mt-3 mb-2 text-uppercase'
+            ),
+            dbc.Button(
+                dbc.Row(
+                    dbc.Col(
+                        [
+                            html.I(className = 'bi bi-journal-bookmark me-2'),
+                            "View events"
+                        ],
+                        width = sidebar_btn_col_width
+                    ), class_name = sidebar_btn_row_class_name
+                ),
+                href = '/events',
+                external_link = True,
+                color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
+            ),
+        ]
+        datmgt_class = 'mb-3'
+        datmgt = [
+            html.Sup(
+                "Data Management",
+                style = sidebar_header_style,
+                className = 'mt-3 mb-2 text-uppercase'
+            ),
+            dbc.Button(
+                dbc.Row(
+                    dbc.Col(
+                        [
+                            html.I(className = 'bi bi-house-add me-2'),
+                            "Submit household profile"
+                        ],
+                        width = sidebar_btn_col_width
+                    ), class_name = sidebar_btn_row_class_name
+                ),
+                href = '/data/household/upload',
+                external_link = True,
+                color = 'warning', outline = True,
+                size = sidebar_btn_size,
+                style = {
+                    'width' : '100%',
+                    'border-width' : '0px'
+                }
+            ),
+        ]
+        if usertype >= 2:
+            usrmgt_class = 'mb-3'
+            usrmgt = [
+                html.Sup(
+                    "User Management",
+                    style = sidebar_header_style,
+                    className = 'mt-3 mb-2 text-uppercase'
+                ),
+                dbc.Button(
+                    dbc.Row(
+                        dbc.Col(
+                            [
+                                html.I(className = 'bi bi-search me-2'),
+                                "Search users"
+                            ],
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
+                    href = '/users/search',
+                    external_link = True,
+                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
+                ),
+            ]
+        if usertype >= 3:
+            evemgt += [
+                dbc.Button(
+                    dbc.Row(
+                        dbc.Col(
+                            [
+                                html.I(className = 'bi bi-exclamation-square me-2'),
+                                "Create an event"
+                            ],
+                            width = sidebar_btn_col_width), class_name = sidebar_btn_row_class_name),
+                    href = '/events/create',
+                    external_link = True,
+                    color = 'warning', outline = True,
+                    size = sidebar_btn_size,
+                    style = {
+                        'width' : '100%',
+                        'border-width' : '0px'
+                    }
+                )
+            ]
+            usrmgt += [
+                dbc.Button(
+                    dbc.Row(
+                        dbc.Col(
+                            [
+                                html.I(className = 'bi bi-person-add me-2'),
+                                "Register new user"
+                            ],
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
+                    href = '/users/register',
+                    external_link = True,
+                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
+                ),
+            ]
+            datmgt += [
+                dbc.Button(
+                    dbc.Row(
+                        dbc.Col(
+                            [
+                                html.I(className = 'bi bi-toggle-on me-2'),
+                                "Activate community profiling"
+                            ],
+                            width = sidebar_btn_col_width
+                        ), class_name = sidebar_btn_row_class_name
+                    ),
+                    href = '/data/activate',
+                    external_link = True,
+                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
+                ),
+            ]
+
+    else: raise PreventUpdate
+    return [
+        repmgt, repmgt_class,
+        evemgt, evemgt_class,
+        usrmgt, usrmgt_class,
+        datmgt, datmgt_class
+    ]
+
 # Sidebar
 sidebar_btn_color = 'dark'
 sidebar_btn_size = 'sm'
@@ -282,20 +485,6 @@ sidebar = dbc.Offcanvas(
         # Main buttons
         html.Div(
             [
-                #dbc.Button(
-                #    dbc.Row(
-                #        dbc.Col(
-                #            [
-                #                html.I(className = 'bi bi-house me-2'),
-                #                "Home"
-                #            ],
-                #            width = sidebar_btn_col_width
-                #        ), class_name = sidebar_btn_row_class_name
-                #    ),
-                #    href = '/',
-                #    external_link = True,
-                #    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
-                #),
                 dbc.Button(
                     dbc.Row(
                         dbc.Col(
@@ -338,229 +527,29 @@ sidebar = dbc.Offcanvas(
                     external_link = True,
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
-                dbc.Button(
-                    dbc.Row(
-                        dbc.Col(
-                            [
-                                html.I(className = 'bi bi-send-exclamation me-2'),
-                                "File a report"
-                            ],
-                            width = sidebar_btn_col_width
-                        ), class_name = sidebar_btn_row_class_name
-                    ),
-                    href = '/reports/create?mode=new',
-                    external_link = True,
-                    color = 'warning', outline = True, #sidebar_btn_color,
-                    size = sidebar_btn_size,
-                    style = {
-                        'width' : '100%',
-                        'border-width' : '0px'
-                    }
-                ),
             ],
             id = 'sidebar_div_mainbtns'
         ),
         html.Hr(),
         # Reports Management
         html.Div(
-            [
-                html.Sup(
-                    [
-                        #html.I(className = 'bi bi-clipboard-fill me-2'),
-                        "Reports Management"
-                    ],
-                    style = sidebar_header_style,
-                    className = 'mt-3 mb-2 text-uppercase'
-                ),
-                dbc.Button(
-                    dbc.Row(
-                        dbc.Col(
-                            [
-                                html.I(className = 'bi bi-clipboard-data me-2'),
-                                "View reports"
-                            ],
-                            width = sidebar_btn_col_width
-                        ), class_name = sidebar_btn_row_class_name
-                    ),
-                    href = '/reports',
-                    external_link = True,
-                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
-                ),
-                #dbc.Button(
-                #    dbc.Row(
-                #        dbc.Col(
-                #            [
-                #                html.I(className = 'bi bi-clipboard-plus me-2'),
-                #                "Request a report"
-                #            ],
-                #            width = sidebar_btn_col_width
-                #        ), class_name = sidebar_btn_row_class_name
-                #    ),
-                #    href = '/reports/request',
-                #    external_link = True,
-                #    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
-                #),
-                #dbc.Button(
-                #    dbc.Row(
-                #        dbc.Col(
-                #            [
-                #                html.I(className = 'bi bi-printer me-2'),
-                #                "Generate a consolidated report"
-                #            ],
-                #            width = sidebar_btn_col_width
-                #        ), class_name = sidebar_btn_row_class_name
-                #    ),
-                #    href = '/reports/generate',
-                #    external_link = True,
-                #    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
-                #),
-            ], className = 'mb-3',
+            id = 'sidebar_div_repmgt',
+            className = 'd-none',
         ),
         # Events Management
         html.Div(
-            [
-                html.Sup(
-                    [
-                        #html.I(className = 'bi bi-clipboard-fill me-2'),
-                        "Events Management"
-                    ],
-                    style = sidebar_header_style,
-                    className = 'mt-3 mb-2 text-uppercase'
-                ),
-                dbc.Button(
-                    dbc.Row(
-                        dbc.Col(
-                            [
-                                html.I(className = 'bi bi-journal-bookmark me-2'),
-                                "View events"
-                            ],
-                            width = sidebar_btn_col_width
-                        ), class_name = sidebar_btn_row_class_name
-                    ),
-                    href = '/events',
-                    external_link = True,
-                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
-                ),
-                dbc.Button(
-                    dbc.Row(
-                        dbc.Col(
-                            [
-                                html.I(className = 'bi bi-exclamation-square me-2'),
-                                "Create an event"
-                            ],
-                            width = sidebar_btn_col_width), class_name = sidebar_btn_row_class_name),
-                    href = '/events/create',
-                    external_link = True,
-                    color = 'warning', outline = True, #sidebar_btn_color,
-                    size = sidebar_btn_size,
-                    style = {
-                        'width' : '100%',
-                        'border-width' : '0px'
-                    }
-                )
-            ], className = 'mb-3'
+            id = 'sidebar_div_evemgt',
+            className = 'd-none'
         ),
         # User Management
         html.Div(
-            [
-                html.Sup(
-                    [
-                        #html.I(className = 'bi bi-person-fill me-2'),
-                        "User Management"
-                    ],
-                    style = sidebar_header_style,
-                    className = 'mt-3 mb-2 text-uppercase'
-                ),
-                dbc.Button(
-                    dbc.Row(
-                        dbc.Col(
-                            [
-                                html.I(className = 'bi bi-search me-2'),
-                                "Search users"
-                            ],
-                            width = sidebar_btn_col_width
-                        ), class_name = sidebar_btn_row_class_name
-                    ),
-                    href = '/users/search',
-                    external_link = True,
-                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
-                ),
-                dbc.Button(
-                    dbc.Row(
-                        dbc.Col(
-                            [
-                                html.I(className = 'bi bi-person-add me-2'),
-                                "Register new user"
-                            ],
-                            width = sidebar_btn_col_width
-                        ), class_name = sidebar_btn_row_class_name
-                    ),
-                    href = '/users/register',
-                    external_link = True,
-                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
-                ),
-            ], className = 'mb-3',
-            id = 'sidebar_div_usermgt'
+            id = 'sidebar_div_usrmgt',
+            className = 'd-none',
         ),
         # Data Management
         html.Div(
-            [
-                html.Sup(
-                    [
-                        #html.I(className = 'bi bi-clipboard-fill me-2'),
-                        "Data Management"
-                    ],
-                    style = sidebar_header_style,
-                    className = 'mt-3 mb-2 text-uppercase'
-                ),
-                #dbc.Button(
-                #    dbc.Row(
-                #        dbc.Col(
-                #            [
-                #                html.I(className = 'bi bi-map me-2'),
-                #                "Submit barangay profile"
-                #            ],
-                #            width = sidebar_btn_col_width
-                #        ), class_name = sidebar_btn_row_class_name
-                #    ),
-                #    href = '/data/barangay/upload',
-                #    external_link = True,
-                #    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
-                #),
-                dbc.Button(
-                    dbc.Row(
-                        dbc.Col(
-                            [
-                                html.I(className = 'bi bi-house-add me-2'),
-                                "Submit household profile"
-                            ],
-                            width = sidebar_btn_col_width
-                        ), class_name = sidebar_btn_row_class_name
-                    ),
-                    href = '/data/household/upload',
-                    external_link = True,
-                    color = 'warning', outline = True, #sidebar_btn_color,
-                    size = sidebar_btn_size,
-                    style = {
-                        'width' : '100%',
-                        'border-width' : '0px'
-                    }
-                ),
-                dbc.Button(
-                    dbc.Row(
-                        dbc.Col(
-                            [
-                                html.I(className = 'bi bi-toggle-on me-2'),
-                                "Activate community profiling"
-                            ],
-                            width = sidebar_btn_col_width
-                        ), class_name = sidebar_btn_row_class_name
-                    ),
-                    href = '/data/activate',
-                    external_link = True,
-                    color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
-                ),
-            ], className = 'mb-3',
+            id = 'sidebar_div_datmgt',
+            className = 'd-none',
         ),
         # Footer
         html.Div(
@@ -568,13 +557,6 @@ sidebar = dbc.Offcanvas(
                 html.Hr(),
                 dbc.Row(
                     [
-                        #dbc.Col(
-                        #    html.Img(
-                        #        src = app.get_asset_url('ph-arms-mono-dark.png'),
-                        #        style = {'height' : '3em'},
-                        #    ),
-                        #    width = 'auto',
-                        #),
                         dbc.Col(
                             html.Img(
                                 src = app.get_asset_url('city-seal.png'),
