@@ -888,7 +888,8 @@ def eve_eve_generatesumreports(
         
         # Report type 1: Related incident
         if type_id == 1:
-            sql2 = """SELECT id, label_en FROM utilities.relinctype;"""
+            sql2 = """SELECT id, CONCAT(symbol, ' ', label_war, ' (', label_en, ')') FROM utilities.relinctype
+                ORDER BY id ASC;"""
             values2 = []
             cols2 = ['id', 'label']
             df2 = db.querydatafromdatabase(sql2, values2, cols2)

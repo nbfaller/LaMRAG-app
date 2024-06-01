@@ -2781,7 +2781,7 @@ def rep_cre_populaterelincstatus(type):
         State('app_region_id', 'data'),
         State('app_province_id', 'data'),
         State('app_citymun_id', 'data'),
-        State('app_brgy_id', 'data')
+        State('rep_cre_input_brgy_id', 'value')
     ],
     prevent_initial_update = True
 )
@@ -2801,15 +2801,15 @@ def rep_cre_setpubutil(pubutiltype, region, province, citymun, brgy):
         options = df.to_dict('records')
         if pubutiltype == 1 or pubutiltype == 2:
             if pubutiltype == 1:
-                sql = """SELECT pubutil_elec_id AS pubutil_id FROM utilities.addressbrgy
+                sql2 = """SELECT pubutil_elec_id AS pubutil_id FROM utilities.addressbrgy
                     WHERE region_id = %s AND province_id = %s AND citymun_id = %s AND id = %s;"""
             else:
-                sql = """SELECT pubutil_water_id AS pubutil_id FROM utilities.addressbrgy
+                sql2 = """SELECT pubutil_water_id AS pubutil_id FROM utilities.addressbrgy
                     WHERE region_id = %s AND province_id = %s AND citymun_id = %s AND id = %s;"""
-            values = [region, province, citymun, brgy]
-            cols = ['pubutil_id']
-            df = db.querydatafromdatabase(sql, values, cols)
-            value = df.at[0, 'pubutil_id']
+            values2 = [int(region), int(province), int(citymun), int(brgy)]
+            cols2 = ['pubutil_id']
+            df = db.querydatafromdatabase(sql2, values2, cols2)
+            value = df['pubutil_id'][0]
         else:
             disabled = False
     return [options, value, disabled]
