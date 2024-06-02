@@ -2242,7 +2242,7 @@ def rep_cre_populatedropdowns(
         existing_hh = None
         existing_mm = None
         existing_ss = None
-        existing_ampm = 'AM'
+        existing_ampm = None
         # Set value if report creation mode is 'update'
         if existing_df.shape[0] and existing_df['occurrence_time'][0]:
             existing_time = str(existing_df['occurrence_time'][0]).split('+')[0]
