@@ -3094,36 +3094,45 @@ def rep_cre_confirmcreation(
                             ]
                         )
                     )
-                if not(hh):
-                    time_hh_invalid = True
-                    alert_span.append(
-                        html.Li(
-                            [
-                                "Oras san panhitabó", html.Br(),
-                                html.Small(" (Hour of occurrence)", className = 'ms-3 text-muted'),
-                            ]
+                time_errors = [
+                    not(hh) and not(mm) and ampm,
+                    hh and not(mm) and not(ampm),
+                    not(hh) and mm and not(ampm),
+                    not(hh) and mm and ampm,
+                    hh and not(mm) and ampm,
+                    hh and mm and not(ampm)
+                ]
+                if any(time_errors):
+                    if not(hh):
+                        time_hh_invalid = True
+                        alert_span.append(
+                            html.Li(
+                                [
+                                    "Oras san panhitabó", html.Br(),
+                                    html.Small(" (Hour of occurrence)", className = 'ms-3 text-muted'),
+                                ]
+                            )
                         )
-                    )
-                if not(mm):
-                    time_mm_invalid = True
-                    alert_span.append(
-                        html.Li(
-                            [
-                                "Minuto san panhitabó", html.Br(),
-                                html.Small(" (Minute of occurrence)", className = 'ms-3 text-muted'),
-                            ]
+                    if not(mm):
+                        time_mm_invalid = True
+                        alert_span.append(
+                            html.Li(
+                                [
+                                    "Minutos san panhitabó", html.Br(),
+                                    html.Small(" (Minutes of occurrence)", className = 'ms-3 text-muted'),
+                                ]
+                            )
                         )
-                    )
-                if not(ampm):
-                    time_ampm_invalid = True
-                    alert_span.append(
-                        html.Li(
-                            [
-                                "Kun aga (AM) o kulop/gabi (PM) an panhitabó", html.Br(),
-                                html.Small(" (AM/PM of occurrence)", className = 'ms-3 text-muted'),
-                            ]
+                    if not(ampm):
+                        time_ampm_invalid = True
+                        alert_span.append(
+                            html.Li(
+                                [
+                                    "Kun aga/kulop/gab-i natabo an panhitabó", html.Br(),
+                                    html.Small(" (AM/PM of occurrence)", className = 'ms-3 text-muted'),
+                                ]
+                            )
                         )
-                    )
             else:
                 if type == 1:
                     conditions = [not(relinc_type), not(relinc_qty), not(relinc_status)]
@@ -3658,6 +3667,8 @@ def rep_cre_submitcreation(
                     df = db.querydatafromdatabase(sql, values, cols)
                     if df.shape[0] > 0: event_report_id = int(df['event_report_id'][0]) + 1
 
+                    purok = int(purok) if purok else None
+
                     # Actual report creation
                     sql = """INSERT INTO reports.report(id, event_id, event_report_id,
                     region_id, province_id, citymun_id, brgy_id,
@@ -3665,7 +3676,7 @@ def rep_cre_submitcreation(
                     VALUES(%s, %s, %s,
                     %s, %s, %s, %s,
                     %s, %s);"""
-                    values = [newreport_id, event, event_report_id, region_id, province_id, citymun_id, brgy_id, type, int(purok)]
+                    values = [newreport_id, event, event_report_id, region_id, province_id, citymun_id, brgy_id, type, purok]
                     db.modifydatabase(sql, values)
 
                     # Setting up time
