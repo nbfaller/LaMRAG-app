@@ -816,12 +816,12 @@ def eve_eve_generateconsreports(
         ),
         html.Small(
             [
-                """Ungod ug sakto ini nga consolidated report yana nga %s.
-                Diri api sini nga mga ihap an mga report nga puprubaran pa.""" % (datetime.now(pytz.timezone('Asia/Manila')).strftime("%Y-%m-%d, %H:%M:%S")),
+                """Ungod ug sakto ini nga consolidated report tikang %s.
+                Diri api sini nga mga ihap an mga report nga puprubaran pa.""" % (datetime.now(pytz.timezone('Asia/Manila')).strftime("%Y-%m-%d, %H:%M %p %Z")),
                 html.Small(
                     [
                         """ (This consolidated report is true and correct as of %s.
-                        Unverified reports are not included in these tallies.)"""  % (datetime.now(pytz.timezone('Asia/Manila')).strftime("%Y-%m-%d at %H:%M:%S"))
+                        Unverified reports are not included in these tallies.)"""  % (datetime.now(pytz.timezone('Asia/Manila')).strftime("%Y-%m-%d at %H:%M %p %Z"))
                     ]
                 )
             ],
@@ -1052,12 +1052,12 @@ def eve_eve_generatesumreports(
         ),
         html.Small(
             [
-                """Ungod ug sakto ini nga consolidated report yana nga %s.
-                Diri api sini nga mga ihap an mga report nga puprubaran pa.""" % (datetime.now(pytz.timezone('Asia/Manila')).strftime("%Y-%m-%d, %H:%M:%S")),
+                """Ungod ug sakto ini nga data summary tikang %s.
+                Diri api sini nga mga ihap an mga report nga puprubaran pa.""" % (datetime.now(pytz.timezone('Asia/Manila')).strftime("%Y-%m-%d, %H:%M %p %Z")),
                 html.Small(
                     [
-                        """ (This consolidated report is true and correct as of %s.
-                        Unverified reports are not included in these tallies.)"""  % (datetime.now(pytz.timezone('Asia/Manila')).strftime("%Y-%m-%d at %H:%M:%S"))
+                        """ (This data summary is true and correct as of %s.
+                        Unverified reports are not included in these tallies.)"""  % (datetime.now(pytz.timezone('Asia/Manila')).strftime("%Y-%m-%d at %H:%M %p %Z"))
                     ]
                 )
             ],
