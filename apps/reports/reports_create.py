@@ -3665,7 +3665,7 @@ def rep_cre_submitcreation(
                     VALUES(%s, %s, %s,
                     %s, %s, %s, %s,
                     %s, %s);"""
-                    values = [newreport_id, event, event_report_id, region_id, province_id, citymun_id, brgy_id, type, purok]
+                    values = [newreport_id, event, event_report_id, region_id, province_id, citymun_id, brgy_id, type, int(purok)]
                     db.modifydatabase(sql, values)
 
                     # Setting up time

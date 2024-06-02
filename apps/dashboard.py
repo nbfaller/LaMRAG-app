@@ -35,7 +35,82 @@ layout = html.Div(
             [
                 dbc.Col(
                     [
-                        "Dashboard"
+                        # Header
+                        html.Div(
+                            [
+                                dbc.Row(
+                                    [
+                                        html.H1(
+                                            "User dashboard",
+                                            id = 'com_das_h1_header'
+                                        ),
+                                        html.P(
+                                            "User information",
+                                            id = 'com_das_htp_userdetails',
+                                            className = p_m
+                                        )
+                                    ],
+                                    class_name = row_m,
+                                ),
+                            ],
+                            id = 'com_das_div_header',
+                            className = header_m
+                        ),
+                        html.Hr(),
+                        # Cards
+                        html.Div(
+                            [
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                dbc.Card(
+                                                    [
+                                                        dbc.CardBody(
+                                                            [
+                                                                html.H4(
+                                                                    [
+                                                                        html.I(className = 'bi bi-file-earmark-bar-graph-fill me-2'),
+                                                                        "Mga ginsumite nga report",
+                                                                        html.Small(" (Reports filed)", className = 'text-muted')
+                                                                    ]
+                                                                )
+                                                            ]
+                                                        )
+                                                    ],
+                                                    style = card_style
+                                                )
+                                            ],
+                                            class_name = 'mb-2 mb-lg-0 col-12 col-lg-7'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dbc.Card(
+                                                    [
+                                                        dbc.CardBody(
+                                                            [
+                                                                html.H4(
+                                                                    [
+                                                                        html.I(className = 'bi bi-calendar-event-fill me-2'),
+                                                                        "Mga aktibo nga panhitabó",
+                                                                        html.Small(" (Active events)", className = 'text-muted')
+                                                                    ]
+                                                                )
+                                                            ]
+                                                        )
+                                                    ],
+                                                    style = card_style
+                                                )
+                                            ],
+                                            class_name = 'mb-2 mb-lg-0 col-12 col-lg-5'
+                                        ),
+                                    ],
+                                    class_name = row_m,
+                                )
+                            ],
+                            id = 'com_das_div_cards',
+                            className = div_m
+                        )
                     ],
                     class_name = 'col-md-10'
                 )
@@ -44,3 +119,44 @@ layout = html.Div(
         )
     ]
 )
+
+com_das_pathname = '/dashboard'
+
+@app.callback(
+    [
+        Output('com_das_htp_userdetails', 'children'),
+    ],
+    [
+        Input('url', 'pathname')
+    ],
+    [
+        State('app_currentuser_id', 'data'),
+        #State('app_usertype_id', 'data')
+    ]
+)
+
+def com_das_setpagedetails(
+    pathname, user_id, #type_id
+):
+    if pathname == com_das_pathname:
+        details = "User information"
+        sql = """SELECT u.lname, u.fname, u.mname, u.livedname,
+            ut.label
+            FROM users.user AS u
+            LEFT JOIN utilities.usertype AS ut ON u.usertype_id = ut.id
+            WHERE u.id = %s;
+            """
+        values = [user_id]
+        cols = ['lname', 'fname', 'mname', 'livedname', 'usertype']
+        df = db.querydatafromdatabase(sql, values, cols)
+
+        if df.shape[0]:
+            lname = df['lname'][0]
+            mname = df['mname'][0][0] + "." if df['mname'][0] else None
+            fname = df['livedname'][0] if df['livedname'][0] else df['fname'][0]
+            usertype = df['usertype'][0]
+            
+            details = "%s %s %s • %s" % (fname, mname, lname, usertype)
+        
+        return [details]
+    else: raise PreventUpdate
