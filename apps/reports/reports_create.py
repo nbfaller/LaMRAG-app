@@ -318,7 +318,8 @@ layout = html.Div(
                                                                     #type = 'number',
                                                                     #min = 1,
                                                                     #max = 12,
-                                                                    invalid = False
+                                                                    invalid = False,
+                                                                    disabled = True
                                                                 ),
                                                                 dbc.InputGroupText(":"),
                                                                 dbc.Select(
@@ -327,7 +328,8 @@ layout = html.Div(
                                                                     #type = 'number',
                                                                     #min = 0,
                                                                     #max = 59,
-                                                                    invalid = False
+                                                                    invalid = False,
+                                                                    disabled = True
                                                                 ),
                                                                 dbc.InputGroupText(":"),
                                                                 dbc.Select(
@@ -336,13 +338,15 @@ layout = html.Div(
                                                                     #type = 'number',
                                                                     #min = 0,
                                                                     #max = 59,
-                                                                    invalid = False
+                                                                    invalid = False,
+                                                                    disabled = True
                                                                 ),
                                                                 dbc.Select(
                                                                     id = 'rep_cre_input_time_ampm',
                                                                     placeholder = 'AM/PM',
                                                                     options = ['AM', 'PM'],
-                                                                    value = None
+                                                                    value = None,
+                                                                    disabled = True
                                                                 )
                                                             ]
                                                         ),
@@ -1216,7 +1220,8 @@ layout = html.Div(
                                                                     #type = 'number',
                                                                     #min = 1,
                                                                     #max = 12,
-                                                                    invalid = False
+                                                                    invalid = False,
+                                                                    disabled = True
                                                                 ),
                                                                 dbc.InputGroupText(":"),
                                                                 dbc.Select(
@@ -1225,7 +1230,8 @@ layout = html.Div(
                                                                     #type = 'number',
                                                                     #min = 0,
                                                                     #max = 59,
-                                                                    invalid = False
+                                                                    invalid = False,
+                                                                    disabled = True
                                                                 ),
                                                                 dbc.InputGroupText(":"),
                                                                 dbc.Select(
@@ -1234,12 +1240,14 @@ layout = html.Div(
                                                                     #type = 'number',
                                                                     #min = 0,
                                                                     #max = 59,
-                                                                    invalid = False
+                                                                    invalid = False,
+                                                                    disabled = True
                                                                 ),
                                                                 dbc.Select(
                                                                     id = 'rep_cre_input_pubutilint_res_time_ampm',
                                                                     placeholder = 'AM/PM',
-                                                                    options = ['AM', 'PM']
+                                                                    options = ['AM', 'PM'],
+                                                                    disabled = True
                                                                 )
                                                             ]
                                                         ),
@@ -2836,6 +2844,63 @@ def rep_cre_setpubutil(pubutiltype, region, province, citymun, brgy):
 def rep_cre_setpubutilintdatetime(date, hh, mm, ss, ampm):
     return[date, hh, mm, ss, ampm]
 
+# Callback for enabling restoration time fields once date fields have values
+@app.callback(
+    [
+        Output('rep_cre_input_pubutilint_res_time_hh', 'disabled'),
+        Output('rep_cre_input_pubutilint_res_time_mm', 'disabled'),
+        Output('rep_cre_input_pubutilint_res_time_ss', 'disabled'),
+        Output('rep_cre_input_pubutilint_res_time_ampm', 'disabled')
+    ],
+    [
+        Input('rep_cre_input_pubutilint_res_date', 'date'),
+        Input('rep_cre_input_reporttype_id', 'value'),
+        Input('rep_cre_input_pubutilint_res_time_hh', 'value'),
+        Input('rep_cre_input_pubutilint_res_time_mm', 'value'),
+    ],
+    prevent_initial_call = True
+)
+
+def rep_cre_setpubutilintdatetime(date, type_id, hh, mm):
+    hh_disabled = True
+    mm_disabled = True
+    ss_disabled = True
+    ampm_disabled = True
+    if date and int(type_id) == 3:
+        hh_disabled = False
+        mm_disabled = False
+        ampm_disabled = False
+        if hh and mm: ss_disabled = False
+    return [hh_disabled, mm_disabled, ss_disabled, ampm_disabled]
+
+# Callback for enabling time fields once date fields have values
+@app.callback(
+    [
+        Output('rep_cre_input_time_hh', 'disabled'),
+        Output('rep_cre_input_time_mm', 'disabled'),
+        Output('rep_cre_input_time_ss', 'disabled'),
+        Output('rep_cre_input_time_ampm', 'disabled')
+    ],
+    [
+        Input('rep_cre_input_date', 'date'),
+        Input('rep_cre_input_time_hh', 'value'),
+        Input('rep_cre_input_time_mm', 'value'),
+    ],
+    prevent_initial_call = True
+)
+
+def rep_cre_setpubutilintdatetime(date, hh, mm):
+    hh_disabled = True
+    mm_disabled = True
+    ss_disabled = True
+    ampm_disabled = True
+    if date:
+        hh_disabled = False
+        mm_disabled = False
+        ampm_disabled = False
+        if hh and mm: ss_disabled = False
+    return [hh_disabled, mm_disabled, ss_disabled, ampm_disabled]
+
 # Callback for confirming report creation
 @app.callback(
     [
@@ -3103,7 +3168,6 @@ def rep_cre_confirmcreation(
                     hh and not(mm) and ampm,
                     hh and mm and not(ampm)
                 ]
-                print(time_errors)
                 if any(time_errors):
                     if not(hh):
                         time_hh_invalid = True
