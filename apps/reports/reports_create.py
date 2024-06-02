@@ -341,7 +341,8 @@ layout = html.Div(
                                                                 dbc.Select(
                                                                     id = 'rep_cre_input_time_ampm',
                                                                     placeholder = 'AM/PM',
-                                                                    options = ['AM', 'PM']
+                                                                    options = ['AM', 'PM'],
+                                                                    value = None
                                                                 )
                                                             ]
                                                         ),
@@ -3102,6 +3103,7 @@ def rep_cre_confirmcreation(
                     hh and not(mm) and ampm,
                     hh and mm and not(ampm)
                 ]
+                print(time_errors)
                 if any(time_errors):
                     if not(hh):
                         time_hh_invalid = True
