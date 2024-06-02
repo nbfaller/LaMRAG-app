@@ -949,14 +949,14 @@ def eve_eve_generatesumreports(
                     sql += """ OR rv_pubutilint.inttype_id = %s) AND rv_pubutilint_pubutil.type_id = %s THEN 1 END) AS """
                     sql += "col_123" + "_" + str(df2['type_id'][i])
                     values += [int(df2['int_id'][i]), int(df2['type_id'][i])]
-                    cols += [df2['symbol'][i] + "Interruption" + ' - ' + df2['type'][i]]
+                    cols += [df2['symbol'][i] + "❌ Interruption" + ' - ' + df2['type'][i]]
                 else:
                     sql += """,
                         COUNT (CASE WHEN rv_pubutilint.inttype_id = %s AND rv_pubutilint_pubutil.type_id = %s THEN 1 END) AS 
                         """
                     sql += "col_4" + "_" + str(df2['type_id'][i])
                     values += [int(df2['int_id'][i]), int(df2['type_id'][i])]
-                    cols += [df2['symbol'][i] + "Restored" + ' - ' + df2['type'][i]]
+                    cols += [df2['symbol'][i] + "✅ Restored" + ' - ' + df2['type'][i]]
 
                 
                 #if i < len(df2): sql += ""","""
@@ -983,7 +983,7 @@ def eve_eve_generatesumreports(
                 #if i < len(df2): sql += ""","""
                 sql += "col_" + str(df2['id'][i])
                 values += [int(df2['id'][i])]
-                cols += [df2['symbol'][i] + df2['label'][i]]
+                cols += [df2['symbol'][i] + ' ' + df2['label'][i]]
             
             sql += """,
                 COUNT (CASE WHEN rv_dmgdhouse.type_id = 1 OR rv_dmgdhouse.type_id = 2 THEN 1 END) AS col_3
@@ -999,7 +999,7 @@ def eve_eve_generatesumreports(
                 SUM (rv_dmgdinfra.infracost) AS cost
                 """
             #values += [int(df2['status_id'][i]), int(df2['type_id'][i])]
-            cols += ['Number of damaged infrastructure', 'Cost of damage (₱)']
+            cols += ['🔢 Number of damaged infrastructure', '💸 Cost of damage (₱)']
 
             sql_join = """ INNER JOIN reports.dmgdinfra AS rv_dmgdinfra
                     ON (lv.report_id = rv_dmgdinfra.report_id
