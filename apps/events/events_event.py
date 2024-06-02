@@ -888,7 +888,7 @@ def eve_eve_generatesumreports(
         
         # Report type 1: Related incident
         if type_id == 1:
-            sql2 = """SELECT id, CONCAT(symbol, ' ', label_war, ' (', label_en, ')') FROM utilities.relinctype
+            sql2 = """SELECT id, CONCAT(symbol, ' ',  label_en) FROM utilities.relinctype
                 ORDER BY id ASC;"""
             values2 = []
             cols2 = ['id', 'label']
@@ -930,23 +930,36 @@ def eve_eve_generatesumreports(
                     AND lv.version_id = rv_casualty.version_id)"""
         # Report type 3: Public utility status
         elif type_id == 3:
-            sql2 = """SELECT pit.id, pit.label_en, put.id, put.label_en
+            sql2 = """SELECT pit.id, pit.label_en, put.id, put.symbol, put.label_en
                 FROM utilities.pubutiltype AS put
             CROSS JOIN utilities.pubutilinttype AS pit
             ORDER BY put.id, pit.id;"""
             values2 = []
-            cols2 = ['int_id', 'status', 'type_id', 'type']
+            cols2 = ['int_id', 'status', 'type_id', 'symbol', 'type']
             df2 = db.querydatafromdatabase(sql2, values2, cols2)
 
             for i in range(0, len(df2)):
-                sql += """,
-                    COUNT (CASE WHEN rv_pubutilint.inttype_id = %s AND rv_pubutilint_pubutil.type_id = %s THEN 1 END) AS 
-                    """
+                if df2['int_id'][i] == 1:
+                    sql += """, COUNT (CASE WHEN (rv_pubutilint.inttype_id = %s"""
+                    values += [int(df2['int_id'][i])]
+                elif df2['int_id'][i] == 2:
+                    sql += """ OR rv_pubutilint.inttype_id = %s"""
+                    values += [int(df2['int_id'][i])]
+                elif df2['int_id'][i] == 3:
+                    sql += """ OR rv_pubutilint.inttype_id = %s) AND rv_pubutilint_pubutil.type_id = %s THEN 1 END) AS """
+                    sql += "col_123" + "_" + str(df2['type_id'][i])
+                    values += [int(df2['int_id'][i]), int(df2['type_id'][i])]
+                    cols += [df2['symbol'][i] + "Interruption" + ' - ' + df2['type'][i]]
+                else:
+                    sql += """,
+                        COUNT (CASE WHEN rv_pubutilint.inttype_id = %s AND rv_pubutilint_pubutil.type_id = %s THEN 1 END) AS 
+                        """
+                    sql += "col_4" + "_" + str(df2['type_id'][i])
+                    values += [int(df2['int_id'][i]), int(df2['type_id'][i])]
+                    cols += [df2['symbol'][i] + "Restored" + ' - ' + df2['type'][i]]
+
                 
                 #if i < len(df2): sql += ""","""
-                sql += "col_" + str(df2['int_id'][i]) + "_" + str(df2['type_id'][i])
-                values += [int(df2['int_id'][i]), int(df2['type_id'][i])]
-                cols += [df2['status'][i] + ' - ' + df2['type'][i]]
 
             sql_join = """ INNER JOIN reports.pubutilint AS rv_pubutilint
                     ON (lv.report_id = rv_pubutilint.report_id
@@ -955,11 +968,11 @@ def eve_eve_generatesumreports(
                     ON rv_pubutilint.pubutil_id = rv_pubutilint_pubutil.id"""
         # Report type 4: Damaged house
         elif type_id == 4:
-            sql2 = """SELECT id, label_en
+            sql2 = """SELECT id, symbol, label_en
                 FROM utilities.dmgdinfratype AS put
                 ORDER BY id;"""
             values2 = []
-            cols2 = ['id', 'label']
+            cols2 = ['id', 'symbol', 'label']
             df2 = db.querydatafromdatabase(sql2, values2, cols2)
 
             for i in range(0, len(df2)):
@@ -970,16 +983,27 @@ def eve_eve_generatesumreports(
                 #if i < len(df2): sql += ""","""
                 sql += "col_" + str(df2['id'][i])
                 values += [int(df2['id'][i])]
-                cols += [df2['label'][i]]
+                cols += [df2['symbol'][i] + df2['label'][i]]
             
             sql += """,
                 COUNT (CASE WHEN rv_dmgdhouse.type_id = 1 OR rv_dmgdhouse.type_id = 2 THEN 1 END) AS col_3
                 """
-            cols += ["Total"]
+            cols += ["🏘️ Total"]
 
             sql_join = """ INNER JOIN reports.dmgdhouse AS rv_dmgdhouse
                     ON (lv.report_id = rv_dmgdhouse.report_id
                     AND lv.version_id = rv_dmgdhouse.version_id)"""
+        elif type_id == 5:
+            sql += """,
+                COUNT (rv_dmgdinfra.version_id) AS qty,
+                SUM (rv_dmgdinfra.infracost) AS cost
+                """
+            #values += [int(df2['status_id'][i]), int(df2['type_id'][i])]
+            cols += ['Number of damaged infrastructure', 'Cost of damage (₱)']
+
+            sql_join = """ INNER JOIN reports.dmgdinfra AS rv_dmgdinfra
+                    ON (lv.report_id = rv_dmgdinfra.report_id
+                    AND lv.version_id = rv_dmgdinfra.version_id)"""
             
         sql += """ FROM latest_version AS lv %s
             GROUP BY lv.brgy ORDER BY lv.brgy;

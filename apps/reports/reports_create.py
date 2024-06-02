@@ -1041,8 +1041,8 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Klase san pag-úndang", tag_required, html.Br(),
-                                                            html.Small(" (Type of interruption/outage)", className = 'text-muted')
+                                                            "Kamutangan san utilidad", tag_required, html.Br(),
+                                                            html.Small(" (Status of utility)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_pubutilinttype_id',
                                                         class_name = label_m
@@ -2397,8 +2397,8 @@ def rep_cre_populatedropdowns(
                             [
                                 html.Div(
                                     [
-                                        "Maupay hinumduman an karuyag signgon sini nga mga klase san pag-úndang", html.Br(),
-                                        html.Small("(It would be helpful to remember the following definitions for interruption/outage type):", className = 'text-muted')
+                                        "Maupay hinumduman an karuyag signgon sini nga mga klase san mga kamutangan", html.Br(),
+                                        html.Small("(It would be helpful to remember the following definitions for public utility statuses):", className = 'text-muted')
                                     ],
                                     className = 'mb-2'
                                 ),
@@ -3271,8 +3271,8 @@ def rep_cre_confirmcreation(
                             alert_span.append(
                                 html.Li(
                                     [
-                                        "Klase san pag-úndang", html.Br(),
-                                        html.Small(" (Type of interruption/outage)", className = 'ms-3 text-muted'),
+                                        "Kamutangan san utilidad", html.Br(),
+                                        html.Small(" (Status of utility)", className = 'ms-3 text-muted'),
                                     ]
                                 )
                             )

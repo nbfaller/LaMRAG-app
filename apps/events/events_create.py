@@ -483,7 +483,7 @@ layout = html.Div(
                                         dbc.Col(
                                             dbc.Button(
                                                 [
-                                                    html.I(className = 'bi bi-file-calendar-event me-2'),
+                                                    html.I(className = 'bi bi-calendar-event me-2'),
                                                     "Abriha an event (View event)"
                                                 ],
                                                 id = 'eve_cre_btn_view',
