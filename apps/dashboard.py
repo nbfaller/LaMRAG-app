@@ -64,6 +64,119 @@ layout = html.Div(
                                     [
                                         dbc.Col(
                                             [
+                                                html.A(
+                                                    dbc.Card(
+                                                        [
+                                                            html.H1(html.I(className = 'bi bi-pencil-square')),
+                                                            html.H4("Maghimo report", className = 'mb-3'),
+                                                            html.Hr(className = 'my-1'),
+                                                            html.P(
+                                                                [
+                                                                    "Himo kit bag-o nga report didi.",
+                                                                    html.Small(
+                                                                        " (Let's file new reports here.)",
+                                                                        className = 'text-muted'
+                                                                    )
+                                                                ],
+                                                                className =  p_m# + ' text-muted'
+                                                            )
+                                                        ],
+                                                        body = True,
+                                                        style = card_style
+                                                    ),
+                                                    href = '/reports/create?mode=new'
+                                                )
+                                            ],
+                                            class_name = 'mb-3 mb-lg-0 col-12 col-sm-6 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                html.A(
+                                                    dbc.Card(
+                                                        [
+                                                            html.H1(html.I(className = 'bi bi-calendar-event')),
+                                                            html.H4("Mga panhitabó", className = 'mb-3'),
+                                                            html.Hr(className = 'my-1'),
+                                                            html.P(
+                                                                [
+                                                                    "An lista san mga panhitabó.",
+                                                                    html.Small(
+                                                                        " (The list of events.)",
+                                                                        className = 'text-muted'
+                                                                    )
+                                                                ],
+                                                                className =  p_m# + ' text-muted'
+                                                            )
+                                                        ],
+                                                        body = True,
+                                                        style = card_style
+                                                    ),
+                                                    href = '/events'
+                                                )
+                                            ],
+                                            class_name = 'mb-3 mb-lg-0 col-12 col-sm-6 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                html.A(
+                                                    dbc.Card(
+                                                        [
+                                                            html.H1(html.I(className = 'bi bi-houses')),
+                                                            html.H4("Aton barangay", className = 'mb-3'),
+                                                            html.Hr(className = 'my-1'),
+                                                            html.P(
+                                                                [
+                                                                    "Populasyon ug mga hazard.",
+                                                                    html.Small(
+                                                                        " (Population and hazards.)",
+                                                                        className = 'text-muted'
+                                                                    )
+                                                                ],
+                                                                className =  p_m# + ' text-muted'
+                                                            )
+                                                        ],
+                                                        body = True,
+                                                        style = card_style
+                                                    ),
+                                                    href = '/data/barangays'
+                                                )
+                                            ],
+                                            class_name = 'mb-3 mb-md-0 col-12 col-sm-6 col-lg-3'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                html.A(
+                                                    dbc.Card(
+                                                        [
+                                                            html.H1(html.I(className = 'bi bi-house-add')),
+                                                            html.H4("Mag-profile balay", className = 'mb-3'),
+                                                            html.Hr(className = 'my-1'),
+                                                            html.P(
+                                                                [
+                                                                    "Para community profiling.",
+                                                                    html.Small(
+                                                                        " (For community profiling.)",
+                                                                        className = 'text-muted'
+                                                                    )
+                                                                ],
+                                                                className =  p_m# + ' text-muted'
+                                                            )
+                                                        ],
+                                                        body = True,
+                                                        style = card_style
+                                                    ),
+                                                    href = '/data/household/upload'
+                                                )
+                                            ],
+                                            class_name = 'col-12 col-sm-6 col-lg-3'
+                                        ),
+                                    ],
+                                    class_name = 'mb-3'
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
                                                 dbc.Card(
                                                     [
                                                         dbc.CardBody(
@@ -118,39 +231,170 @@ layout = html.Div(
                                         ),
                                         dbc.Col(
                                             [
-                                                dbc.Card(
+                                                dbc.Row(
                                                     [
-                                                        dbc.CardBody(
+                                                        dbc.Col(
                                                             [
-                                                                dbc.Row(
+                                                                dbc.Card(
                                                                     [
-                                                                        dbc.Col(
+                                                                        dbc.CardBody(
                                                                             [
-                                                                                html.A(
-                                                                                    html.H4(
-                                                                                        [
-                                                                                            html.I(className = 'bi bi-calendar-event-fill me-2'),
-                                                                                            "Mga aktibo nga panhitabó",
-                                                                                            html.Small(" (Active events)", className = 'text-muted'),
-                                                                                        ]
-                                                                                    ),
-                                                                                    href = '/events'
+                                                                                dbc.Row(
+                                                                                    [
+                                                                                        dbc.Col(
+                                                                                            [
+                                                                                                html.A(
+                                                                                                    html.H4(
+                                                                                                        [
+                                                                                                            html.I(className = 'bi bi-calendar-event-fill me-2'),
+                                                                                                            "Mga aktibo nga panhitabó",
+                                                                                                            html.Small(" (Active events)", className = 'text-muted'),
+                                                                                                        ]
+                                                                                                    ),
+                                                                                                    href = '/events'
+                                                                                                )
+                                                                                            ]
+                                                                                        )
+                                                                                    ], class_name = row_m
+                                                                                ),
+                                                                                dbc.Row(
+                                                                                    [
+                                                                                        dbc.Col(
+                                                                                            id = 'com_das_col_eventstable'
+                                                                                        )
+                                                                                    ]
                                                                                 )
                                                                             ]
                                                                         )
-                                                                    ], class_name = row_m
-                                                                ),
-                                                                dbc.Row(
-                                                                    [
-                                                                        dbc.Col(
-                                                                            id = 'com_das_col_eventstable'
-                                                                        )
-                                                                    ]
+                                                                    ],
+                                                                    style = card_style
                                                                 )
                                                             ]
                                                         )
                                                     ],
-                                                    style = card_style
+                                                    class_name = 'mb-3'
+                                                ),
+                                                dbc.Row(
+                                                    [
+                                                        dbc.Col(
+                                                            [
+                                                                dbc.Card(
+                                                                    [
+                                                                        dbc.CardBody(
+                                                                            [
+                                                                                dbc.Row(
+                                                                                    [
+                                                                                        dbc.Col(
+                                                                                            [
+                                                                                                html.A(
+                                                                                                    html.H4(
+                                                                                                        [
+                                                                                                            html.I(className = 'bi bi-exclamation-diamond-fill me-2'),
+                                                                                                            "Mga hazard sa mga barangay",
+                                                                                                            html.Small(" (Barangay hazards)", className = 'text-muted'),
+                                                                                                        ]
+                                                                                                    ),
+                                                                                                    href = '/data/barangays'
+                                                                                                )
+                                                                                            ]
+                                                                                        )
+                                                                                    ], class_name = row_m
+                                                                                ),
+                                                                                dbc.Row(
+                                                                                    [
+                                                                                        dbc.Col(
+                                                                                            dcc.Dropdown(
+                                                                                                id = 'com_das_input_brgy_id',
+                                                                                                clearable = True,
+                                                                                                value = 1,
+                                                                                                placeholder = "Barangay"
+                                                                                            ),
+                                                                                            #class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-10'
+                                                                                        ),
+                                                                                    ], className = 'mb-3',
+                                                                                    id = 'com_das_row_selectbrgy'
+                                                                                ),
+                                                                                dbc.Row(
+                                                                                    [
+                                                                                        dbc.Col(
+                                                                                            [
+                                                                                                html.H1(
+                                                                                                    [
+                                                                                                        html.I(className = 'fa fa-house-flood-water me-2'),
+                                                                                                        html.Span("-", id = 'com_das_spa_vul_flood')
+                                                                                                    ],
+                                                                                                    id = 'com_das_h1_vul_flood',
+                                                                                                    style = {'color' : 'gray'}
+                                                                                                ),
+                                                                                            ],
+                                                                                            class_name = 'd-flex justify-content-center'
+                                                                                        ),
+                                                                                        dbc.Tooltip(
+                                                                                            "Posibilidad san pagbaha (possibility of flooding).",
+                                                                                            target = 'com_das_h1_vul_flood',
+                                                                                            #body = True,
+                                                                                            #trigger = 'focus',
+                                                                                        ),
+                                                                                        dbc.Col(
+                                                                                            [
+                                                                                                html.H1(
+                                                                                                    [
+                                                                                                        html.I(className = 'fa fa-hill-rockslide me-2'),
+                                                                                                        html.Span("-", id = 'com_das_spa_vul_landslide')
+                                                                                                    ],
+                                                                                                    id = 'com_das_h1_vul_landslide',
+                                                                                                    style = {'color' : 'gray'}
+                                                                                                ),
+                                                                                            ],
+                                                                                            class_name = 'd-flex justify-content-center'
+                                                                                        ),
+                                                                                        dbc.Tooltip(
+                                                                                            "Posibilidad san pagtimpag san tuna (possibility of landslides).",
+                                                                                            target = 'com_das_h1_vul_landslide',
+                                                                                            #body = True,
+                                                                                            #trigger = 'focus',
+                                                                                        ),
+                                                                                        dbc.Col(
+                                                                                            [
+                                                                                                html.H1(
+                                                                                                    [
+                                                                                                        html.I(className = 'fa fa-house-tsunami me-2'),
+                                                                                                        html.Span("-", id = 'com_das_spa_vul_stormsurge')
+                                                                                                    ],
+                                                                                                    id = 'com_das_h1_vul_stormsurge',
+                                                                                                    style = {'color' : 'gray'}
+                                                                                                ),
+                                                                                            ],
+                                                                                            class_name = 'd-flex justify-content-center'
+                                                                                        ),
+                                                                                        dbc.Tooltip(
+                                                                                            "Posibilidad san storm surge (possibility of storm surge).",
+                                                                                            target = 'com_das_h1_vul_stormsurge',
+                                                                                            #body = True,
+                                                                                            #trigger = 'focus',
+                                                                                        ),
+                                                                                    ], class_name = row_m
+                                                                                ),
+                                                                                dbc.Row(
+                                                                                    [
+                                                                                        dbc.Col(
+                                                                                            [
+                                                                                                """Tikang ini nga datos sa National Operational
+                                                                                                Assessment of Hazards (NOAH) san University of the Philippines
+                                                                                                Resilience Institute (UPRI)."""
+                                                                                            ]
+                                                                                        )
+                                                                                    ]
+                                                                                )
+                                                                            ]
+                                                                        )
+                                                                    ],
+                                                                    style = card_style
+                                                                )
+                                                            ]
+                                                        )
+                                                    ],
+                                                    class_name = 'h-auto'
                                                 )
                                             ],
                                             class_name = 'mb-2 mb-lg-0 col-12 col-lg-5'
@@ -363,3 +607,112 @@ def com_das_generatereportsgraph(pathname, region, province, citymun, brgy):
         class_name,
         table
     ]
+
+# Callback for populating dropdowns
+@app.callback(
+    [
+        # Selected barangay
+        Output('com_das_input_brgy_id', 'options'),
+        Output('com_das_input_brgy_id', 'value'),
+    ],
+    [
+        Input('url', 'pathname')
+    ],
+    [
+        State('app_region_id', 'data'),
+        State('app_province_id', 'data'),
+        State('app_citymun_id', 'data'),
+        State('app_brgy_id', 'data'),
+        State('com_das_input_brgy_id', 'value'),
+    ]
+)
+
+def com_das_populatedropdowns(pathname, region, province, citymun, brgy, selectedbrgy):
+    if pathname == '/dashboard':
+        dropdowns = []
+
+        # Barangays
+        sql = """SELECT name AS label, id AS value
+        FROM utilities.addressbrgy WHERE region_id = %s AND province_id = %s AND citymun_id = %s;
+        """
+        values = [region, province, citymun]
+        cols = ['label', 'value']
+        df = db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        brgys = df.to_dict('records')
+        dropdowns.append(brgys)
+
+        if brgy > 0: dropdowns.append(brgy)
+        else: dropdowns.append(selectedbrgy)
+
+        return dropdowns
+    else: raise PreventUpdate
+
+
+# Callback for showing barangay-specific information
+@app.callback(
+    [
+        # Flood vulnerability
+        Output('com_das_spa_vul_flood', 'children'),
+        Output('com_das_h1_vul_flood', 'style'),
+        # Landslide vulnerability
+        Output('com_das_spa_vul_landslide', 'children'),
+        Output('com_das_h1_vul_landslide', 'style'),
+        # Storm surge vulnerability
+        Output('com_das_spa_vul_stormsurge', 'children'),
+        Output('com_das_h1_vul_stormsurge', 'style'),
+    ],
+    [
+        #Input('url', 'pathname'),
+        Input('com_das_input_brgy_id', 'value')
+    ],
+    [
+        State('app_region_id', 'data'),
+        State('app_province_id', 'data'),
+        State('app_citymun_id', 'data'),
+        State('app_brgyinfo_cols', 'data'),
+        State('app_latestcensusyear', 'data')
+    ]
+)
+
+def com_das_setbrgyinfo(brgy, region, province, citymun, info_cols, censusyear):
+    if brgy:
+        toreturn = []
+
+        # Header
+        header = None
+        sql = """SELECT addressbrgy.name, addressbrgy.pop_2000, addressbrgy.pop_2007, addressbrgy.pop_2010, addressbrgy.pop_2015, addressbrgy.pop_2020,
+            addressbrgy.vul_flood, addressbrgy.vul_landslide, addressbrgy.vul_stormsurge,
+            vultype_flood.label_war, vultype_landslide.label_war, vultype_stormsurge.label_war,
+            vultype_flood.label_en, vultype_landslide.label_en, vultype_stormsurge.label_en,
+            vultype_flood.color, vultype_landslide.color, vultype_stormsurge.color,
+            vultype_flood.score, vultype_landslide.score, vultype_stormsurge.score,
+            addressbrgy.map_src
+            FROM utilities.addressbrgy
+            LEFT JOIN utilities.vultype AS vultype_flood ON addressbrgy.vul_flood = vultype_flood.id
+            LEFT JOIN utilities.vultype AS vultype_landslide ON addressbrgy.vul_landslide = vultype_landslide.id
+            LEFT JOIN utilities.vultype AS vultype_stormsurge ON addressbrgy.vul_stormsurge = vultype_stormsurge.id
+            WHERE addressbrgy.region_id = %s AND addressbrgy.province_id = %s AND addressbrgy.citymun_id = %s AND addressbrgy.id = %s;"""
+        values = [region, province, citymun, brgy]
+        cols = info_cols + [
+            'vul_flood', 'vul_landslide', 'vul_stormsurge',
+            'label_war_flood', 'label_war_landslide', 'label_war_stormsurge',
+            'label_en_flood', 'label_en_landslide', 'label_en_stormsurge',
+            'color_flood', 'color_landslide', 'color_stormsurge',
+            'score_flood', 'score_landslide', 'score_stormsurge',
+            'map_src'
+            ]
+        df = db.querydatafromdatabase(sql, values, cols)
+            
+        # Flood vulnerability
+        toreturn.append(df['vul_flood'][0])
+        toreturn.append({'color' : df['color_flood'][0]})
+        # Landslide vulnerability
+        toreturn.append(df['vul_landslide'][0])
+        toreturn.append({'color' : df['color_landslide'][0]})
+        # Storm surge vulnerability
+        toreturn.append(df['vul_stormsurge'][0])
+        toreturn.append({'color' : df['color_stormsurge'][0]})
+
+        return toreturn
+    else: raise PreventUpdate

@@ -2136,8 +2136,11 @@ def rep_cre_populatedropdowns(
         mode = 'new'
         header = "File a report"
         parsed = urlparse(search)
-        if parse_qs(parsed.query)['mode'][0]:
-            mode = parse_qs(parsed.query)['mode'][0]
+        try:
+            if parse_qs(parsed.query)['mode'][0]:
+                mode = parse_qs(parsed.query)['mode'][0]
+        except:
+            mode = 'new'
         dropdowns.append(mode)
 
         existing_df = pd.DataFrame()
