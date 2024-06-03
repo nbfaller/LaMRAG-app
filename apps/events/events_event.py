@@ -606,7 +606,7 @@ def eve_eve_generateconsreports(
                     ON r.id = rv.report_id
                 INNER JOIN utilities.addressbrgy AS ab
                     ON (r.region_id = ab.region_id AND r.province_id = ab.province_id AND r.citymun_id = ab.citymun_id AND r.brgy_id = ab.id)
-                WHERE r.event_id = %s AND r.type_id = %s
+                WHERE r.event_id = %s AND r.type_id = %s AND rv.status_id == 2
                 ORDER BY r.id, rv.id DESC)
             SELECT /*lv.report_id AS id,
                 lv.version_id AS version,*/
@@ -875,7 +875,7 @@ def eve_eve_generatesumreports(
                     ON r.id = rv.report_id
                 LEFT JOIN utilities.addressbrgy AS ab
                     ON (r.region_id = ab.region_id AND r.province_id = ab.province_id AND r.citymun_id = ab.citymun_id AND r.brgy_id = ab.id)
-                WHERE r.event_id = %s AND r.type_id = %s
+                WHERE r.event_id = %s AND r.type_id = %s AND rv.status_id == 2
                 ORDER BY r.id, rv.id DESC
             )
             SELECT /*lv.report_id AS id,
