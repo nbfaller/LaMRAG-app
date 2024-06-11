@@ -1745,23 +1745,30 @@ def usr_reg_confirmregistration(
             # Button href
             profile_href = '/users/profile?id=%s' % newuser_id
 
+            existing_user = False
             sql = """SELECT id FROM users.user
             WHERE fname = %s AND mname = %s AND lname = %s;
             """
             values = [fname, mname, lname]
             cols = ['id']
             df = db.querydatafromdatabase(sql, values, cols)
-            if not df.empty:
-                alert_name_open = True
-                alert_name_class_name = 'mb-3'
+            if not df.empty: existing_user = True
             
-            if (not(usertype_id) or not(fname) or not(lname) or not (birthdate) or not (assignedsex_id)
+            if (existing_user or (usertype_id) or not(fname) or not(lname) or not (birthdate) or not (assignedsex_id)
                 or not(office_id) or not(designation) or not (contactnum)
                 or not(present_region_id) or not (present_province_id) or not (present_citymun_id) or not(present_brgy_id) or not(present_street)
                 or not(permanent_region_id) or not (permanent_province_id) or not (permanent_citymun_id) or not(permanent_brgy_id) or not(permanent_street)
             ):
                 alert_open = True
                 alert_class_name = 'mb-3'
+                if existing_user:
+                    # Add input validation here
+                    alert_span += html.Li(
+                        [
+                            "Sakto nga ngaran, tungod nga naka-register na ini sa LáMRAG", html.Br(),
+                            html.Small(" (Correct name, as this one is already registered in LáMRAG)", className = 'ms-3 text-muted'),
+                        ]
+                    ),
                 if not(usertype_id):
                     # Add input validation here
                     alert_span += html.Li(
