@@ -2870,7 +2870,7 @@ def rep_cre_setpubutilintdatetime(date, type_id, hh, mm):
     mm_disabled = True
     ss_disabled = True
     ampm_disabled = True
-    type_id = int(type_id)
+    if type_id: type_id = int(type_id)
     if date and int(type_id) == 3:
         hh_disabled = False
         mm_disabled = False
@@ -3565,6 +3565,7 @@ def rep_cre_confirmcreation(
         State('rep_cre_input_password', 'value'),
         # User details
         State('app_currentuser_id', 'data'),
+        State('app_usertype_id', 'data'),
         # App geolock details
         State('app_region_id', 'data'),
         State('app_province_id', 'data'),
@@ -3644,7 +3645,7 @@ def rep_cre_confirmcreation(
 
 def rep_cre_submitcreation(
     btn, password,
-    user_id, region_id, province_id, citymun_id,
+    user_id, usertype_id, region_id, province_id, citymun_id,
     newreport_id, newversion_id,
 
     # Common information
@@ -3766,11 +3767,14 @@ def rep_cre_submitcreation(
                         if ampm == 'PM':
                             hh += 12
                         time = '{:02d}'.format(hh) + '{:02d}'.format(mm) + '{:02d}'.format(ss) + '+08'
+                    
+                    version_status = 1
+                    version_status = 2 if usertype_id > 1 else 1
 
                     # New version creation
                     sql = """INSERT INTO reports.reportversion(id, report_id, occurrence_date, occurrence_time,
-                    remarks, creator_id, status_updater_id) VALUES(%s, %s, %s, %s, %s, %s, %s)"""
-                    values = [newversion_id, newreport_id, date, time, remarks, user_id, user_id]
+                    remarks, creator_id, status_id, status_updater_id) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"""
+                    values = [newversion_id, newreport_id, date, time, remarks, user_id, version_status, user_id]
                     db.modifydatabase(sql, values)
 
                     # Creation of report-type specific table rows
