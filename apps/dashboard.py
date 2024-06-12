@@ -82,7 +82,8 @@ layout = html.Div(
                                                             )
                                                         ],
                                                         body = True,
-                                                        style = card_style
+                                                        style = card_style,
+                                                        #color = 'warning'
                                                     ),
                                                     href = '/reports/create?mode=new'
                                                 )
@@ -267,7 +268,8 @@ layout = html.Div(
                                                                             ]
                                                                         )
                                                                     ],
-                                                                    style = card_style
+                                                                    style = card_style,
+                                                                    #color = 'warning'
                                                                 )
                                                             ]
                                                         )

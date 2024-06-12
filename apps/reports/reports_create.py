@@ -215,10 +215,10 @@ layout = html.Div(
                                                 ),
                                                 dbc.Col(
                                                     [
-                                                        dcc.Dropdown(
+                                                        dbc.Select(
                                                             id = 'rep_cre_input_reporttype_id',
                                                             #required = True,
-                                                            clearable = True,
+                                                            #clearable = True,
                                                         ),
                                                         dbc.FormText(
                                                             "Usa la nga initial report an puwede himuon. (Initial reports can only be filed once.)",
@@ -2618,6 +2618,7 @@ def rep_cre_showreportform(brgy, event, type, date):
     style_pubutil = disp_none
     style_dmgdhouse = disp_none
     style_dmgdinfra = disp_none
+    if type: type = int(type)
     if all(conditions):
         style_submit = disp_show
         if type == 1: style_relinc = disp_show
@@ -2869,6 +2870,7 @@ def rep_cre_setpubutilintdatetime(date, type_id, hh, mm):
     mm_disabled = True
     ss_disabled = True
     ampm_disabled = True
+    type_id = int(type_id)
     if date and int(type_id) == 3:
         hh_disabled = False
         mm_disabled = False
@@ -3119,6 +3121,7 @@ def rep_cre_confirmcreation(
 
             time_values = [hh, mm, ampm]
             time_invalid = [not(hh), not(mm), not(ampm)]
+            if type: type = int(type)
 
             if (not(brgy) or not(event) or not(type) or not (date) or (any(time_values) and any(time_invalid))):
                 alert_open = True
@@ -3706,6 +3709,8 @@ def rep_cre_submitcreation(
             modal_backdrop = True
             # Password visibility
             class_password = row_m + ' ' + vis_block
+
+            if type: type = int(type)
 
             if not(password):
                 alert_open = True
