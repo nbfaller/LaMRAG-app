@@ -10,6 +10,12 @@ import hashlib
 from app import app
 from apps import dbconnect as db
 
+card_style = {
+    'border-radius' : '0.75rem',
+    'overflow' : 'hidden',
+    'box-shadow' : '0 0 32px 4px rgba(135, 113, 90, 0.2)'
+}
+
 # Default margins and spacing settings
 header_m = 'mb-3'
 div_m = 'mt-3 mb-3'
@@ -25,159 +31,228 @@ layout = html.Div(
     [
         dbc.Row(
             [
-                dbc.Card(
+                dbc.Col(
                     [
-                        dbc.Row(
+                        dbc.Card(
                             [
-                                dbc.Col(
+                                dbc.Row(
                                     [
-                                        dbc.Row(
-                                            [
-                                                #html.H4("City proper")
-                                            ],
-                                            style = {
-                                                'color' : '#F5F5F5',
-                                                'position' : 'absolute',
-                                                'bottom' : '2em',
-                                                'padding-left' : '2em',
-                                                'padding-right' : '2em',
-                                                #'text-shadow' : '0 0 4px rgba(135, 113, 90, 0.6)'
-                                            },
-                                            #class_name = 'align-self-bottom'
-                                        ),
-                                        html.Img(
-                                            src=app.get_asset_url('banner.jpg'),
-                                            style = {
-                                                'display' : 'block',
-                                                'height' : '30em',
-                                                'width' : '100%',
-                                                'object-fit' : 'cover',
-                                                'z-index' : '-1',
-                                                #'border-start-start-radius' : '0.75rem',
-                                                #'border-end-start-radius' : '0.75rem'
-                                                #'mask-image' : 'linear-gradient(to bottom, rgba(0, 0, 0, 1.0) 50%, transparent 100%)'
-                                            }
-                                        ),
-                                    ],
-                                    class_name = 'p-0 col-12 col-md-8'
-                                ),
-                                dbc.Col(
-                                    [
-                                        dbc.CardBody(
+                                        dbc.Col(
                                             [
                                                 dbc.Row(
-                                                    html.H4(
-                                                        "Local Management Platform for Risk Analytics & Governance",
-                                                        className = 'mb-0'
-                                                    ),
-                                                    class_name = 'mt-0 mb-3'
+                                                    [
+                                                        #html.H4("City proper")
+                                                    ],
+                                                    style = {
+                                                        'color' : '#F5F5F5',
+                                                        'position' : 'absolute',
+                                                        'bottom' : '2em',
+                                                        'padding-left' : '2em',
+                                                        'padding-right' : '2em',
+                                                        #'text-shadow' : '0 0 4px rgba(135, 113, 90, 0.6)'
+                                                    },
+                                                    #class_name = 'align-self-bottom'
                                                 ),
-                                                html.Hr(className = 'mb-0'),
-                                                dbc.Form(
+                                                html.Img(
+                                                    src=app.get_asset_url('banner.jpg'),
+                                                    style = {
+                                                        'display' : 'block',
+                                                        'height' : '30em',
+                                                        'width' : '100%',
+                                                        'object-fit' : 'cover',
+                                                        'z-index' : '-1',
+                                                        #'border-start-start-radius' : '0.75rem',
+                                                        #'border-end-start-radius' : '0.75rem'
+                                                        #'mask-image' : 'linear-gradient(to bottom, rgba(0, 0, 0, 1.0) 50%, transparent 100%)'
+                                                    }
+                                                ),
+                                            ],
+                                            class_name = 'p-0 col-12 col-md-8'
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dbc.CardBody(
                                                     [
                                                         dbc.Row(
+                                                            html.H4(
+                                                                "Local Management Platform for Risk Analytics & Governance",
+                                                                className = 'mb-0'
+                                                            ),
+                                                            class_name = 'mt-0 mb-3'
+                                                        ),
+                                                        html.Hr(className = 'mb-0'),
+                                                        dbc.Form(
                                                             [
-                                                                dbc.Col(
+                                                                dbc.Row(
                                                                     [
-                                                                        dbc.Alert(
-                                                                            dbc.Row(
-                                                                                [
-                                                                                    dbc.Col(
-                                                                                        html.I(className = 'bi bi-exclamation-circle-fill me-2'),
-                                                                                        width = 'auto',
-                                                                                        class_name = alert_i_m
+                                                                        dbc.Col(
+                                                                            [
+                                                                                dbc.Alert(
+                                                                                    dbc.Row(
+                                                                                        [
+                                                                                            dbc.Col(
+                                                                                                html.I(className = 'bi bi-exclamation-circle-fill me-2'),
+                                                                                                width = 'auto',
+                                                                                                class_name = alert_i_m
+                                                                                            ),
+                                                                                            dbc.Col(
+                                                                                                id = 'com_hom_alert_passwordvalidation_col_text'
+                                                                                            )
+                                                                                        ]
                                                                                     ),
-                                                                                    dbc.Col(
-                                                                                        id = 'com_hom_alert_passwordvalidation_col_text'
-                                                                                    )
-                                                                                ]
-                                                                            ),
-                                                                            id = 'com_hom_alert_passwordvalidation',
-                                                                            is_open = False,
-                                                                            color = 'warning',
-                                                                            class_name = label_m,
-                                                                            dismissable = True,
-                                                                            #fade = True,
+                                                                                    id = 'com_hom_alert_passwordvalidation',
+                                                                                    is_open = False,
+                                                                                    color = 'warning',
+                                                                                    class_name = label_m,
+                                                                                    dismissable = True,
+                                                                                    #fade = True,
+                                                                                )
+                                                                            ]
                                                                         )
-                                                                    ]
+                                                                    ],
+                                                                    id = 'com_hom_row_passwordvalidation',
+                                                                    class_name = 'mt-0 mb-0'
+                                                                ),
+                                                                dbc.Row(
+                                                                    dbc.Col(
+                                                                        [
+                                                                            dbc.Input(
+                                                                                type = 'text',
+                                                                                placeholder = 'Username',
+                                                                                id = 'com_hom_input_username'
+                                                                            )
+                                                                        ],
+                                                                        #class_name = 'mb-3'
+                                                                    ), class_name = 'mt-3 mb-3'
+                                                                ),
+                                                                dbc.Row(
+                                                                    [
+                                                                        dbc.Col(
+                                                                            dbc.Input(
+                                                                                type = 'password',
+                                                                                placeholder = 'Password',
+                                                                                id = 'com_hom_input_password'
+                                                                            )
+                                                                        )
+                                                                    ], class_name = 'mt-3 mb-3'
+                                                                ),
+                                                                #dbc.Row(
+                                                                #    [
+                                                                #        dbc.Col(
+                                                                #            dbc.Checkbox(
+                                                                #                label = [
+                                                                #                    'Ibilin la ako nga naka log-in',
+                                                                #                    html.Small(" (Keep me logged in)", className = 'text-muted')
+                                                                #                ],
+                                                                #                id = 'com_hom_cbox_logintype'
+                                                                #            )
+                                                                #        )
+                                                                #    ], class_name = 'mt-3 mb-3'
+                                                                #),
+                                                                dbc.Row(
+                                                                    [
+                                                                        dbc.Col(
+                                                                            dbc.Button(
+                                                                                "Log-in",
+                                                                                style = {'width' : '100%'},
+                                                                                id = 'com_hom_btn_login',
+                                                                                type = 'submit'
+                                                                                #color = 'secondary'
+                                                                            )
+                                                                        )
+                                                                    ], class_name = 'mt-3 mb-3'
                                                                 )
-                                                            ],
-                                                            id = 'com_hom_row_passwordvalidation',
-                                                            class_name = 'mt-0 mb-0'
+                                                            ]
                                                         ),
-                                                        dbc.Row(
-                                                            dbc.Col(
-                                                                [
-                                                                    dbc.Input(
-                                                                        type = 'text',
-                                                                        placeholder = 'Username',
-                                                                        id = 'com_hom_input_username'
-                                                                    )
-                                                                ],
-                                                                #class_name = 'mb-3'
-                                                            ), class_name = 'mt-3 mb-3'
-                                                        ),
-                                                        dbc.Row(
-                                                            [
-                                                                dbc.Col(
-                                                                    dbc.Input(
-                                                                        type = 'password',
-                                                                        placeholder = 'Password',
-                                                                        id = 'com_hom_input_password'
-                                                                    )
-                                                                )
-                                                            ], class_name = 'mt-3 mb-3'
-                                                        ),
-                                                        #dbc.Row(
-                                                        #    [
-                                                        #        dbc.Col(
-                                                        #            dbc.Checkbox(
-                                                        #                label = [
-                                                        #                    'Ibilin la ako nga naka log-in',
-                                                        #                    html.Small(" (Keep me logged in)", className = 'text-muted')
-                                                        #                ],
-                                                        #                id = 'com_hom_cbox_logintype'
-                                                        #            )
-                                                        #        )
-                                                        #    ], class_name = 'mt-3 mb-3'
-                                                        #),
-                                                        dbc.Row(
-                                                            [
-                                                                dbc.Col(
-                                                                    dbc.Button(
-                                                                        "Log-in",
-                                                                        style = {'width' : '100%'},
-                                                                        id = 'com_hom_btn_login',
-                                                                        type = 'submit'
-                                                                        #color = 'secondary'
-                                                                    )
-                                                                )
-                                                            ], class_name = 'mt-3 mb-3'
+                                                        html.Hr(),
+                                                        html.P(
+                                                            "Forgot password?",
+                                                            className = 'mt-3 mb-0'
                                                         )
                                                     ]
-                                                ),
-                                                html.Hr(),
-                                                html.P(
-                                                    "Forgot password?",
-                                                    className = 'mt-3 mb-0'
                                                 )
-                                            ]
+                                            ],
+                                            class_name = 'align-self-center col-12 col-md-4'
                                         )
-                                    ],
-                                    class_name = 'align-self-center col-12 col-md-4'
+                                    ]
                                 )
-                            ]
+                            ],
+                            style = {
+                                'border-radius' : '0.75rem',
+                                #'overflow' : 'hidden',
+                                'box-shadow' : '0 0 32px 4px rgba(135, 113, 90, 0.2)'
+                            },
+                            class_name = 'overflow-hidden'
+                        )
+                    ]
+                )
+            ],
+            class_name = 'mb-4'
+        ),
+        dbc.Row(
+            [
+                dbc.Col(
+                    [
+                        html.A(
+                            dbc.Card(
+                                [
+                                    html.H1(html.I(className = 'bi bi-calendar-event')),
+                                    html.H4("Mga panhitabó", className = 'mb-3'),
+                                    html.Hr(className = 'my-1'),
+                                    html.P(
+                                        [
+                                            """Kitaa an mga aktibo ug naglabay nga mga panhitabó
+                                            ug an ira mga summarized ug consolidated report didi.""",
+                                            html.Small(
+                                                " (View all events and their reports here.)",
+                                                className = 'text-muted'
+                                            )
+                                        ],
+                                        className =  p_m# + ' text-muted'
+                                    )
+                                ],
+                                body = True,
+                                style = card_style,
+                                #color = 'warning'
+                            ),
+                            href = '/events'
                         )
                     ],
-                    style = {
-                        'border-radius' : '0.75rem',
-                        #'overflow' : 'hidden',
-                        'box-shadow' : '0 0 32px 4px rgba(135, 113, 90, 0.2)'
-                    },
-                    class_name = 'overflow-hidden'
+                    class_name = 'col-12 col-md-6 mb-4 mb-md-0'
+                ),
+                dbc.Col(
+                    [
+                        html.A(
+                            dbc.Card(
+                                [
+                                    html.H1(html.I(className = 'bi bi-houses')),
+                                    html.H4("Mga barangay", className = 'mb-3'),
+                                    html.Hr(className = 'my-1'),
+                                    html.P(
+                                        [
+                                            """Kitaa an datos hiunong san mga populasyon ug
+                                            posibilidad san mga hazard san mga barangay san
+                                            Calbayog didi.""",
+                                            html.Small(
+                                                """ (View population and hazard vulnerability data for
+                                                Calbayog's barangays here.)""",
+                                                className = 'text-muted'
+                                            )
+                                        ],
+                                        className =  p_m# + ' text-muted'
+                                    )
+                                ],
+                                body = True,
+                                style = card_style,
+                                #color = 'warning'
+                            ),
+                            href = '/data/barangays'
+                        )
+                    ],
+                    class_name = 'col-12 col-md-6 mb-0'
                 )
             ]
-        )
+        )    
     ],
     className = 'mt-2 mb-2 ms-md-5 me-md-5'
 )

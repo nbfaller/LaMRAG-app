@@ -1753,8 +1753,14 @@ def usr_reg_confirmregistration(
             cols = ['id']
             df = db.querydatafromdatabase(sql, values, cols)
             if not df.empty: existing_user = True
+
+            print (existing_user, (usertype_id), not(fname), not(lname), not (birthdate), not (assignedsex_id)
+               , not(office_id), not(designation), not (contactnum)
+               , not(present_region_id), not (present_province_id), not (present_citymun_id), not(present_brgy_id), not(present_street)
+               , not(permanent_region_id), not (permanent_province_id), not (permanent_citymun_id), not(permanent_brgy_id), not(permanent_street)
+            )
             
-            if (existing_user or (usertype_id) or not(fname) or not(lname) or not (birthdate) or not (assignedsex_id)
+            if (existing_user or (usertype_id == None or usertype_id == '') or not(fname) or not(lname) or not (birthdate) or not (assignedsex_id)
                 or not(office_id) or not(designation) or not (contactnum)
                 or not(present_region_id) or not (present_province_id) or not (present_citymun_id) or not(present_brgy_id) or not(present_street)
                 or not(permanent_region_id) or not (permanent_province_id) or not (permanent_citymun_id) or not(permanent_brgy_id) or not(permanent_street)
