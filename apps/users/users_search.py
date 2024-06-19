@@ -16,6 +16,7 @@ import pandas as pd
 # App definition
 from app import app
 from apps import dbconnect as db
+from utilities.utils import MarginSettings
 
 tag_required = html.Sup("*", className = 'text-danger')
 card_style = {
@@ -25,15 +26,7 @@ card_style = {
 }
 
 # Default margins and spacing settings
-header_m = 'mb-3'
-div_m = 'mt-3 mb-3'
-row_m = 'mb-2'
-subhead_m = 'mt-3'
-p_m = 'mb-0'
-label_m = 'mb-0'
-ftext_m = 'mt-1'
-alert_i_m = 'pe-0 me-0 col-12 col-md-auto mb-2 mb-md-0'
-footer_m = 'mt-3'
+margins = MarginSettings()
 
 layout = html.Div(
     [
@@ -51,7 +44,7 @@ layout = html.Div(
                                             id = 'usr_src_h1_header'
                                         ),
                                     ],
-                                    class_name = row_m,
+                                    class_name = margins.row,
                                 ),
                                 dbc.Row(
                                     [
@@ -66,7 +59,7 @@ layout = html.Div(
                                         ),
                                     ], className = 'mb-1 mb-md-0',
                                     id = 'usr_src_row_search',
-                                    class_name = row_m
+                                    class_name = margins.row
                                 ),
                                 dbc.Row(
                                     [
@@ -77,7 +70,7 @@ layout = html.Div(
                                                     #html.Small(" (Year)", className = 'text-muted')
                                                 ],
                                                 id = 'usr_src_label_filter',
-                                                class_name = label_m
+                                                class_name = margins.label
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-2'
                                         ),
@@ -103,15 +96,15 @@ layout = html.Div(
                                         ),
                                     ], className = 'mb-1 mb-md-0',
                                     id = 'usr_src_row_filter',
-                                    class_name = row_m
+                                    class_name = margins.row
                                 ),
                             ],
                             id = 'usr_src_div_header',
-                            className = header_m
+                            className = margins.header
                         ),
                         html.Div(
                             id = 'usr_src_div_results',
-                            className = div_m,
+                            className = margins.div,
                             style = {
                                 'max-width' : '100%',
                                 'overflow' : 'scroll'
@@ -134,7 +127,7 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = row_m
+                                    ], class_name = margins.row
                                 ),
                                 dbc.Row(
                                     [
@@ -154,7 +147,7 @@ layout = html.Div(
                                         )
                                     ],
                                     id = 'usr_src_row_logins',
-                                    class_name = row_m
+                                    class_name = margins.row
                                 ),
                                 dbc.Row(
                                     [
@@ -166,7 +159,7 @@ layout = html.Div(
                                                             dbc.Col(
                                                                 html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                 width = 'auto',
-                                                                class_name = alert_i_m
+                                                                class_name = margins.alert_icon
                                                             ),
                                                             dbc.Col(
                                                                 [
@@ -198,7 +191,7 @@ layout = html.Div(
                                                     ),
                                                     is_open = True,
                                                     color = 'info',
-                                                    class_name = label_m,
+                                                    class_name = margins.label,
                                                     dismissable = False,
                                                     #fade = True,
                                                 )
@@ -206,7 +199,7 @@ layout = html.Div(
                                         )
                                     ],
                                     style = {'display' : 'none'}
-                                    #class_name = row_m
+                                    #class_name = margins.row
                                 ),
                             ],
                             id = 'usr_src_div_logchart'
@@ -230,11 +223,11 @@ layout = html.Div(
                                             class_name = 'col-auto'
                                         )
                                     ],
-                                    class_name = row_m + ' justify-content-end'
+                                    class_name = margins.row + ' justify-content-end'
                                 )
                             ],
                             id = 'usr_src_div_footer',
-                            className = footer_m
+                            className = margins.footer
                         )
                     ],
                     class_name = 'col-md-10'

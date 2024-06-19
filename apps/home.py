@@ -9,6 +9,7 @@ import hashlib
 # App definition
 from app import app
 from apps import dbconnect as db
+from utilities.utils import MarginSettings
 
 card_style = {
     'border-radius' : '0.75rem',
@@ -17,15 +18,7 @@ card_style = {
 }
 
 # Default margins and spacing settings
-header_m = 'mb-3'
-div_m = 'mt-3 mb-3'
-row_m = 'mb-2'
-subhead_m = 'mt-3'
-p_m = 'mb-0'
-label_m = 'mb-0'
-ftext_m = 'mt-1'
-alert_i_m = 'pe-0 me-0 col-12 col-md-auto mb-2 mb-md-0'
-footer_m = 'mt-3'
+margins = MarginSettings()
 
 layout = html.Div(
     [
@@ -93,7 +86,7 @@ layout = html.Div(
                                                                                             dbc.Col(
                                                                                                 html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                                                 width = 'auto',
-                                                                                                class_name = alert_i_m
+                                                                                                class_name = margins.alert_icon
                                                                                             ),
                                                                                             dbc.Col(
                                                                                                 id = 'com_hom_alert_passwordvalidation_col_text'
@@ -103,7 +96,7 @@ layout = html.Div(
                                                                                     id = 'com_hom_alert_passwordvalidation',
                                                                                     is_open = False,
                                                                                     color = 'warning',
-                                                                                    class_name = label_m,
+                                                                                    class_name = margins.label,
                                                                                     dismissable = True,
                                                                                     #fade = True,
                                                                                 )
@@ -208,7 +201,7 @@ layout = html.Div(
                                                 className = 'text-muted'
                                             )
                                         ],
-                                        className =  p_m# + ' text-muted'
+                                        className =  margins.paragraph# + ' text-muted'
                                     )
                                 ],
                                 body = True,
@@ -239,7 +232,7 @@ layout = html.Div(
                                                 className = 'text-muted'
                                             )
                                         ],
-                                        className =  p_m# + ' text-muted'
+                                        className =  margins.paragraph# + ' text-muted'
                                     )
                                 ],
                                 body = True,

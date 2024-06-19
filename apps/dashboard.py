@@ -10,6 +10,7 @@ import pandas as pd
 # App definition
 from app import app
 from apps import dbconnect as db
+from utilities.utils import MarginSettings
 
 tag_required = html.Sup("*", className = 'text-danger')
 card_style = {
@@ -19,15 +20,7 @@ card_style = {
 }
 
 # Default margins and spacing settings
-header_m = 'mb-3'
-div_m = 'mt-3 mb-3'
-row_m = 'mb-2'
-subhead_m = 'mt-3'
-p_m = 'mb-0'
-label_m = 'mb-0'
-ftext_m = 'mt-1'
-alert_i_m = 'pe-0 me-0 col-12 col-md-auto mb-2 mb-md-0'
-footer_m = 'mt-3'
+margins = MarginSettings()
 
 layout = html.Div(
     [
@@ -47,14 +40,14 @@ layout = html.Div(
                                         html.P(
                                             "User information",
                                             id = 'com_das_htp_userdetails',
-                                            className = p_m
+                                            className = margins.paragraph
                                         )
                                     ],
-                                    class_name = row_m,
+                                    class_name = margins.row,
                                 ),
                             ],
                             id = 'com_das_div_header',
-                            className = header_m
+                            className = margins.header
                         ),
                         html.Hr(),
                         # Cards
@@ -78,7 +71,7 @@ layout = html.Div(
                                                                         className = 'text-muted'
                                                                     )
                                                                 ],
-                                                                className =  p_m# + ' text-muted'
+                                                                className =  margins.paragraph# + ' text-muted'
                                                             )
                                                         ],
                                                         body = True,
@@ -106,7 +99,7 @@ layout = html.Div(
                                                                         className = 'text-muted'
                                                                     )
                                                                 ],
-                                                                className =  p_m# + ' text-muted'
+                                                                className =  margins.paragraph# + ' text-muted'
                                                             )
                                                         ],
                                                         body = True,
@@ -133,7 +126,7 @@ layout = html.Div(
                                                                         className = 'text-muted'
                                                                     )
                                                                 ],
-                                                                className =  p_m# + ' text-muted'
+                                                                className =  margins.paragraph# + ' text-muted'
                                                             )
                                                         ],
                                                         body = True,
@@ -160,7 +153,7 @@ layout = html.Div(
                                                                         className = 'text-muted'
                                                                     )
                                                                 ],
-                                                                className =  p_m# + ' text-muted'
+                                                                className =  margins.paragraph# + ' text-muted'
                                                             )
                                                         ],
                                                         body = True,
@@ -198,7 +191,7 @@ layout = html.Div(
                                                                                 )
                                                                             ]
                                                                         )
-                                                                    ], class_name = row_m
+                                                                    ], class_name = margins.row
                                                                 ),
                                                                 dbc.Row(
                                                                     [
@@ -256,7 +249,7 @@ layout = html.Div(
                                                                                                 )
                                                                                             ]
                                                                                         )
-                                                                                    ], class_name = row_m
+                                                                                    ], class_name = margins.row
                                                                                 ),
                                                                                 dbc.Row(
                                                                                     [
@@ -300,7 +293,7 @@ layout = html.Div(
                                                                                                 )
                                                                                             ]
                                                                                         )
-                                                                                    ], class_name = row_m
+                                                                                    ], class_name = margins.row
                                                                                 ),
                                                                                 dbc.Row(
                                                                                     [
@@ -375,7 +368,7 @@ layout = html.Div(
                                                                                             #body = True,
                                                                                             #trigger = 'focus',
                                                                                         ),
-                                                                                    ], class_name = row_m
+                                                                                    ], class_name = margins.row
                                                                                 ),
                                                                                 dbc.Row(
                                                                                     [
@@ -402,11 +395,11 @@ layout = html.Div(
                                             class_name = 'mb-2 mb-lg-0 col-12 col-lg-5'
                                         ),
                                     ],
-                                    class_name = row_m,
+                                    class_name = margins.row,
                                 )
                             ],
                             id = 'com_das_div_cards',
-                            className = div_m
+                            className = margins.div
                         )
                     ],
                     class_name = 'col-md-10'

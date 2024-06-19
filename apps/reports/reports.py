@@ -12,21 +12,12 @@ import pandas as pd
 # App definition
 from app import app
 from apps import dbconnect as db
+from utilities.utils import MarginSettings
 
 tag_required = html.Sup("*", className = 'text-danger')
 
-
-
 # Default margins and spacing settings
-header_m = 'mb-3'
-div_m = 'mt-3 mb-3'
-row_m = 'mb-2'
-subhead_m = 'mt-3'
-p_m = 'mb-0'
-label_m = 'mb-0'
-ftext_m = 'mt-1'
-alert_i_m = 'pe-0 me-0 col-12 col-md-auto mb-2 mb-md-0'
-footer_m = 'mt-3'
+margins = MarginSettings()
 
 layout = html.Div(
     [
@@ -44,7 +35,7 @@ layout = html.Div(
                                             id = 'rep_vie_h1_header'
                                         ),
                                     ],
-                                    class_name = row_m,
+                                    class_name = margins.row,
                                 ),
                                 dbc.Row(
                                     [
@@ -55,7 +46,7 @@ layout = html.Div(
                                                     #html.Small(" (Event)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_vie_label_brgy_id',
-                                                class_name = label_m
+                                                class_name = margins.label
                                             ),
                                             class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3 col-lg-2'
                                         ),
@@ -69,14 +60,14 @@ layout = html.Div(
                                                 #dbc.FormText(
                                                 #    "Kun opisyal ka san barangay, awtomatiko nga pipilion dinhi an imo barangay. (If you are a barangay official, your barangay will be automatically selected.)",
                                                 #    color = 'secondary',
-                                                #    class_name = ftext_m
+                                                #    class_name = margins.form_text
                                                 #),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9 col-lg-10'
                                         )
                                     ],
                                     id = 'rep_vie_row_brgy_id',
-                                    class_name = row_m,
+                                    class_name = margins.row,
                                 ),
                                 dbc.Row(
                                     [
@@ -87,7 +78,7 @@ layout = html.Div(
                                                     #html.Small(" (Year)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_vie_label_filter',
-                                                class_name = label_m
+                                                class_name = margins.label
                                             ),
                                             class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3 col-lg-2'
                                         ),
@@ -102,7 +93,7 @@ layout = html.Div(
                                             class_name = 'align-self-center mb-0 col-12 col-md-9 col-lg-10'
                                         ),
                                     ],
-                                    class_name = row_m
+                                    class_name = margins.row
                                 ),
                                 dbc.Row(
                                     [
@@ -126,15 +117,15 @@ layout = html.Div(
                                             class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3 col-lg-3'
                                         ),
                                     ],
-                                    className = row_m + ' justify-content-end'
+                                    className = margins.row + ' justify-content-end'
                                 )
                             ],
                             id = 'rep_vie_div_header',
-                            className = header_m
+                            className = margins.header
                         ),
                         html.Div(
                             id = 'rep_vie_div_results',
-                            className = div_m,
+                            className = margins.div,
                             style = {
                                 'max-width' : '100%',
                                 'overflow' : 'scroll'
@@ -157,7 +148,7 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = row_m
+                                    ], class_name = margins.row
                                 ),
                                 dbc.Row(
                                     [
@@ -167,11 +158,11 @@ layout = html.Div(
                                             )
                                         )
                                     ],
-                                    class_name = row_m
+                                    class_name = margins.row
                                 )
                             ],
                             id = 'rep_vie_div_chart',
-                            className = footer_m + ' d-block'
+                            className = margins.footer + ' d-block'
                         ),
                         html.Hr(),
                         html.Div(
@@ -192,11 +183,11 @@ layout = html.Div(
                                             class_name = 'col-auto'
                                         )
                                     ],
-                                    class_name = row_m + ' justify-content-end'
+                                    class_name = margins.row + ' justify-content-end'
                                 )
                             ],
                             id = 'rep_vie_div_footer',
-                            className = footer_m
+                            className = margins.footer
                         )
                     ],
                     class_name = 'col-md-10'
@@ -368,7 +359,7 @@ def rep_vie_loadsearchresults(pathname, brgy, type, event, purok, region, provin
                     ]
                 )
             ],
-            #class_name = row_m
+            #class_name = margins.row
         ),
 
         if df.shape[0]:
@@ -409,7 +400,7 @@ def rep_vie_loadsearchresults(pathname, brgy, type, event, purok, region, provin
 
 def rep_vie_generatereportsgraph(pathname, brgy, region, province, citymun):
     fig = None
-    class_name = footer_m + ' d-block'
+    class_name = margins.footer + ' d-block'
     conditions = [
         pathname == '/reports',
         pathname == '/reports/view'

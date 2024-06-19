@@ -13,6 +13,7 @@ import pytz
 # App definition
 from app import app
 from apps import dbconnect as db
+from utilities.utils import MarginSettings
 
 tag_required = html.Sup("*", className = 'text-danger')
 card_style = {
@@ -22,15 +23,7 @@ card_style = {
 }
 
 # Default margins and spacing settings
-header_m = 'mb-3'
-div_m = 'mt-3 mb-3'
-row_m = 'mb-2'
-subhead_m = 'mt-3'
-p_m = 'mb-0'
-label_m = 'mb-0'
-ftext_m = 'mt-1'
-alert_i_m = 'pe-0 me-0 col-12 col-md-auto mb-2 mb-md-0'
-footer_m = 'mt-3'
+margins = MarginSettings()
 
 layout = html.Div(
     [
@@ -50,7 +43,7 @@ layout = html.Div(
                                         ),
                                         width = 'auto'
                                     ),
-                                    class_name = row_m,
+                                    class_name = margins.row,
                                 ),
                                 dbc.Row(
                                     [
@@ -59,11 +52,11 @@ layout = html.Div(
                                             id = 'eve_eve_h1_header'
                                         ),
                                     ],
-                                    class_name = row_m,
+                                    class_name = margins.row,
                                 )
                             ],
                             id = 'eve_eve_div_header',
-                            className = header_m
+                            className = margins.header
                         ),
                         html.Hr(),
                         # Basic information
@@ -82,7 +75,7 @@ layout = html.Div(
                                                             html.Small(" (Basic information)", className = 'text-muted')
                                                         ]
                                                     ),
-                                                ], class_name = row_m
+                                                ], class_name = margins.row
                                             ),
                                             dbc.Row(
                                                 [
@@ -94,7 +87,7 @@ layout = html.Div(
                                                             'overflow' : 'scroll'
                                                         }
                                                     )
-                                                ], class_name = row_m
+                                                ], class_name = margins.row
                                             ),
                                             dbc.Row(
                                                 [
@@ -122,7 +115,7 @@ layout = html.Div(
                                 #)
                             ],
                             id = 'eve_eve_div_basicinfo',
-                            className = div_m
+                            className = margins.div
                         ),
                         html.Hr(),
                         html.Div(
@@ -137,23 +130,23 @@ layout = html.Div(
                                                 html.Small(" (Description)", className = 'text-muted')
                                             ]
                                         ),
-                                    ], class_name = row_m
+                                    ], class_name = margins.row
                                 ),
                                 dbc.Row(
                                     [
                                         html.P(
                                             id = 'eve_eve_htp_description',
-                                            className = p_m,
+                                            className = margins.paragraph,
                                             style = {
                                                 'white-space' : 'pre-wrap'
                                             }
                                         )
                                     ],
-                                    class_name = row_m,
+                                    class_name = margins.row,
                                 )
                             ],
                             id = 'eve_eve_div_description',
-                            className = div_m + ' d-block'
+                            className = margins.div + ' d-block'
                         ),
                         html.Hr(),
                         html.Div(
@@ -169,7 +162,7 @@ layout = html.Div(
                                             ]
                                         ),
                                     ],
-                                    class_name = row_m
+                                    class_name = margins.row
                                 ),
                                 dbc.Row(
                                     [
@@ -222,7 +215,7 @@ layout = html.Div(
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-5 col-lg-4'
                                         )
                                     ],
-                                    class_name = row_m
+                                    class_name = margins.row
                                 ),
                                 dbc.Row(
                                     [
@@ -233,11 +226,11 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = row_m
+                                    ], class_name = margins.row
                                 ),
                             ],
                             id = 'eve_eve_div_data',
-                            className = div_m
+                            className = margins.div
                         ),
                         html.Hr(),
                         html.Div(
@@ -252,7 +245,7 @@ layout = html.Div(
                                                 html.Small(" (Generated consolidated reports)", className = 'text-muted')
                                             ]
                                         ),
-                                    ], class_name = row_m
+                                    ], class_name = margins.row
                                 ),
                                 dbc.Row(
                                     [
@@ -263,10 +256,10 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = row_m
+                                    ], class_name = margins.row
                                 ),
                             ],
-                            className = div_m
+                            className = margins.div
                         ),
                         html.Hr(),
                         html.Div(
@@ -287,11 +280,11 @@ layout = html.Div(
                                             class_name = 'col-auto'
                                         )
                                     ],
-                                    class_name = row_m + ' justify-content-end'
+                                    class_name = margins.row + ' justify-content-end'
                                 )
                             ],
                             id = 'eve_eve_div_footer',
-                            className = footer_m
+                            className = margins.footer
                         )
                     ],
                     class_name = 'col-md-10'
@@ -365,7 +358,7 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
                 # Description
                 to_return.append(df['Deskripsiyon (Description)'][0])
                 if df['Deskripsiyon (Description)'][0]:
-                    description_class = div_m + ' d-block'
+                    description_class = margins.div + ' d-block'
                 to_return.append(description_class)
 
                 # Basic information table

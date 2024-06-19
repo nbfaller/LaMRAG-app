@@ -9,17 +9,10 @@ import pytz
 # App definition
 from app import app
 from apps import dbconnect as db
+from utilities.utils import MarginSettings
 
 # Default margins and spacing settings
-header_m = 'mb-3'
-div_m = 'mt-3 mb-3'
-row_m = 'mb-2'
-subhead_m = 'mt-3'
-p_m = 'mb-0'
-label_m = 'mb-0'
-ftext_m = 'mt-1'
-alert_i_m = 'pe-0 me-0 col-12 col-md-auto mb-2 mb-md-0'
-footer_m = 'mt-3'
+margins = MarginSettings()
 
 # Navbar
 @app.callback(
@@ -528,7 +521,7 @@ sidebar = dbc.Offcanvas(
                     color = sidebar_btn_color, size = sidebar_btn_size, style = sidebar_btn_style
                 ),
             ],
-            id = 'sidebar_div_mainbtns'
+            id = 'sidebar_margins.divainbtns'
         ),
         html.Hr(),
         # Reports Management
@@ -819,11 +812,11 @@ change_password = dbc.Modal(
                                                     by your new password in the next two fields.""",
                                                     className = 'text-muted'
                                                 )
-                                            ], className = p_m
+                                            ], className = margins.paragraph
                                         )
                                     ]
                                 )
-                            ], class_name = row_m
+                            ], class_name = margins.row
                         ),
                         dbc.Row(
                             [
@@ -835,7 +828,7 @@ change_password = dbc.Modal(
                                                     dbc.Col(
                                                         html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                         width = 'auto',
-                                                        class_name = alert_i_m
+                                                        class_name = margins.alert_icon
                                                     ),
                                                     dbc.Col(
                                                         id = 'cm_alert_paswordvalidation_col_text'
@@ -845,7 +838,7 @@ change_password = dbc.Modal(
                                             id = 'cm_alert_passwordvalidation',
                                             is_open = False,
                                             color = 'warning',
-                                            class_name = label_m,
+                                            class_name = margins.label,
                                             dismissable = True 
                                         )
                                     ]
@@ -865,7 +858,7 @@ change_password = dbc.Modal(
                                 )
                             ],
                             id = 'cm_row_existingpassword',
-                            class_name = row_m + ' d-block'
+                            class_name = margins.row + ' d-block'
                         ),
                         dbc.Row(
                             [
@@ -880,7 +873,7 @@ change_password = dbc.Modal(
                                 )
                             ],
                             id = 'cm_row_newpassword_initial',
-                            class_name = row_m + ' d-block'
+                            class_name = margins.row + ' d-block'
                         ),
                         dbc.Row(
                             [
@@ -895,7 +888,7 @@ change_password = dbc.Modal(
                                 )
                             ],
                             id = 'cm_row_newpassword_verification',
-                            class_name = row_m + ' d-block'
+                            class_name = margins.row + ' d-block'
                         ),
                     ]
                 ),
