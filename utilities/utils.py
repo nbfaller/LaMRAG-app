@@ -1,4 +1,7 @@
 from dash import html
+import dash_bootstrap_components as dbc
+
+usr_reg_tag_required = html.Sup("*", className = 'text-danger')
 
 class MarginSettings:
     def __init__(self):

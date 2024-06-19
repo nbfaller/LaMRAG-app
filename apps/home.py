@@ -206,7 +206,7 @@ layout = html.Div(
                                 ],
                                 body = True,
                                 style = card_style,
-                                #color = 'warning'
+                                class_name = 'hover-enlarge'
                             ),
                             href = '/events'
                         )
@@ -237,7 +237,7 @@ layout = html.Div(
                                 ],
                                 body = True,
                                 style = card_style,
-                                #color = 'warning'
+                                class_name = 'hover-enlarge'
                             ),
                             href = '/data/barangays'
                         )

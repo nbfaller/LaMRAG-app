@@ -76,7 +76,7 @@ layout = html.Div(
                                                         ],
                                                         body = True,
                                                         style = card_style,
-                                                        #color = 'warning'
+                                                        class_name = 'hover-enlarge'
                                                     ),
                                                     href = '/reports/create?mode=new'
                                                 )
@@ -103,7 +103,8 @@ layout = html.Div(
                                                             )
                                                         ],
                                                         body = True,
-                                                        style = card_style
+                                                        style = card_style,
+                                                        class_name = 'hover-enlarge'
                                                     ),
                                                     href = '/events'
                                                 )
@@ -130,7 +131,8 @@ layout = html.Div(
                                                             )
                                                         ],
                                                         body = True,
-                                                        style = card_style
+                                                        style = card_style,
+                                                        class_name = 'hover-enlarge'
                                                     ),
                                                     href = '/data/barangays'
                                                 )
@@ -157,7 +159,8 @@ layout = html.Div(
                                                             )
                                                         ],
                                                         body = True,
-                                                        style = card_style
+                                                        style = card_style,
+                                                        class_name = 'hover-enlarge'
                                                     ),
                                                     href = '/data/household/upload'
                                                 )
@@ -218,7 +221,8 @@ layout = html.Div(
                                                             ]
                                                         )
                                                     ],
-                                                    style = card_style
+                                                    style = card_style,
+                                                    #class_name = 'hover-enlarge'
                                                 )
                                             ],
                                             class_name = 'mb-2 mb-lg-0 col-12 col-lg-7'
@@ -262,7 +266,7 @@ layout = html.Div(
                                                                         )
                                                                     ],
                                                                     style = card_style,
-                                                                    #color = 'warning'
+                                                                    #class_name = 'hover-enlarge'
                                                                 )
                                                             ]
                                                         )
@@ -384,7 +388,8 @@ layout = html.Div(
                                                                             ]
                                                                         )
                                                                     ],
-                                                                    style = card_style
+                                                                    style = card_style,
+                                                                    #class_name = 'hover-enlarge'
                                                                 )
                                                             ]
                                                         )

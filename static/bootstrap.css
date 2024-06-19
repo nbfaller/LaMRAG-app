@@ -4072,7 +4072,7 @@ fieldset:disabled .btn {
 .dropdown-menu {
   position: absolute;
   z-index: 1000;
-  display: none;
+  display: block;
   min-width: 10rem;
   padding: 0.5rem 0;
   margin: 0;
@@ -4084,6 +4084,14 @@ fieldset:disabled .btn {
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 0.25rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+
+.show > .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
 }
 
 .dropdown-menu[data-bs-popper] {
@@ -5179,6 +5187,16 @@ fieldset:disabled .btn {
   .card-group>.card:not(:first-child) .card-footer {
     border-bottom-left-radius: 0;
   }
+}
+
+.hover-enlarge {
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border 0.3s ease-in-out;
+}
+
+.hover-enlarge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 0.25rem rgba(135, 113, 90, 0.25);
+  border: 1px solid #7a736b;
 }
 
 .accordion-button {
@@ -8639,14 +8657,6 @@ fieldset:disabled .btn {
 
 .rounded-3 {
   border-radius: 0.3rem !important;
-}
-
-.rounded-4 {
-  border-radius: 0.5rem !important;
-}
-
-.rounded-4 {
-  border-radius: 0.75rem !important;
 }
 
 .rounded-circle {

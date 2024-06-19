@@ -218,10 +218,11 @@ navbar = dbc.Navbar(
                             header = True
                         ),
                         dbc.DropdownMenuItem(divider = True),
-                        dbc.DropdownMenuItem("Dashboard", href = '/dashboard', external_link = nav_external_link),
-                        dbc.DropdownMenuItem("Profile", href = '/users/profile', external_link = nav_external_link),
-                        dbc.DropdownMenuItem("Change password", id = 'cm_btn_createnewpassword'),
-                        dbc.DropdownMenuItem("Log-out", href = '/logout', external_link = nav_external_link, id = 'com_mod_dmi_logout'),
+                        dbc.DropdownMenuItem([html.I(className = 'bi bi-speedometer me-2'), "Dashboard"], href = '/dashboard', external_link = nav_external_link),
+                        dbc.DropdownMenuItem([html.I(className = 'bi bi-person-circle me-2'), "Profile"], href = '/users/profile', external_link = nav_external_link),
+                        dbc.DropdownMenuItem([html.I(className = 'bi bi-key me-2'), "Change password"], id = 'cm_btn_createnewpassword'),
+                        dbc.DropdownMenuItem(divider = True),
+                        dbc.DropdownMenuItem([html.I(className = 'bi bi-door-open me-2'), "Log-out"], href = '/logout', external_link = nav_external_link, id = 'com_mod_dmi_logout'),
                     ],
                     id = 'com_mod_ddm_navbarmenu',
                     label = [
@@ -482,7 +483,7 @@ sidebar = dbc.Offcanvas(
                     dbc.Row(
                         dbc.Col(
                             [
-                                html.I(className = 'bi bi-grid-1x2 me-2'),
+                                html.I(className = 'bi bi-speedometer me-2'),
                                 "Dashboard"
                             ],
                             width = sidebar_btn_col_width
