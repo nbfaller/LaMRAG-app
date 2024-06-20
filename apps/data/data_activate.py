@@ -9,12 +9,7 @@ from datetime import datetime, timedelta
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings
-
-tag_required = html.Sup("*", className = 'text-danger')
-
-# Default margins and spacing settings
-margins = MarginSettings()
+from utilities.utils import MarginSettings, CardStyle, RequiredTag
 
 layout = html.Div(
     [
@@ -32,17 +27,17 @@ layout = html.Div(
                                                 html.H1("Activate community profiling"),
                                                 html.P(
                                                     [
-                                                        "Kinihanglan pun-on an mga patlang nga may pula nga asterisk ", tag_required, ".",
+                                                        "Kinihanglan pun-on an mga patlang nga may pula nga asterisk ", RequiredTag.tag, ".",
                                                         html.Br(),
                                                         html.Small(
-                                                            ["(Fields with red asterisks ", tag_required, " are required.)"],
+                                                            ["(Fields with red asterisks ", RequiredTag.tag, " are required.)"],
                                                             className = 'text-muted'
                                                         )
-                                                    ], className = margins.paragraph
+                                                    ], className = MarginSettings().paragraph
                                                 )
                                             ],
                                             id = 'dat_ena_row_header',
-                                            class_name = margins.row
+                                            class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
@@ -54,7 +49,7 @@ layout = html.Div(
                                                                     dbc.Col(
                                                                         html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                         width = 'auto',
-                                                                        class_name = margins.alert_icon
+                                                                        class_name = MarginSettings().alert_icon
                                                                     ),
                                                                     dbc.Col(
                                                                         [
@@ -72,15 +67,15 @@ layout = html.Div(
                                                             id = 'dat_ena_alert_inputvalidation',
                                                             is_open = False,
                                                             color = 'warning',
-                                                            class_name = margins.label,
+                                                            class_name = MarginSettings().label,
                                                             dismissable = True
                                                         )
                                                     ]
                                                 )
                                             ],
-                                            #class_name = margins.row
+                                            #class_name = MarginSettings().row
                                         )
-                                    ], className = margins.header
+                                    ], className = MarginSettings().header
                                 ),
                                 html.Hr(),
                                 html.Div(
@@ -91,11 +86,11 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Petsa san pagtikang", tag_required, html.Br(),
+                                                            "Petsa san pagtikang", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Start date)", className = 'text-muted')
                                                         ],
                                                         id = 'dat_ena_label_startdate',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -115,7 +110,7 @@ layout = html.Div(
                                                         #    (Separate events should be created for those caused by others, such as
                                                         #    tsunamis caused by earthquakes or storm surges caused by typhoons.)""",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
@@ -123,11 +118,11 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Petsa san pagtapos", tag_required, html.Br(),
+                                                            "Petsa san pagtapos", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Deadline/end date)", className = 'text-muted')
                                                         ],
                                                         id = 'dat_ena_label_enddate',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -148,12 +143,12 @@ layout = html.Div(
                                                         #    (Separate events should be created for those caused by others, such as
                                                         #    tsunamis caused by earthquakes or storm surges caused by typhoons.)""",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 )
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                             id = 'dat_ena_row_date'
                                         ),
                                         # Participating barangays
@@ -162,11 +157,11 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Mga api nga barangay", tag_required, html.Br(),
+                                                            "Mga api nga barangay", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Participating barangays)", className = 'text-muted')
                                                         ],
                                                         id = 'dat_ena_label_brgy_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -204,12 +199,12 @@ layout = html.Div(
                                                             (Please select all barangays that will participate in
                                                             this community profiling run.)""",
                                                             color = 'secondary',
-                                                            class_name = margins.form_text
+                                                            class_name = MarginSettings().form_text
                                                         ),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                             id = 'dat_ena_row_brgy'
                                         ),
                                         dbc.Row(
@@ -221,7 +216,7 @@ layout = html.Div(
                                                             html.Small(" (Remarks/message to barangays)", className = 'text-muted')
                                                         ],
                                                         id = 'dat_ena_label_remarks',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -243,17 +238,17 @@ layout = html.Div(
                                                             like to give to the barangays that are participating in this
                                                             community profiling run.)""",
                                                             color = 'secondary',
-                                                            class_name = margins.form_text
+                                                            class_name = MarginSettings().form_text
                                                         ),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                             id = 'dat_ena_row_remarks'
                                         ),
                                     ],
                                     id = 'dat_ena_div_details',
-                                    className = margins.div
+                                    className = MarginSettings().div
                                 ),
                                 html.Hr(),
                                 # Create button
@@ -264,7 +259,7 @@ layout = html.Div(
                                                 dbc.Col(
                                                     html.I(className = 'bi bi-exclamation-square-fill me-2'),
                                                     width = 'auto',
-                                                    class_name = margins.alert_icon
+                                                    class_name = MarginSettings().alert_icon
                                                 ),
                                                 dbc.Col(
                                                     html.P(
@@ -289,10 +284,10 @@ layout = html.Div(
                                                                 """,
                                                                 className = 'text-muted'
                                                             )
-                                                        ], className = margins.paragraph
+                                                        ], className = MarginSettings().paragraph
                                                     )
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
@@ -312,7 +307,7 @@ layout = html.Div(
                                             class_name = 'justify-content-end'
                                         )
                                     ],
-                                    className = margins.footer
+                                    className = MarginSettings().footer
                                 )
                             ]
                         )
@@ -344,7 +339,7 @@ layout = html.Div(
                                                             """,
                                                             className = 'text-muted'
                                                         )
-                                                    ], className = margins.paragraph
+                                                    ], className = MarginSettings().paragraph
                                                 ),
                                             ]
                                         )
@@ -361,7 +356,7 @@ layout = html.Div(
                                                             dbc.Col(
                                                                 html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                 width = 'auto',
-                                                                class_name = margins.alert_icon
+                                                                class_name = MarginSettings().alert_icon
                                                             ),
                                                             dbc.Col(
                                                                 id = 'dat_ena_alert_passwordvalidation_col_text'
@@ -371,7 +366,7 @@ layout = html.Div(
                                                     id = 'dat_ena_alert_passwordvalidation',
                                                     is_open = False,
                                                     color = 'warning',
-                                                    class_name = margins.label,
+                                                    class_name = MarginSettings().label,
                                                     dismissable = True,
                                                     #fade = True,
                                                 )
@@ -393,7 +388,7 @@ layout = html.Div(
                                         )
                                     ],
                                     id = 'dat_ena_row_password',
-                                    class_name = margins.row
+                                    class_name = MarginSettings().row
                                 ),
                             ],
                             id = 'dat_ena_modal_confirm_body'
@@ -704,7 +699,7 @@ def dat_ena_submitcreation(
             # Modal dissmisability
             modal_backdrop = True
             # Password visibility
-            class_password = margins.row + ' ' + vis_block
+            class_password = MarginSettings().row + ' ' + vis_block
 
             if not(password):
                 alert_open = True
@@ -771,7 +766,7 @@ def dat_ena_submitcreation(
                     # Modal dissmisability
                     modal_backdrop = 'static'
                     # Password visibility
-                    class_password = margins.row + ' ' + vis_none
+                    class_password = MarginSettings().row + ' ' + vis_none
                 else:
                     alert_open = True
                     alert_class_name = 'mb-3'

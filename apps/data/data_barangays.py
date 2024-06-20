@@ -11,17 +11,7 @@ from datetime import datetime, timedelta
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings
-
-tag_required = html.Sup("*", className = 'text-danger')
-card_style = {
-    'border-radius' : '0.75rem',
-    'overflow' : 'hidden',
-    'box-shadow' : '0 0 32px 4px rgba(135, 113, 90, 0.2)'
-}
-
-# Default margins and spacing settings
-margins = MarginSettings()
+from utilities.utils import MarginSettings, CardStyle
 
 layout = html.Div(
     [
@@ -42,7 +32,7 @@ layout = html.Div(
                                         ),
                                         width = 'auto'
                                     ),
-                                    class_name = margins.row,
+                                    class_name = MarginSettings().row,
                                 ),
                                 dbc.Row(
                                     [
@@ -51,7 +41,7 @@ layout = html.Div(
                                             id = 'dat_bar_h1_header'
                                         ),
                                     ],
-                                    class_name = margins.row,
+                                    class_name = MarginSettings().row,
                                 ),
                                 dbc.Row(
                                     [
@@ -62,7 +52,7 @@ layout = html.Div(
                                                     #html.Br(), html.Small(" (User type)", className = 'text-muted')
                                                 ],
                                                 id = 'dat_bar_label_brgy_id',
-                                                class_name = margins.row
+                                                class_name = MarginSettings().row
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-2'
                                         ),
@@ -79,7 +69,7 @@ layout = html.Div(
                                 ),
                             ],
                             id = 'dat_bar_div_header',
-                            className = margins.header
+                            className = MarginSettings().header
                         ),
                         # Cards
                         html.Div(
@@ -107,7 +97,7 @@ layout = html.Div(
                                                                                 ),
                                                                             ]
                                                                         )
-                                                                    ], class_name = margins.row
+                                                                    ], class_name = MarginSettings().row
                                                                 ),
                                                                 dbc.Row(
                                                                     [
@@ -120,7 +110,7 @@ layout = html.Div(
                                                                                 ),
                                                                             ]
                                                                         )
-                                                                    ], class_name = margins.row
+                                                                    ], class_name = MarginSettings().row
                                                                 ),
                                                                 dbc.Row(
                                                                     [
@@ -183,7 +173,7 @@ layout = html.Div(
                                                                                 )
                                                                             ]
                                                                         )
-                                                                    ], class_name = margins.row
+                                                                    ], class_name = MarginSettings().row
                                                                 ),
                                                                 html.Hr(),
                                                                 dbc.Row(
@@ -200,7 +190,7 @@ layout = html.Div(
                                                                                 ),
                                                                             ]
                                                                         )
-                                                                    ], class_name = margins.row
+                                                                    ], class_name = MarginSettings().row
                                                                 ),
                                                                 dbc.Row(
                                                                     [
@@ -211,7 +201,7 @@ layout = html.Div(
                                                                                     html.Small(" (Year)", className = 'text-muted')
                                                                                 ],
                                                                                 id = 'dat_bar_label_calcyear',
-                                                                                class_name = margins.label
+                                                                                class_name = MarginSettings().label
                                                                             ),
                                                                             class_name = 'align-self-center mb-2 mb-lg-0 col-5 col-md-3'
                                                                         ),
@@ -224,7 +214,7 @@ layout = html.Div(
                                                                             ),
                                                                             class_name = 'align-self-center mb-2 mb-lg-0 col-7 col-md-9'
                                                                         ),
-                                                                    ], class_name = margins.row
+                                                                    ], class_name = MarginSettings().row
                                                                 ),
                                                                 dbc.Row(
                                                                     [
@@ -235,7 +225,7 @@ layout = html.Div(
                                                                                     html.Small(" (Population)", className = 'text-muted')
                                                                                 ],
                                                                                 id = 'dat_bar_label_calcpop',
-                                                                                class_name = margins.label
+                                                                                class_name = MarginSettings().label
                                                                             ),
                                                                             class_name = 'align-self-center mb-2 mb-lg-0 col-5 col-md-3'
                                                                         ),
@@ -248,7 +238,7 @@ layout = html.Div(
                                                                             ),
                                                                             class_name = 'align-self-center mb-2 mb-lg-0 col-7 col-md-9'
                                                                         ),
-                                                                    ], class_name = margins.row
+                                                                    ], class_name = MarginSettings().row
                                                                 ),
                                                                 dbc.Row(
                                                                     [
@@ -269,17 +259,17 @@ layout = html.Div(
                                                                                             (CPDO).)""",
                                                                                             className = 'text-muted'
                                                                                         )
-                                                                                    ], className = margins.paragraph
+                                                                                    ], className = MarginSettings().paragraph
                                                                                 ),
                                                                             ]
                                                                         )
-                                                                    ], class_name = margins.row
+                                                                    ], class_name = MarginSettings().row
                                                                 )
                                                             ]
                                                         )
                                                     ],
                                                     id = 'dat_bar_car_popgraph',
-                                                    style = card_style,
+                                                    style = CardStyle.get_style(),
                                                     class_name = 'w-md-100'
                                                 )
                                             ],
@@ -309,7 +299,7 @@ layout = html.Div(
                                                                                                 ),
                                                                                             ]
                                                                                         )
-                                                                                    ], class_name = margins.row
+                                                                                    ], class_name = MarginSettings().row
                                                                                 ),
                                                                                 dbc.Row(
                                                                                     [
@@ -352,7 +342,7 @@ layout = html.Div(
                                                                                             ],
                                                                                             class_name = 'd-flex justify-content-center'
                                                                                         ),
-                                                                                    ], class_name = margins.row
+                                                                                    ], class_name = MarginSettings().row
                                                                                 ),
                                                                                 dbc.Row(
                                                                                     [
@@ -434,7 +424,7 @@ layout = html.Div(
                                                                                                 ),
                                                                                             ]
                                                                                         )
-                                                                                    ], class_name = margins.row
+                                                                                    ], class_name = MarginSettings().row
                                                                                 ),
                                                                                 #html.Hr(),
                                                                                 #dbc.Row(
@@ -462,17 +452,17 @@ layout = html.Div(
                                                                                 #                            not be held liable for any damage or loss resulting from the use of the data above.)""",
                                                                                 #                            className = 'text-muted'
                                                                                 #                        )
-                                                                                #                    ], className = margins.paragraph
+                                                                                #                    ], className = MarginSettings().paragraph
                                                                                 #                ),
                                                                                 #            ]
                                                                                 #        )
-                                                                                #    ], class_name = margins.row
+                                                                                #    ], class_name = MarginSettings().row
                                                                                 #)
                                                                             ]
                                                                         )
                                                                     ],
                                                                     id = 'dat_bar_car_hazardscores',
-                                                                    style = card_style,
+                                                                    style = CardStyle.get_style(),
                                                                     class_name = 'w-md-100'
                                                                 )
                                                             ]
@@ -502,7 +492,7 @@ layout = html.Div(
                                                                                                 ),
                                                                                             ]
                                                                                         )
-                                                                                    ], class_name = margins.row
+                                                                                    ], class_name = MarginSettings().row
                                                                                 ),
                                                                                 dbc.Row(
                                                                                     [
@@ -521,7 +511,7 @@ layout = html.Div(
                                                                                                 )
                                                                                             ]
                                                                                         )
-                                                                                    ], class_name = margins.row
+                                                                                    ], class_name = MarginSettings().row
                                                                                 ),
                                                                                 dbc.Row(
                                                                                     [
@@ -538,17 +528,17 @@ layout = html.Div(
                                                                                                             please reach out to the City Planning and Development Office or CPDO.)""",
                                                                                                             className = 'text-muted'
                                                                                                         )
-                                                                                                    ], className = margins.paragraph
+                                                                                                    ], className = MarginSettings().paragraph
                                                                                                 ),
                                                                                             ]
                                                                                         )
-                                                                                    ], class_name = margins.row
+                                                                                    ], class_name = MarginSettings().row
                                                                                 )
                                                                             ]
                                                                         )
                                                                     ],
                                                                     id = 'dat_bar_car_spotmap',
-                                                                    style = card_style,
+                                                                    style = CardStyle.get_style(),
                                                                     class_name = 'w-md-100'
                                                                 )
                                                             ]
@@ -560,11 +550,11 @@ layout = html.Div(
                                             class_name = 'mb-3 mb-lg-0 col-12 col-lg-5'
                                         )
                                     ],
-                                    class_name = margins.row
+                                    class_name = MarginSettings().row
                                 )
                             ],
                             id = 'dat_bar_div_cards',
-                            className = margins.div
+                            className = MarginSettings().div
                         )
                     ],
                     class_name = 'col-md-10'

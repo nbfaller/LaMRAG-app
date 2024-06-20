@@ -10,12 +10,7 @@ import pandas as pd
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings
-
-tag_required = html.Sup("*", className = 'text-danger')
-
-# Default margins and spacing settings
-margins = MarginSettings()
+from utilities.utils import MarginSettings, CardStyle, RequiredTag
 
 layout = html.Div(
     [
@@ -42,17 +37,17 @@ layout = html.Div(
                                                 ),
                                                 html.P(
                                                     [
-                                                        "Kinihanglan pun-on an mga patlang nga may pula nga asterisk ", tag_required, ".",
+                                                        "Kinihanglan pun-on an mga patlang nga may pula nga asterisk ", RequiredTag.tag, ".",
                                                         html.Br(),
                                                         html.Small(
-                                                            ["(Fields with red asterisks ", tag_required, " are required.)"],
+                                                            ["(Fields with red asterisks ", RequiredTag.tag, " are required.)"],
                                                             className = 'text-muted'
                                                         )
-                                                    ], className = margins.paragraph
+                                                    ], className = MarginSettings().paragraph
                                                 )
                                             ],
                                             id = 'rep_cre_row_header',
-                                            class_name = margins.row
+                                            class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
@@ -64,7 +59,7 @@ layout = html.Div(
                                                                     dbc.Col(
                                                                         html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                         width = 'auto',
-                                                                        class_name = margins.alert_icon
+                                                                        class_name = MarginSettings().alert_icon
                                                                     ),
                                                                     dbc.Col(
                                                                         [
@@ -82,7 +77,7 @@ layout = html.Div(
                                                             id = 'rep_cre_alert_inputvalidation',
                                                             is_open = False,
                                                             color = 'warning',
-                                                            class_name = margins.label,
+                                                            class_name = MarginSettings().label,
                                                             dismissable = True,
                                                             #fade = True,
                                                         )
@@ -90,7 +85,7 @@ layout = html.Div(
                                                 )
                                             ],
                                             id = 'rep_cre_row_inputvalidation',
-                                            class_name = margins.row
+                                            class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
@@ -102,7 +97,7 @@ layout = html.Div(
                                                                     dbc.Col(
                                                                         html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                         width = 'auto',
-                                                                        class_name = margins.alert_icon
+                                                                        class_name = MarginSettings().alert_icon
                                                                     ),
                                                                     dbc.Col(
                                                                         [
@@ -134,11 +129,11 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Barangay", tag_required, #html.Br(),
+                                                            "Barangay", RequiredTag.tag, #html.Br(),
                                                             #html.Small(" (Event)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_brgy_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -152,25 +147,25 @@ layout = html.Div(
                                                         dbc.FormText(
                                                             "Kun opisyal ka san barangay, awtomatiko nga pipilion dinhi an imo barangay. (If you are a barangay official, your barangay will be automatically selected.)",
                                                             color = 'secondary',
-                                                            class_name = margins.form_text
+                                                            class_name = MarginSettings().form_text
                                                         ),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 )
                                             ],
                                             id = 'rep_cre_row_brgy_id',
-                                            class_name = margins.row,
+                                            class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Panhitabó", tag_required, html.Br(),
+                                                            "Panhitabó", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Event)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_event_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -183,25 +178,25 @@ layout = html.Div(
                                                         dbc.FormText(
                                                             "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                             color = 'secondary',
-                                                            class_name = margins.form_text
+                                                            class_name = MarginSettings().form_text
                                                         ),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 )
                                             ],
                                             id = 'rep_cre_row_event',
-                                            class_name = margins.row,
+                                            class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Klase san report", tag_required, html.Br(),
+                                                            "Klase san report", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Report type)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_reporttype_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -215,26 +210,26 @@ layout = html.Div(
                                                         dbc.FormText(
                                                             "Usa la nga initial report an puwede himuon. (Initial reports can only be filed once.)",
                                                             color = 'secondary',
-                                                            class_name = margins.form_text
+                                                            class_name = MarginSettings().form_text
                                                         ),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 )
                                             ],
                                             id = 'rep_cre_row_reporttype',
-                                            class_name = margins.row
+                                            class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Purok san panhitabó", #tag_required,
+                                                            "Purok san panhitabó", #RequiredTag.tag,
                                                             html.Br(),
                                                             html.Small(" (Purok of occurrence)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_purok',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -250,7 +245,7 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Alayon pagbutang san numero san purok kun diin ini natabó. (Please input the purok number where this incident occurred.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-3'
@@ -258,11 +253,11 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Petsa san panhitabó", tag_required, html.Br(),
+                                                            "Petsa san panhitabó", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Date of occurrence)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_date',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-2'
                                                 ),
@@ -279,24 +274,24 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-4'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Oras san panhitabó", #tag_required,
+                                                            "Oras san panhitabó", #RequiredTag.tag,
                                                             html.Br(),
                                                             html.Small(" (Time of occurrence)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_time',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -346,16 +341,16 @@ layout = html.Div(
                                                         #    """Awtomátikó nga ginkukuha san LáMRAG an oras yana komo oras san panhitabó. Alayon pagbalyo sini kun sa iba nga oras nahitabó an imo ginhihimuan report.
                                                         #    (LáMRAG automatically sets the current time as the time of occurrence. Please change this if the event you are reporting occurred at a different time.)""",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         )
                                     ],
                                     id = 'rep_cre_div_basicdetails',
-                                    className = margins.header
+                                    className = MarginSettings().header
                                 ),
                                 # Related incidents
                                 html.Div(
@@ -375,18 +370,18 @@ layout = html.Div(
                                                         ),
                                                     ]
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Klase san insidente", tag_required, html.Br(),
+                                                            "Klase san insidente", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Type of incident)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_relinc_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -400,7 +395,7 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-4'
@@ -408,11 +403,11 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Kantidad san insidente", tag_required, html.Br(),
+                                                            "Kantidad san insidente", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Quantity of incident)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_relinc_qty',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -427,12 +422,12 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-2'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
@@ -443,7 +438,7 @@ layout = html.Div(
                                                             html.Small(" (Description)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_relinc_desc',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -461,7 +456,7 @@ layout = html.Div(
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
@@ -472,7 +467,7 @@ layout = html.Div(
                                                             html.Small(" (Actions taken)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_relinc_actions',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -490,18 +485,18 @@ layout = html.Div(
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Kamutangan san insidente", tag_required, html.Br(),
+                                                            "Kamutangan san insidente", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Status)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_relincstatus_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -515,16 +510,16 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                     ],
                                     id = 'rep_cre_div_relinc',
-                                    className = margins.row,
+                                    className = MarginSettings().row,
                                     style = {'display' : 'none'}
                                 ),
                                 # Casualties
@@ -545,18 +540,18 @@ layout = html.Div(
                                                         ),
                                                     ]
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Klase san disgrasiya", tag_required, html.Br(),
+                                                            "Klase san disgrasiya", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Type of casualty)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_casualtytype_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -569,12 +564,12 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
@@ -590,18 +585,18 @@ layout = html.Div(
                                                         ),
                                                     ]
                                                 )
-                                            ], class_name = margins.subhead
+                                            ], class_name = MarginSettings().subhead
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Ngaran", tag_required, html.Br(),
+                                                            "Ngaran", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Name)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_casualty_name',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -638,18 +633,18 @@ layout = html.Div(
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Edad (tuig)", tag_required, html.Br(),
+                                                            "Edad (tuig)", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Age in years)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_casualty_age',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -665,7 +660,7 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-3'
@@ -673,11 +668,11 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Natawo nga babayi/lalaki", tag_required, html.Br(),
+                                                            "Natawo nga babayi/lalaki", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Sex assigned at birth)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_casualty_assignedsex_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -690,12 +685,12 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-3'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
@@ -711,19 +706,19 @@ layout = html.Div(
                                                         ),
                                                     ]
                                                 )
-                                            ], class_name = margins.subhead
+                                            ], class_name = MarginSettings().subhead
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Rehiyon", #tag_required,
+                                                            "Rehiyon", #RequiredTag.tag,
                                                             html.Br(),
                                                             html.Small(" (Region)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_casualty_region_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -736,19 +731,19 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Probinsya", #tag_required,
+                                                            "Probinsya", #RequiredTag.tag,
                                                             html.Br(),
                                                             html.Small(" (Province)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_casualty_province_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -761,19 +756,19 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Siyudad/bungto", #tag_required,
+                                                            "Siyudad/bungto", #RequiredTag.tag,
                                                             html.Br(),
                                                             html.Small(" (City/municipality)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_casualty_citymun_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -786,19 +781,19 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Barangay", #tag_required,
+                                                            "Barangay", #RequiredTag.tag,
                                                             #html.Br(),
                                                             #html.Small(" (Barangay of residence)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_casualty_brgy_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -811,19 +806,19 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Kalsada", #tag_required,
+                                                            "Kalsada", #RequiredTag.tag,
                                                             html.Br(),
                                                             html.Small(" (Street)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_casualty_street',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -838,7 +833,7 @@ layout = html.Div(
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 ),
                                             ],
-                                            class_name = margins.row
+                                            class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
@@ -854,7 +849,7 @@ layout = html.Div(
                                                         ),
                                                     ]
                                                 )
-                                            ], class_name = margins.subhead
+                                            ], class_name = MarginSettings().subhead
                                         ),
                                         dbc.Row(
                                             [
@@ -865,7 +860,7 @@ layout = html.Div(
                                                             html.Small(" (Cause of casualty)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_casualty_cause',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 mb-md-1 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -883,18 +878,18 @@ layout = html.Div(
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Ginkuhaan san impormasyon", tag_required, html.Br(),
+                                                            "Ginkuhaan san impormasyon", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Source of data)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_casualty_source',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -909,18 +904,18 @@ layout = html.Div(
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Kamutangan san pagprubar", tag_required, html.Br(),
+                                                            "Kamutangan san pagprubar", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Validation status)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_casualtystatus_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -933,16 +928,16 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                     ],
                                     id = 'rep_cre_div_casualty',
-                                    className = margins.row,
+                                    className = MarginSettings().row,
                                     style = {'display' : 'none'}
                                 ),
                                 # Public utilities
@@ -963,18 +958,18 @@ layout = html.Div(
                                                         ),
                                                     ]
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Klase san utilidad", tag_required, html.Br(),
+                                                            "Klase san utilidad", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Type of utility)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_pubutiltype_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -988,23 +983,23 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Naghahatag san serbisyo", tag_required, html.Br(),
+                                                            "Naghahatag san serbisyo", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Service provider)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_pubutil_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -1019,30 +1014,30 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             dbc.Col(
                                                 id = 'rep_cre_col_pubutilinttype_desc',
                                                 class_name = 'align-self-center mb-2 mb-lg-0 col-12'
                                             ),
-                                            class_name = margins.label,
+                                            class_name = MarginSettings().label,
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Kamutangan san utilidad", tag_required, html.Br(),
+                                                            "Kamutangan san utilidad", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Status of utility)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_pubutilinttype_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -1056,23 +1051,23 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Petsa san pag-undang",  tag_required, html.Br(),
+                                                            "Petsa san pag-undang",  RequiredTag.tag, html.Br(),
                                                             html.Small(" (Date of interruption/outage)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_pubutilint_int_date',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -1090,7 +1085,7 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-2'
@@ -1098,12 +1093,12 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Oras san pag-undang", #tag_required,
+                                                            "Oras san pag-undang", #RequiredTag.tag,
                                                             html.Br(),
                                                             html.Small(" (Time of interruption/outage)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_pubutilint_int_time',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -1152,12 +1147,12 @@ layout = html.Div(
                                                         #    """Awtomátikó. nga ginkukuha san LáMRAG an oras yana komo oras san panhitabó. Alayon pagbalyo sini kun sa iba nga oras nahitabó an imo ginhihimuan report.
                                                         #    (LáMRAG automatically sets the current time as the time of occurrence. Please change this if the event you are reporting occurred at a different time.)""",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-4'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
@@ -1168,7 +1163,7 @@ layout = html.Div(
                                                             html.Small(" (Date of restoration)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_pubutilint_res_date',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -1185,7 +1180,7 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-2'
@@ -1193,12 +1188,12 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Oras san pagbalik", #tag_required,
+                                                            "Oras san pagbalik", #RequiredTag.tag,
                                                             html.Br(),
                                                             html.Small(" (Time of restoration)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_pubutilint_res_time',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -1247,16 +1242,16 @@ layout = html.Div(
                                                         #    """Awtomátikó. nga ginkukuha san LáMRAG an oras yana komo oras san panhitabó. Alayon pagbalyo sini kun sa iba nga oras nahitabó an imo ginhihimuan report.
                                                         #    (LáMRAG automatically sets the current time as the time of occurrence. Please change this if the event you are reporting occurred at a different time.)""",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-4'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         )
                                     ],
                                     id = 'rep_cre_div_pubutil',
-                                    className = margins.row,
+                                    className = MarginSettings().row,
                                     style = {'display' : 'none'}
                                 ),
                                 # Damaged house
@@ -1277,25 +1272,25 @@ layout = html.Div(
                                                         ),
                                                     ]
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             dbc.Col(
                                                 id = 'rep_cre_col_dmgdhousetype_desc',
                                                 class_name = 'align-self-center mb-2 mb-lg-0 col-12'
                                             ),
-                                            class_name = margins.label,
+                                            class_name = MarginSettings().label,
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Klase san pagkarubat", tag_required, html.Br(),
+                                                            "Klase san pagkarubat", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Type of damage)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_dmgdhousetype_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -1308,12 +1303,12 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
@@ -1329,18 +1324,18 @@ layout = html.Div(
                                                         ),
                                                     ]
                                                 )
-                                            ], class_name = margins.subhead
+                                            ], class_name = MarginSettings().subhead
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Ngaran", tag_required, html.Br(),
+                                                            "Ngaran", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Name)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_dmgdhouse_name',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -1377,18 +1372,18 @@ layout = html.Div(
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Edad (tuig)", tag_required, html.Br(),
+                                                            "Edad (tuig)", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Age in years)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_dmgdhouse_age',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -1404,7 +1399,7 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-3'
@@ -1412,11 +1407,11 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Natawo nga babayi/lalaki", tag_required, html.Br(),
+                                                            "Natawo nga babayi/lalaki", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Sex assigned at birth)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_dmgdhouse_assignedsex_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -1429,24 +1424,24 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-3'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Lokasiyon san balay", tag_required,
+                                                            "Lokasiyon san balay", RequiredTag.tag,
                                                             html.Br(),
                                                             html.Small(" (Location of home)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_dmgdhouse_geoloc',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -1482,11 +1477,11 @@ layout = html.Div(
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                     ],
                                     id = 'rep_cre_div_dmgdhouse',
-                                    className = margins.row,
+                                    className = MarginSettings().row,
                                     style = {'display' : 'none'}
                                 ),
                                 # Infrastructure
@@ -1507,18 +1502,18 @@ layout = html.Div(
                                                         ),
                                                     ]
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Tipo san imprastruktura", tag_required, html.Br(),
+                                                            "Tipo san imprastruktura", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Infrastructure type)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_infratype_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -1532,23 +1527,23 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Klase", tag_required, html.Br(),
+                                                            "Klase", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Classification)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_infraclass_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -1563,23 +1558,23 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Ngaran/deskripsiyon", tag_required, html.Br(),
+                                                            "Ngaran/deskripsiyon", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Name/description)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_dmgdinfra_desc',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -1594,24 +1589,24 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Lokasiyon", tag_required,
+                                                            "Lokasiyon", RequiredTag.tag,
                                                             html.Br(),
                                                             html.Small(" (Location)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_dmgdinfra_geoloc',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -1647,18 +1642,18 @@ layout = html.Div(
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Kadamo san narubat", tag_required, html.Br(),
+                                                            "Kadamo san narubat", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Quantity of damage)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_dmgdinfra_qty',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -1683,7 +1678,7 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-3'
@@ -1691,12 +1686,12 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Kantidad san narubat", #tag_required,
+                                                            "Kantidad san narubat", #RequiredTag.tag,
                                                             html.Br(),
                                                             html.Small(" (Cost of damage)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_dmgdinfra_cost',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-2'
                                                 ),
@@ -1719,23 +1714,23 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-4'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Kamutangan", tag_required, html.Br(),
+                                                            "Kamutangan", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Status)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_dmgdinfratype_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -1750,16 +1745,16 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = margins.form_text
+                                                        #    class_name = MarginSettings().form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 ),
-                                            ], class_name = margins.row,
+                                            ], class_name = MarginSettings().row,
                                         ),
                                     ],
                                     id = 'rep_cre_div_dmgdinfra',
-                                    className = margins.row,
+                                    className = MarginSettings().row,
                                     style = {'display' : 'none'}
                                 ),
                                 # Submit button
@@ -1774,7 +1769,7 @@ layout = html.Div(
                                                             html.Small(" (Remarks)", className = 'text-muted')
                                                         ],
                                                         id = 'rep_cre_label_remarks',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -1792,7 +1787,7 @@ layout = html.Div(
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         html.Hr(),
                                         dbc.Row(
@@ -1816,7 +1811,7 @@ layout = html.Div(
                                         )
                                     ],
                                     id = 'rep_cre_div_submit',
-                                    #className = footer_m,
+                                    #className = MarginSettings().footer,
                                     style = {'display' : 'none'}
                                 )
                             ]
@@ -1849,7 +1844,7 @@ layout = html.Div(
                                                             """,
                                                             className = 'text-muted'
                                                         )
-                                                    ], className = margins.paragraph
+                                                    ], className = MarginSettings().paragraph
                                                 ),
                                             ]
                                         )
@@ -1866,7 +1861,7 @@ layout = html.Div(
                                                             dbc.Col(
                                                                 html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                 width = 'auto',
-                                                                class_name = margins.alert_icon
+                                                                class_name = MarginSettings().alert_icon
                                                             ),
                                                             dbc.Col(
                                                                 id = 'rep_cre_alert_passwordvalidation_col_text'
@@ -1876,7 +1871,7 @@ layout = html.Div(
                                                     id = 'rep_cre_alert_passwordvalidation',
                                                     is_open = False,
                                                     color = 'warning',
-                                                    class_name = margins.label,
+                                                    class_name = MarginSettings().label,
                                                     dismissable = True,
                                                     #fade = True,
                                                 )
@@ -1898,7 +1893,7 @@ layout = html.Div(
                                         )
                                     ],
                                     id = 'rep_cre_row_password',
-                                    class_name = margins.row
+                                    class_name = MarginSettings().row
                                 ),
                             ],
                             id = 'rep_cre_modal_confirm_body'
@@ -2395,7 +2390,7 @@ def rep_cre_populatedropdowns(
                     [
                         dbc.Col(
                             html.I(className = 'bi bi-exclamation-circle-fill me-2'),
-                            class_name = margins.alert_icon
+                            class_name = MarginSettings().alert_icon
                         ),
                         dbc.Col(
                             [
@@ -2413,7 +2408,7 @@ def rep_cre_populatedropdowns(
                 ),
             ],
             color = 'info',
-            class_name = margins.row,
+            class_name = MarginSettings().row,
             dismissable = True
         )
         dropdowns.append(pubutilinttype_desc)
@@ -2455,7 +2450,7 @@ def rep_cre_populatedropdowns(
                     [
                         dbc.Col(
                             html.I(className = 'bi bi-exclamation-circle-fill me-2'),
-                            class_name = margins.alert_icon
+                            class_name = MarginSettings().alert_icon
                         ),
                         dbc.Col(
                             [
@@ -2480,7 +2475,7 @@ def rep_cre_populatedropdowns(
                 ),
             ],
             color = 'info',
-            class_name = margins.row,
+            class_name = MarginSettings().row,
             dismissable = True
         )
         dropdowns.append(dmgdhousetype_desc)
@@ -3701,7 +3696,7 @@ def rep_cre_submitcreation(
             # Modal dissmisability
             modal_backdrop = True
             # Password visibility
-            class_password = margins.row + ' ' + vis_block
+            class_password = MarginSettings().row + ' ' + vis_block
 
             if type: type = int(type)
 
@@ -3867,7 +3862,7 @@ def rep_cre_submitcreation(
                     # Modal dissmisability
                     modal_backdrop = 'static'
                     # Password visibility
-                    class_password = margins.row + ' ' + vis_none
+                    class_password = MarginSettings().row + ' ' + vis_none
                 else:
                     alert_open = True
                     alert_class_name = 'mb-3'

@@ -13,12 +13,7 @@ from datetime import datetime, timedelta
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings
-
-usr_reg_tag_required = html.Sup("*", className = 'text-danger')
-
-# Default margins and spacing settings
-margins = MarginSettings()
+from utilities.utils import MarginSettings, CardStyle, RequiredTag
 
 layout = html.Div(
     [
@@ -41,17 +36,17 @@ layout = html.Div(
                                                 ),
                                                 html.P(
                                                     [
-                                                        "Kinihanglan pun-on an mga patlang nga may pula nga asterisk ", usr_reg_tag_required, ".",
+                                                        "Kinihanglan pun-on an mga patlang nga may pula nga asterisk ", RequiredTag.tag, ".",
                                                         html.Br(),
                                                         html.Small(
-                                                            ["(Fields with red asterisks ", usr_reg_tag_required, " are required.)"],
+                                                            ["(Fields with red asterisks ", RequiredTag.tag, " are required.)"],
                                                             className = 'text-muted'
                                                         )
-                                                    ], className = margins.paragraph
+                                                    ], className = MarginSettings().paragraph
                                                 )
                                             ],
                                             id = 'usr_reg_row_header',
-                                            class_name = margins.row
+                                            class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
@@ -63,7 +58,7 @@ layout = html.Div(
                                                                     dbc.Col(
                                                                         html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                         width = 'auto',
-                                                                        class_name = margins.alert_icon
+                                                                        class_name = MarginSettings().alert_icon
                                                                     ),
                                                                     dbc.Col(
                                                                         [
@@ -81,7 +76,7 @@ layout = html.Div(
                                                             id = 'usr_reg_alert_inputvalidation',
                                                             is_open = False,
                                                             color = 'warning',
-                                                            class_name = margins.label,
+                                                            class_name = MarginSettings().label,
                                                             dismissable = True,
                                                             #fade = True,
                                                         )
@@ -89,7 +84,7 @@ layout = html.Div(
                                                 )
                                             ],
                                             id = 'usr_reg_row_inputvalidation',
-                                            class_name = margins.row
+                                            class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
@@ -97,11 +92,11 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Klase san magamit", usr_reg_tag_required,
+                                                            "Klase san magamit", RequiredTag.tag,
                                                             html.Br(), html.Small(" (User type)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_usertype_id',
-                                                        class_name = margins.row
+                                                        class_name = MarginSettings().row
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -126,7 +121,7 @@ layout = html.Div(
                                                                     dbc.Col(
                                                                         html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                         width = 'auto',
-                                                                        class_name = margins.alert_icon
+                                                                        class_name = MarginSettings().alert_icon
                                                                     ),
                                                                     dbc.Col(
                                                                         [
@@ -150,7 +145,7 @@ layout = html.Div(
                                                             id = 'usr_reg_alert_usertype',
                                                             is_open = False,
                                                             color = 'warning',
-                                                            class_name = margins.label,
+                                                            class_name = MarginSettings().label,
                                                             dismissable = False,
                                                             #fade = True,
                                                         )
@@ -158,9 +153,9 @@ layout = html.Div(
                                                 )
                                             ],
                                             id = 'usr_reg_row_alert_usertype',
-                                            class_name = margins.row
+                                            class_name = MarginSettings().row
                                         )
-                                    ], className = margins.header,
+                                    ], className = MarginSettings().header,
                                 ),
                                 html.Hr(),
                                 # Basic identity
@@ -176,7 +171,7 @@ layout = html.Div(
                                                         html.Small(" (Basic information)", className = 'text-muted')
                                                     ]
                                                 ),
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         # Name
                                         dbc.Row(
@@ -184,11 +179,11 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Ngaran", usr_reg_tag_required, html.Br(),
+                                                            "Ngaran", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Name)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_name',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -222,7 +217,7 @@ layout = html.Div(
                                                 ),
                                             ],
                                             id = 'usr_reg_row_name',
-                                            class_name = margins.row
+                                            class_name = MarginSettings().row
                                         ),
                                         # Input validation for name
                                         dbc.Row(
@@ -234,7 +229,7 @@ layout = html.Div(
                                                                 dbc.Col(
                                                                     html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                     width = 'auto',
-                                                                    class_name = margins.alert_icon
+                                                                    class_name = MarginSettings().alert_icon
                                                                 ),
                                                                 dbc.Col(
                                                                     [
@@ -251,7 +246,7 @@ layout = html.Div(
                                                         id = 'usr_reg_alert_namevalidation',
                                                         is_open = False,
                                                         color = 'warning',
-                                                        class_name = margins.label,
+                                                        class_name = MarginSettings().label,
                                                         dismissable = True,
                                                         #fade = True,
                                                     )
@@ -265,7 +260,7 @@ layout = html.Div(
                                                     dbc.Label(
                                                         "Username",
                                                         id = 'usr_reg_label_username',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -282,7 +277,7 @@ layout = html.Div(
                                                     "Usernames are automatically generated.",
                                                     target = 'usr_reg_label_username'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         # Birthdate and sex assigned at birth
                                         dbc.Row(
@@ -290,11 +285,11 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Petsa san pagkatawo", usr_reg_tag_required, html.Br(),
+                                                            "Petsa san pagkatawo", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Date of birth)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_birthdate',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -312,11 +307,11 @@ layout = html.Div(
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Natawo nga babayi/lalaki", usr_reg_tag_required, html.Br(),
+                                                            "Natawo nga babayi/lalaki", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Sex assigned at birth)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_assignedsex',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -327,9 +322,9 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         )
-                                    ], className = margins.div
+                                    ], className = MarginSettings().div
                                 ),
                                 # Affirmative identity
                                 html.Div(
@@ -356,9 +351,9 @@ layout = html.Div(
                                                             Everyone is enjoined to fill out these details whenever applicable.)""",
                                                             className = 'text-muted'
                                                         )
-                                                    ], className = margins.paragraph
+                                                    ], className = MarginSettings().paragraph
                                                 ),
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
@@ -366,7 +361,7 @@ layout = html.Div(
                                                     dbc.Label(
                                                         "Lived name",
                                                         id = 'usr_reg_label_livedname',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -378,7 +373,7 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
@@ -389,7 +384,7 @@ layout = html.Div(
                                                             html.Br(), html.Small(" (Honorific)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_honorific',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -408,7 +403,7 @@ layout = html.Div(
                                                             html.Br(), html.Small(" (Pronouns)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_pronouns',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -420,9 +415,9 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         )
-                                    ], className = margins.div
+                                    ], className = MarginSettings().div
                                 ),
                                 html.Hr(),
                                 # Employment information
@@ -447,9 +442,9 @@ layout = html.Div(
                                                             ],
                                                             className = 'text-muted'
                                                         )
-                                                    ], className = margins.paragraph
+                                                    ], className = MarginSettings().paragraph
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         # Office
                                         dbc.Row(
@@ -458,11 +453,11 @@ layout = html.Div(
                                                     dbc.Label(
                                                         [
                                                             #html.I(className = 'bi bi-telephone me-2'),
-                                                            "Opisina", usr_reg_tag_required, html.Br(),
+                                                            "Opisina", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Office)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_office_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -474,7 +469,7 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         # Designation
                                         dbc.Row(
@@ -483,11 +478,11 @@ layout = html.Div(
                                                     dbc.Label(
                                                         [
                                                             #html.I(className = 'bi bi-envelope-at me-2'),
-                                                            "Puwesto/katungdánan", usr_reg_tag_required, html.Br(),
+                                                            "Puwesto/katungdánan", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Position/designation)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_designation',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -500,9 +495,9 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 ),
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         )
-                                    ], className = margins.div
+                                    ], className = MarginSettings().div
                                 ),
                                 html.Hr(),
                                 # Contact information
@@ -518,7 +513,7 @@ layout = html.Div(
                                                         #html.Small(" (Basic information)", className = 'text-muted')
                                                     ]
                                                 ),
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         # Contact number and email
                                         dbc.Row(
@@ -527,11 +522,11 @@ layout = html.Div(
                                                     dbc.Label(
                                                         [
                                                             #html.I(className = 'bi bi-telephone me-2'),
-                                                            "Numero sa cellphone/telepono", usr_reg_tag_required, html.Br(),
+                                                            "Numero sa cellphone/telepono", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Contact number)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_contactnum',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -551,7 +546,7 @@ layout = html.Div(
                                                             "Email address"
                                                         ],
                                                         id = 'usr_reg_label_email',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -563,7 +558,7 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         # Facebook
                                         dbc.Row(
@@ -576,7 +571,7 @@ layout = html.Div(
                                                             html.Small(" (Facebook name)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_facebbok',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-0 mb-md-2 col-12 col-md-3'
                                                 ),
@@ -588,9 +583,9 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-0 mb-md-2 col-12 col-md-9'
                                                 ),
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         )
-                                    ], className = margins.div
+                                    ], className = MarginSettings().div
                                 ),
                                 html.Hr(),
                                 # Present address
@@ -620,20 +615,20 @@ layout = html.Div(
                                                             ],
                                                             className = 'text-muted'
                                                         )
-                                                    ], className = margins.paragraph
+                                                    ], className = MarginSettings().paragraph
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Rehiyon", usr_reg_tag_required, html.Br(),
+                                                            "Rehiyon", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Region)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_present_region_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -645,18 +640,18 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Probinsya", usr_reg_tag_required, html.Br(),
+                                                            "Probinsya", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Province)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_present_province_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -669,18 +664,18 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Siyudad/bungto", usr_reg_tag_required, html.Br(),
+                                                            "Siyudad/bungto", RequiredTag.tag, html.Br(),
                                                             html.Small(" (City/municipality)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_present_citymun_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -693,17 +688,17 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Barangay",  usr_reg_tag_required,
+                                                            "Barangay",  RequiredTag.tag,
                                                         ],
                                                         id = 'usr_reg_label_present_brgy_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -716,18 +711,18 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Kalsada", usr_reg_tag_required, html.Br(),
+                                                            "Kalsada", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Street)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_present_street',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -742,9 +737,9 @@ layout = html.Div(
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 ),
                                             ],
-                                            class_name = margins.row
+                                            class_name = MarginSettings().row
                                         ),
-                                    ], className = margins.div
+                                    ], className = MarginSettings().div
                                 ),
                                 # Permanent address
                                 html.Div(
@@ -771,7 +766,7 @@ layout = html.Div(
                                                             ],
                                                             className = 'text-muted'
                                                         )
-                                                    ], className = margins.paragraph
+                                                    ], className = MarginSettings().paragraph
                                                 ),
                                                 dbc.Checkbox(
                                                     id = "usr_reg_cbox_permanent_address",
@@ -782,18 +777,18 @@ layout = html.Div(
                                                     #style = {'display' : 'none'},
                                                     class_name = 'ms-3'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Rehiyon", usr_reg_tag_required, html.Br(),
+                                                            "Rehiyon", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Region)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_permanent_region_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -805,18 +800,18 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Probinsya", usr_reg_tag_required, html.Br(),
+                                                            "Probinsya", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Province)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_permanent_province_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -829,18 +824,18 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Siyudad/bungto", usr_reg_tag_required, html.Br(),
+                                                            "Siyudad/bungto", RequiredTag.tag, html.Br(),
                                                             html.Small(" (City/municipality)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_permanent_citymun_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -853,17 +848,17 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Barangay", usr_reg_tag_required,
+                                                            "Barangay", RequiredTag.tag,
                                                         ],
                                                         id = 'usr_reg_label_permanent_brgy_id',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -876,18 +871,18 @@ layout = html.Div(
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = margins.row
+                                            ], class_name = MarginSettings().row
                                         ),
                                         dbc.Row(
                                             [
                                                 dbc.Col(
                                                     dbc.Label(
                                                         [
-                                                            "Kalsada", usr_reg_tag_required, html.Br(),
+                                                            "Kalsada", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Street)", className = 'text-muted')
                                                         ],
                                                         id = 'usr_reg_label_permanent_street',
-                                                        class_name = margins.label
+                                                        class_name = MarginSettings().label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -902,9 +897,9 @@ layout = html.Div(
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 ),
                                             ],
-                                            class_name = margins.row
+                                            class_name = MarginSettings().row
                                         ),
-                                    ], className = margins.div
+                                    ], className = MarginSettings().div
                                 ),
                                 html.Hr(),
                                 # Register button
@@ -927,7 +922,7 @@ layout = html.Div(
                                             ],
                                             class_name = 'justify-content-end'
                                         )
-                                    ], className = margins.footer
+                                    ], className = MarginSettings().footer
                                 )
                             ]
                         ),
@@ -959,7 +954,7 @@ layout = html.Div(
                                                             """,
                                                             className = 'text-muted'
                                                         )
-                                                    ], className = margins.paragraph
+                                                    ], className = MarginSettings().paragraph
                                                 ),
                                             ]
                                         )
@@ -976,7 +971,7 @@ layout = html.Div(
                                                             dbc.Col(
                                                                 html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                 width = 'auto',
-                                                                class_name = margins.alert_icon
+                                                                class_name = MarginSettings().alert_icon
                                                             ),
                                                             dbc.Col(
                                                                 id = 'usr_reg_alert_passwordvalidation_col_text'
@@ -986,7 +981,7 @@ layout = html.Div(
                                                     id = 'usr_reg_alert_passwordvalidation',
                                                     is_open = False,
                                                     color = 'warning',
-                                                    class_name = margins.label,
+                                                    class_name = MarginSettings().label,
                                                     dismissable = True,
                                                     #fade = True,
                                                 )
@@ -1008,7 +1003,7 @@ layout = html.Div(
                                         )
                                     ],
                                     id = 'usr_reg_row_password_initial',
-                                    class_name = margins.row
+                                    class_name = MarginSettings().row
                                 ),
                                 dbc.Row(
                                     [
@@ -1024,7 +1019,7 @@ layout = html.Div(
                                         )
                                     ],
                                     id = 'usr_reg_row_password_confirm',
-                                    class_name = margins.row
+                                    class_name = MarginSettings().row
                                 )
                             ],
                             id = 'usr_reg_modal_confirm_body'
@@ -1121,7 +1116,7 @@ layout = html.Div(
                                                     """,
                                                     className = 'text-muted'
                                                 )
-                                            ], className = margins.paragraph
+                                            ], className = MarginSettings().paragraph
                                         ),
                                     ]
                                 )
@@ -2057,8 +2052,8 @@ def usr_reg_submitregistration(
             # Modal dissmisability
             modal_backdrop = True
             # Password visibility
-            class_password_initial = margins.row + ' ' + vis_block
-            class_password_confirm = margins.row + ' ' + vis_block
+            class_password_initial = MarginSettings().row + ' ' + vis_block
+            class_password_confirm = MarginSettings().row + ' ' + vis_block
 
             if not(password_initial) or not(password_confirm):
                 alert_open = True
@@ -2132,8 +2127,8 @@ def usr_reg_submitregistration(
                 # Modal dissmisability
                 modal_backdrop = 'static'
                 # Password visibility
-                class_password_initial = margins.row + ' ' + vis_none
-                class_password_confirm = margins.row + ' ' + vis_none
+                class_password_initial = MarginSettings().row + ' ' + vis_none
+                class_password_confirm = MarginSettings().row + ' ' + vis_none
                 
                 encrypt_string = lambda string: hashlib.sha256(string.encode('utf-8')).hexdigest()
                 sql = """INSERT INTO users.user (id, usertype_id, password,

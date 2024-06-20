@@ -9,12 +9,7 @@ from datetime import datetime, timedelta
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings
-
-tag_required = html.Sup("*", className = 'text-danger')
-
-# Default margins and spacing settings
-margins = MarginSettings()
+from utilities.utils import MarginSettings, CardStyle
 
 layout = html.Div(
     [
@@ -32,7 +27,7 @@ layout = html.Div(
                                             id = 'eve_vie_h1_header'
                                         ),
                                     ],
-                                    class_name = margins.row,
+                                    class_name = MarginSettings().row,
                                 ),
                                 dbc.Row(
                                     [
@@ -47,7 +42,7 @@ layout = html.Div(
                                         ),
                                     ], className = 'mb-1 mb-md-0',
                                     id = 'eve_vie_row_search',
-                                    class_name = margins.row
+                                    class_name = MarginSettings().row
                                 ),
                                 dbc.Row(
                                     [
@@ -58,7 +53,7 @@ layout = html.Div(
                                                     #html.Small(" (Year)", className = 'text-muted')
                                                 ],
                                                 id = 'eve_vie_label_filter',
-                                                class_name = margins.label
+                                                class_name = MarginSettings().label
                                             ),
                                             class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3 col-lg-2'
                                         ),
@@ -89,15 +84,15 @@ layout = html.Div(
                                         ),
                                     ], className = 'mb-1 mb-md-0',
                                     id = 'eve_vie_row_filter',
-                                    class_name = margins.row
+                                    class_name = MarginSettings().row
                                 ),
                             ],
                             id = 'eve_vie_div_header',
-                            className = margins.header
+                            className = MarginSettings().header
                         ),
                         html.Div(
                             id = 'eve_vie_div_results',
-                            className = margins.div,
+                            className = MarginSettings().div,
                             style = {
                                 'max-width' : '100%',
                                 'overflow' : 'scroll'
@@ -122,11 +117,11 @@ layout = html.Div(
                                             class_name = 'col-auto'
                                         )
                                     ],
-                                    class_name = margins.row + ' justify-content-end'
+                                    class_name = MarginSettings().row + ' justify-content-end'
                                 )
                             ],
                             id = 'eve_vie_div_footer',
-                            className = margins.footer
+                            className = MarginSettings().footer
                         )
                     ],
                     class_name = 'col-md-10'

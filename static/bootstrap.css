@@ -4089,9 +4089,21 @@ fieldset:disabled .btn {
   transition: opacity 0.3s ease, visibility 0.3s;
 }
 
+@keyframes slideDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 .show > .dropdown-menu {
   opacity: 1;
   visibility: visible;
+  animation: slideDown 0.3s ease-out forwards;
 }
 
 .dropdown-menu[data-bs-popper] {
@@ -5190,10 +5202,11 @@ fieldset:disabled .btn {
 }
 
 .hover-enlarge {
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border 0.3s ease-in-out;
 }
 
 .hover-enlarge:hover {
+  background-color: #ffbd59;
   transform: scale(1.05);
   box-shadow: 0 0 0 0.25rem rgba(135, 113, 90, 0.25);
   border: 1px solid #7a736b;

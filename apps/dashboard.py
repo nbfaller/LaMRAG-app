@@ -7,20 +7,12 @@ from dash.exceptions import PreventUpdate
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
+from datetime import datetime
+import pytz
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings
-
-tag_required = html.Sup("*", className = 'text-danger')
-card_style = {
-    'border-radius' : '0.75rem',
-    'overflow' : 'hidden',
-    'box-shadow' : '0 0 32px 4px rgba(135, 113, 90, 0.2)'
-}
-
-# Default margins and spacing settings
-margins = MarginSettings()
+from utilities.utils import MarginSettings, CardStyle
 
 layout = html.Div(
     [
@@ -40,14 +32,14 @@ layout = html.Div(
                                         html.P(
                                             "User information",
                                             id = 'com_das_htp_userdetails',
-                                            className = margins.paragraph
+                                            className = MarginSettings().paragraph
                                         )
                                     ],
-                                    class_name = margins.row,
+                                    class_name = MarginSettings().row,
                                 ),
                             ],
                             id = 'com_das_div_header',
-                            className = margins.header
+                            className = MarginSettings().header
                         ),
                         html.Hr(),
                         # Cards
@@ -71,11 +63,11 @@ layout = html.Div(
                                                                         className = 'text-muted'
                                                                     )
                                                                 ],
-                                                                className =  margins.paragraph# + ' text-muted'
+                                                                className = MarginSettings().paragraph # + ' text-muted'
                                                             )
                                                         ],
                                                         body = True,
-                                                        style = card_style,
+                                                        style = CardStyle.get_style(),
                                                         class_name = 'hover-enlarge'
                                                     ),
                                                     href = '/reports/create?mode=new'
@@ -99,11 +91,11 @@ layout = html.Div(
                                                                         className = 'text-muted'
                                                                     )
                                                                 ],
-                                                                className =  margins.paragraph# + ' text-muted'
+                                                                className = MarginSettings().paragraph # + ' text-muted'
                                                             )
                                                         ],
                                                         body = True,
-                                                        style = card_style,
+                                                        style = CardStyle.get_style(),
                                                         class_name = 'hover-enlarge'
                                                     ),
                                                     href = '/events'
@@ -127,11 +119,11 @@ layout = html.Div(
                                                                         className = 'text-muted'
                                                                     )
                                                                 ],
-                                                                className =  margins.paragraph# + ' text-muted'
+                                                                className = MarginSettings().paragraph # + ' text-muted'
                                                             )
                                                         ],
                                                         body = True,
-                                                        style = card_style,
+                                                        style = CardStyle.get_style(),
                                                         class_name = 'hover-enlarge'
                                                     ),
                                                     href = '/data/barangays'
@@ -155,11 +147,11 @@ layout = html.Div(
                                                                         className = 'text-muted'
                                                                     )
                                                                 ],
-                                                                className =  margins.paragraph# + ' text-muted'
+                                                                className = MarginSettings().paragraph # + ' text-muted'
                                                             )
                                                         ],
                                                         body = True,
-                                                        style = card_style,
+                                                        style = CardStyle.get_style(),
                                                         class_name = 'hover-enlarge'
                                                     ),
                                                     href = '/data/household/upload'
@@ -194,7 +186,7 @@ layout = html.Div(
                                                                                 )
                                                                             ]
                                                                         )
-                                                                    ], class_name = margins.row
+                                                                    ], class_name = MarginSettings().row
                                                                 ),
                                                                 dbc.Row(
                                                                     [
@@ -221,7 +213,7 @@ layout = html.Div(
                                                             ]
                                                         )
                                                     ],
-                                                    style = card_style,
+                                                    style = CardStyle.get_style(),
                                                     #class_name = 'hover-enlarge'
                                                 )
                                             ],
@@ -253,7 +245,7 @@ layout = html.Div(
                                                                                                 )
                                                                                             ]
                                                                                         )
-                                                                                    ], class_name = margins.row
+                                                                                    ], class_name = MarginSettings().row
                                                                                 ),
                                                                                 dbc.Row(
                                                                                     [
@@ -265,7 +257,7 @@ layout = html.Div(
                                                                             ]
                                                                         )
                                                                     ],
-                                                                    style = card_style,
+                                                                    style = CardStyle.get_style(),
                                                                     #class_name = 'hover-enlarge'
                                                                 )
                                                             ]
@@ -297,7 +289,7 @@ layout = html.Div(
                                                                                                 )
                                                                                             ]
                                                                                         )
-                                                                                    ], class_name = margins.row
+                                                                                    ], class_name = MarginSettings().row
                                                                                 ),
                                                                                 dbc.Row(
                                                                                     [
@@ -372,7 +364,7 @@ layout = html.Div(
                                                                                             #body = True,
                                                                                             #trigger = 'focus',
                                                                                         ),
-                                                                                    ], class_name = margins.row
+                                                                                    ], class_name = MarginSettings().row
                                                                                 ),
                                                                                 dbc.Row(
                                                                                     [
@@ -388,7 +380,7 @@ layout = html.Div(
                                                                             ]
                                                                         )
                                                                     ],
-                                                                    style = card_style,
+                                                                    style = CardStyle.get_style(),
                                                                     #class_name = 'hover-enlarge'
                                                                 )
                                                             ]
@@ -400,11 +392,11 @@ layout = html.Div(
                                             class_name = 'mb-2 mb-lg-0 col-12 col-lg-5'
                                         ),
                                     ],
-                                    class_name = margins.row,
+                                    class_name = MarginSettings().row,
                                 )
                             ],
                             id = 'com_das_div_cards',
-                            className = margins.div
+                            className = MarginSettings().div
                         )
                     ],
                     class_name = 'col-md-10'
@@ -509,7 +501,7 @@ def com_das_generatereportsgraph(pathname, region, province, citymun, brgy):
             sql += " AND r.brgy_id = %s"
             values += [brgy]
 
-        sql += ");"
+        sql += ") ORDER BY rv.create_time ASC;"
         df = db.querydatafromdatabase(sql, values, cols)
         
         if df.shape[0]:
@@ -538,7 +530,8 @@ def com_das_generatereportsgraph(pathname, region, province, citymun, brgy):
                 },
                 #title = 'Cumulative reports filed over time',
                 xaxis = {
-                    'title': 'Petsa (Date)'
+                    'title' : 'Petsa (Date)',
+                    #'range' : [df['Creation time'][0], datetime.now()],
                 },
                 yaxis = {
                     'title': 'Mga ginhimo nga report (Reports filed)'

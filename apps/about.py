@@ -10,24 +10,7 @@ import plotly.io as pio
 # App definition
 from app import app
 from apps import dbconnect as db
-
-tag_required = html.Sup("*", className = 'text-danger')
-card_style = {
-    'border-radius' : '0.75rem',
-    'overflow' : 'hidden',
-    'box-shadow' : '0 0 32px 4px rgba(135, 113, 90, 0.2)'
-}
-
-# Default margins and spacing settings
-header_m = 'mb-3'
-div_m = 'mt-3 mb-3'
-row_m = 'mb-2'
-subhead_m = 'mt-3'
-p_m = 'mb-0'
-label_m = 'mb-0'
-ftext_m = 'mt-1'
-alert_i_m = 'pe-0 me-0 col-12 col-md-auto mb-2 mb-md-0'
-footer_m = 'mt-3'
+from utilities.utils import MarginSettings, CardStyle
 
 layout = html.Div(
     [
@@ -51,7 +34,7 @@ layout = html.Div(
                                             id = 'com_abt_h1_header'
                                         ),
                                     ],
-                                    class_name = row_m,
+                                    class_name = MarginSettings().row,
                                 ),
                                 dbc.Row(
                                     [
@@ -105,7 +88,7 @@ layout = html.Div(
                                 ),
                             ],
                             id = 'com_abt_div_header',
-                            className = header_m
+                            className = MarginSettings().header
                         ),
                         html.Hr(),
                         html.Div(
@@ -132,7 +115,7 @@ layout = html.Div(
                                 ),
                             ],
                             id = 'com_abt_div_team',
-                            className = div_m
+                            className = MarginSettings().div
                         )
                     ],
                     class_name = 'col-md-10'

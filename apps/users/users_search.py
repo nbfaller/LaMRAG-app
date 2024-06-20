@@ -16,17 +16,7 @@ import pandas as pd
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings
-
-tag_required = html.Sup("*", className = 'text-danger')
-card_style = {
-    'border-radius' : '0.75rem',
-    'overflow' : 'hidden',
-    'box-shadow' : '0 0 32px 4px rgba(135, 113, 90, 0.2)'
-}
-
-# Default margins and spacing settings
-margins = MarginSettings()
+from utilities.utils import MarginSettings, CardStyle
 
 layout = html.Div(
     [
@@ -44,7 +34,7 @@ layout = html.Div(
                                             id = 'usr_src_h1_header'
                                         ),
                                     ],
-                                    class_name = margins.row,
+                                    class_name = MarginSettings().row,
                                 ),
                                 dbc.Row(
                                     [
@@ -59,7 +49,7 @@ layout = html.Div(
                                         ),
                                     ], className = 'mb-1 mb-md-0',
                                     id = 'usr_src_row_search',
-                                    class_name = margins.row
+                                    class_name = MarginSettings().row
                                 ),
                                 dbc.Row(
                                     [
@@ -70,7 +60,7 @@ layout = html.Div(
                                                     #html.Small(" (Year)", className = 'text-muted')
                                                 ],
                                                 id = 'usr_src_label_filter',
-                                                class_name = margins.label
+                                                class_name = MarginSettings().label
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-2'
                                         ),
@@ -96,15 +86,15 @@ layout = html.Div(
                                         ),
                                     ], className = 'mb-1 mb-md-0',
                                     id = 'usr_src_row_filter',
-                                    class_name = margins.row
+                                    class_name = MarginSettings().row
                                 ),
                             ],
                             id = 'usr_src_div_header',
-                            className = margins.header
+                            className = MarginSettings().header
                         ),
                         html.Div(
                             id = 'usr_src_div_results',
-                            className = margins.div,
+                            className = MarginSettings().div,
                             style = {
                                 'max-width' : '100%',
                                 'overflow' : 'scroll'
@@ -127,7 +117,7 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = margins.row
+                                    ], class_name = MarginSettings().row
                                 ),
                                 dbc.Row(
                                     [
@@ -141,13 +131,13 @@ layout = html.Div(
                                                             #style = {'max-height' : '15em'}
                                                         )
                                                     #),
-                                                    #style = card_style
+                                                    #style = CardStyle.get_style()
                                                 #)
                                             ]
                                         )
                                     ],
                                     id = 'usr_src_row_logins',
-                                    class_name = margins.row
+                                    class_name = MarginSettings().row
                                 ),
                                 dbc.Row(
                                     [
@@ -159,7 +149,7 @@ layout = html.Div(
                                                             dbc.Col(
                                                                 html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                 width = 'auto',
-                                                                class_name = margins.alert_icon
+                                                                class_name = MarginSettings().alert_icon
                                                             ),
                                                             dbc.Col(
                                                                 [
@@ -191,7 +181,7 @@ layout = html.Div(
                                                     ),
                                                     is_open = True,
                                                     color = 'info',
-                                                    class_name = margins.label,
+                                                    class_name = MarginSettings().label,
                                                     dismissable = False,
                                                     #fade = True,
                                                 )
@@ -199,7 +189,7 @@ layout = html.Div(
                                         )
                                     ],
                                     style = {'display' : 'none'}
-                                    #class_name = margins.row
+                                    #class_name = MarginSettings().row
                                 ),
                             ],
                             id = 'usr_src_div_logchart'
@@ -223,11 +213,11 @@ layout = html.Div(
                                             class_name = 'col-auto'
                                         )
                                     ],
-                                    class_name = margins.row + ' justify-content-end'
+                                    class_name = MarginSettings().row + ' justify-content-end'
                                 )
                             ],
                             id = 'usr_src_div_footer',
-                            className = margins.footer
+                            className = MarginSettings().footer
                         )
                     ],
                     class_name = 'col-md-10'

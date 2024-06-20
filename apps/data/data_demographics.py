@@ -12,16 +12,6 @@ from app import app
 from apps import dbconnect as db
 from utilities.utils import MarginSettings
 
-tag_required = html.Sup("*", className = 'text-danger')
-card_style = {
-    'border-radius' : '0.75rem',
-    'overflow' : 'hidden',
-    'box-shadow' : '0 0 32px 4px rgba(135, 113, 90, 0.2)'
-}
-
-# Default margins and spacing settings
-margins = MarginSettings()
-
 layout = html.Div(
     [
         dbc.Row(

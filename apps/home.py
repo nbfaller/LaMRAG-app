@@ -9,16 +9,7 @@ import hashlib
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings
-
-card_style = {
-    'border-radius' : '0.75rem',
-    'overflow' : 'hidden',
-    'box-shadow' : '0 0 32px 4px rgba(135, 113, 90, 0.2)'
-}
-
-# Default margins and spacing settings
-margins = MarginSettings()
+from utilities.utils import MarginSettings, CardStyle
 
 layout = html.Div(
     [
@@ -86,7 +77,7 @@ layout = html.Div(
                                                                                             dbc.Col(
                                                                                                 html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                                                 width = 'auto',
-                                                                                                class_name = margins.alert_icon
+                                                                                                class_name = MarginSettings().alert_icon
                                                                                             ),
                                                                                             dbc.Col(
                                                                                                 id = 'com_hom_alert_passwordvalidation_col_text'
@@ -96,7 +87,7 @@ layout = html.Div(
                                                                                     id = 'com_hom_alert_passwordvalidation',
                                                                                     is_open = False,
                                                                                     color = 'warning',
-                                                                                    class_name = margins.label,
+                                                                                    class_name = MarginSettings().label,
                                                                                     dismissable = True,
                                                                                     #fade = True,
                                                                                 )
@@ -201,11 +192,11 @@ layout = html.Div(
                                                 className = 'text-muted'
                                             )
                                         ],
-                                        className =  margins.paragraph# + ' text-muted'
+                                        className =  MarginSettings().paragraph# + ' text-muted'
                                     )
                                 ],
                                 body = True,
-                                style = card_style,
+                                style = CardStyle.get_style(),
                                 class_name = 'hover-enlarge'
                             ),
                             href = '/events'
@@ -232,11 +223,11 @@ layout = html.Div(
                                                 className = 'text-muted'
                                             )
                                         ],
-                                        className =  margins.paragraph# + ' text-muted'
+                                        className =  MarginSettings().paragraph# + ' text-muted'
                                     )
                                 ],
                                 body = True,
-                                style = card_style,
+                                style = CardStyle.get_style(),
                                 class_name = 'hover-enlarge'
                             ),
                             href = '/data/barangays'
