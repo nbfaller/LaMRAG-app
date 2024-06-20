@@ -7066,7 +7066,7 @@ fieldset:disabled .btn {
   background-color: #fff;
   background-clip: padding-box;
   outline: 0;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -7137,7 +7137,11 @@ fieldset:disabled .btn {
 }
 
 .offcanvas.show {
-  transform: none;
+  /*transform: none;*/
+  /* Make it visible */
+  visibility: visible;
+  /* Adjust the transition timing for visibility to make it immediate */
+  transition: transform 0.3s ease, visibility 0s linear 0s;
 }
 
 .clearfix::after {
