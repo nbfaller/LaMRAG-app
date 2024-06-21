@@ -75,10 +75,10 @@ class HeaderRowConstructor:
 
 # Common callbacks
 class ReturnLinkCallback:
-    def __init__(self, app, link_id, text_war_id, text_en_id):
-        self.link_id = link_id
-        self.text_war_id = text_war_id
-        self.text_en_id = text_en_id
+    def __init__(self, app, prefix):
+        self.link_id = prefix + '_hta_returnlink'
+        self.text_war_id = prefix + '_spa_returnlink_war'
+        self.text_en_id = prefix + '_sma_returnlink_en'
 
         @app.callback(
             [

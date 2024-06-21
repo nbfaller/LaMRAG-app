@@ -600,12 +600,7 @@ layout = html.Div(
 
 # Common callback for changing return link depending
 # on user login status
-return_link_callback_instance = ReturnLinkCallback(
-    app,
-    'dat_bar_hta_returnlink',
-    'dat_bar_spa_returnlink_war',
-    'dat_bar_sma_returnlink_en'
-)
+return_link_callback_instance = ReturnLinkCallback(app, 'dat_bar')
 
 # Callback for populating dropdowns
 @app.callback(

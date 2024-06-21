@@ -142,12 +142,7 @@ layout = html.Div(
 
 # Common callback for changing return link depending
 # on user login status
-return_link_callback_instance = ReturnLinkCallback(
-    app,
-    'eve_vie_hta_returnlink',
-    'eve_vie_spa_returnlink_war',
-    'eve_vie_sma_returnlink_en'
-)
+return_link_callback_instance = ReturnLinkCallback(app, 'eve_vie')
 
 # Callback for populating dropdowns and checklists
 @app.callback(
