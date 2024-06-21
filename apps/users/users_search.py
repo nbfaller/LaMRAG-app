@@ -16,7 +16,7 @@ import pandas as pd
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings, CardStyle
+from utilities.utils import MarginSettings, CardStyle, DropdownDataLoader
 
 layout = html.Div(
     [
@@ -69,20 +69,20 @@ layout = html.Div(
                                                 id = 'usr_src_input_usertype_id',
                                                 multi = True,
                                                 #type = 'text',
-                                                #placeholder = "Search by last name, first name, lived name, or middle name"
+                                                placeholder = "Klase san user (User type)"
                                                 #value = 1
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-4'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
                                         dbc.Col(
                                             dcc.Dropdown(
                                                 id = 'usr_src_input_office_id',
-                                                multi = True
+                                                multi = True,
                                                 #type = 'text',
-                                                #placeholder = "Search by last name, first name, lived name, or middle name"
+                                                placeholder = "Opisina (Office)"
                                                 #value = 1
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-6'
+                                            class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-7'
                                         ),
                                     ], className = 'mb-1 mb-md-0',
                                     id = 'usr_src_row_filter',
@@ -244,25 +244,14 @@ usr_src_url_pathname = '/users/search'
 def usr_src_populatedropdowns(pathname):
     if pathname == usr_src_url_pathname:
         dropdowns = []
+        ddl = DropdownDataLoader(db)
 
         # User types
-        sql = """SELECT label AS label, id AS value
-        FROM utilities.usertype;
-        """
-        values = []
-        cols = ['label', 'value']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        usertypes = df.to_dict('records')
+        usertypes = ddl.load_user_types()
         dropdowns.append(usertypes)
 
         # Offices
-        sql = """SELECT label AS label, id AS value
-        FROM utilities.office;
-        """
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        offices = df.to_dict('records')
+        offices = ddl.load_offices()
         dropdowns.append(offices)
 
         return dropdowns

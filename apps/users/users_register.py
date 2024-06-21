@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings, CardStyle, RequiredTag
+from utilities.utils import MarginSettings, CardStyle, RequiredTag, DropdownDataLoader
 
 layout = html.Div(
     [
@@ -1210,6 +1210,7 @@ usr_reg_url_pathname = '/users/register'
 def usr_reg_populatedropdowns(pathname):
     if pathname == usr_reg_url_pathname:
         dropdowns = []
+        ddl = DropdownDataLoader(db)
 
         # New user id
         newuser_id = 1
@@ -1222,44 +1223,20 @@ def usr_reg_populatedropdowns(pathname):
         dropdowns.append(newuser_id)
 
         # Regions
-        sql = """SELECT name as label, id as value
-        FROM utilities.addressregion;
-        """
-        values = []
-        cols = ['label', 'value']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        regions = df.to_dict('records')
+        regions = ddl.load_regions()
         dropdowns.append(regions)
         dropdowns.append(regions)
 
         # Assgined sex
-        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
-        FROM utilities.assignedsex
-        """
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        sexes = df.to_dict('records')
+        sexes = ddl.load_assignedsexes()
         dropdowns.append(sexes)
 
         # Offices
-        #sql = """SELECT COALESCE(NULLIF(label, ''), name) AS label, id AS value
-        sql = """SELECT name AS label, id AS value
-        FROM utilities.office
-        """
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        offices = df.to_dict('records')
+        offices = ddl.load_offices()
         dropdowns.append(offices)
 
         # User types
-        #sql = """SELECT COALESCE(NULLIF(label, ''), name) AS label, id AS value
-        sql = """SELECT label AS label, id AS value
-        FROM utilities.usertype
-        """
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        usertypes = df.to_dict('records')
+        usertypes = ddl.load_user_types()
         dropdowns.append(usertypes)
 
         # Maximum date of birth allowed

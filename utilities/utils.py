@@ -146,10 +146,31 @@ class DropdownDataLoader:
             type_disabled = True
         return type_value, type_disabled
 
+    def load_user_types(self):
+        sql = """SELECT label AS label, id AS value
+        FROM utilities.usertype
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df.to_dict('records')
+
     # Personal information dropdowns
     def load_assignedsexes(self):
         sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
         FROM utilities.assignedsex;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df.to_dict('records')
+    
+    # Work information dropdowns
+    def load_offices(self):
+        sql = """SELECT name AS label, id AS value
+        FROM utilities.office
         """
         values = []
         cols = ['label', 'value']
