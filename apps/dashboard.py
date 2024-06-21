@@ -12,7 +12,7 @@ import pytz
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings, CardStyle
+from utilities.utils import MarginSettings, CardStyle, DropdownDataLoader
 
 layout = html.Div(
     [
@@ -623,16 +623,10 @@ def com_das_generatereportsgraph(pathname, region, province, citymun, brgy):
 def com_das_populatedropdowns(pathname, region, province, citymun, brgy, selectedbrgy):
     if pathname == '/dashboard':
         dropdowns = []
+        ddl = DropdownDataLoader(db)
 
         # Barangays
-        sql = """SELECT name AS label, id AS value
-        FROM utilities.addressbrgy WHERE region_id = %s AND province_id = %s AND citymun_id = %s;
-        """
-        values = [region, province, citymun]
-        cols = ['label', 'value']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        brgys = df.to_dict('records')
+        brgys = ddl.load_barangays(region, province, citymun)
         dropdowns.append(brgys)
 
         if brgy > 0: dropdowns.append(brgy)

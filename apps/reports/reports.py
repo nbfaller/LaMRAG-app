@@ -12,7 +12,7 @@ import pandas as pd
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings, CardStyle, RequiredTag
+from utilities.utils import MarginSettings, CardStyle, RequiredTag, DropdownDataLoader
 
 layout = html.Div(
     [
@@ -200,7 +200,6 @@ layout = html.Div(
         Output('rep_vie_input_brgy_id', 'value'),
         Output('rep_vie_input_brgy_id', 'disabled'),
         Output('rep_vie_input_reporttype_id', 'options'),
-        Output('rep_vie_input_event_id', 'options'),
     ],
     [
         Input('url', 'pathname')
@@ -220,49 +219,18 @@ def rep_vie_populatedropdowns(pathname, region, province, citymun, brgy):
     ]
     if any(conditions):
         dropdowns = []
+        ddl = DropdownDataLoader(db)
         
         # Barangays
-        sql = """SELECT name AS label, id AS value
-        FROM utilities.addressbrgy
-        WHERE region_id = %s AND province_id = %s AND citymun_id = %s;
-        """
-        values = [region, province, citymun]
-        cols = ['label', 'value']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        brgys = df.to_dict('records')
+        brgys = ddl.load_barangays(region, province, citymun)
         dropdowns.append(brgys)
 
-        brgy_value = None
-        brgy_disabled = False
-        if brgy and int(brgy) > 0:
-            brgy_value = brgy
-            brgy_disabled = True
-        dropdowns.append(brgy_value)
-        dropdowns.append(brgy_disabled)
+        brgy_value, brgy_disabled = ddl.lock_brgy(brgy)
+        dropdowns.extend([brgy_value, brgy_disabled])
         
         # Report types
-        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
-        FROM utilities.reporttype;
-        """
-        values = []
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        reporttypes = df.to_dict('records')
+        reporttypes = ddl.load_report_types()
         dropdowns.append(reporttypes)
-        
-        # Events
-        sql = """SELECT e.name AS label, e.id AS value
-        FROM events.event AS e
-        LEFT JOIN events.eventbrgy AS eb ON e.id = eb.event_id
-        WHERE eb.region_id = %s AND eb.province_id = %s AND eb.citymun_id = %s
-        AND eb.brgy_id = %s;
-        """
-        values = [region, province, citymun, brgy]
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        events = df.to_dict('records')
-        dropdowns.append(events)
         return dropdowns
     else: raise PreventUpdate
 
@@ -291,19 +259,31 @@ def rep_vie_loadsearchresults(pathname, brgy, type, event, purok, region, provin
         pathname == '/reports/view'
     ]
     if any(conditions):
-        # Retrieve users as dataframe
+        # Retrieve reports as dataframe
         sql = """SELECT
         r.id AS report_id,
 		e.name AS event_name,
         CONCAT(rt.symbol, ' ', rt.label_war, ' (', rt.label_en, ')') as reporttype_id,
-        r.purok
+        ab.name AS brgy,
+        r.purok,
+        rv.status_id
         FROM reports.report AS r
         LEFT JOIN utilities.reporttype AS rt ON r.type_id = rt.id
 		LEFT JOIN events.event AS e ON r.event_id = e.id
-        WHERE (region_id = %s AND province_id = %s AND citymun_id = %s
+        LEFT JOIN utilities.addressbrgy AS ab ON (r.region_id = ab.region_id AND r.province_id = ab.province_id AND r.citymun_id = ab.citymun_id AND r.brgy_id = ab.id)
+        LEFT JOIN (
+            SELECT rv1.report_id, rv1.status_id
+            FROM reports.reportversion AS rv1
+            INNER JOIN (
+                SELECT report_id, MAX(id) AS version_id
+                FROM reports.reportversion
+                GROUP BY report_id
+            ) AS rv2 ON rv1.report_id = rv2.report_id AND rv1.id = rv2.version_id
+        ) AS rv ON r.id = rv.report_id
+        WHERE (r.region_id = %s AND r.province_id = %s AND r.citymun_id = %s
         """
         values = [region, province, citymun]
-        cols = ['No.', 'Event', 'Report type', 'Purok']
+        cols = ['No.', 'Event', 'Report type', 'Barangay', 'Purok', 'Status']
 
         if brgy and int(brgy) > 0:
             sql += """ AND brgy_id = %s"""

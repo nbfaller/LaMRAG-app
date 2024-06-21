@@ -111,3 +111,211 @@ class ReturnLinkCallback:
                     en = " (Return to dashboard)"
                 return [href, war, en]
             else: raise PreventUpdate
+
+class DropdownDataLoader:
+    def __init__(self, db):
+        self.db = db
+
+    # Basic dropdowns
+    def load_event_types(self):
+        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
+        FROM utilities.eventtype
+        ORDER BY id ASC;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df.to_dict('records')
+
+    def load_report_types(self):
+        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
+        FROM utilities.reporttype;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df.to_dict('records')
+
+    def lock_report_type(self, df):
+        type_value = None
+        type_disabled = False
+        if df.shape[0]:
+            type_value = df['type_id'][0]
+            type_disabled = True
+        return type_value, type_disabled
+
+    # Personal information dropdowns
+    def load_assignedsexes(self):
+        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
+        FROM utilities.assignedsex;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df.to_dict('records')
+    
+    # Time dropdowns
+    def load_time_hh(self):
+        sql = """SELECT label, value
+        FROM utilities.time_hh
+        ORDER BY value ASC;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df.to_dict('records')
+
+    def load_time_mmss(self):
+        sql = """SELECT label, value
+        FROM utilities.time_mmss
+        ORDER BY value ASC;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df.to_dict('records')
+    
+    # Address dropdowns
+    def load_regions(self):
+        sql = """SELECT name as label, id as value
+        FROM utilities.addressregion;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df.to_dict('records')
+
+    def load_barangays(self, region, province, citymun):
+        sql = """SELECT name AS label, id AS value
+        FROM utilities.addressbrgy
+        WHERE region_id = %s AND province_id = %s AND citymun_id = %s;
+        """
+        values = [region, province, citymun]
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df.to_dict('records')
+
+    def lock_brgy(self, brgy):
+        brgy_value = None
+        brgy_disabled = False
+        if brgy and int(brgy) > 0:
+            brgy_value = brgy
+            brgy_disabled = True
+        return brgy_value, brgy_disabled
+    
+    # Report dropdowns
+    def load_casualty_types(self):
+        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') as label, id as value
+        FROM utilities.casualtytype;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df.to_dict('records')
+    
+    def load_casualty_statuses(self):
+        sql = """SELECT CONCAT(label_war, ' (', label_en, ')') AS label, id AS value
+        FROM utilities.casualtystatus;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df.to_dict('records')
+
+    def load_public_utility_types(self):
+        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
+        FROM utilities.pubutiltype;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df.to_dict('records')
+
+    def load_public_utility_interruption_types(self):
+        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value, desc_war, desc_en
+        FROM utilities.pubutilinttype;
+        """
+        values = []
+        cols = ['label', 'value', 'desc_war', 'desc_en']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df[['label', 'value']].to_dict('records')
+    
+    def load_infra_types(self):
+        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') as label, id as value
+        FROM utilities.infratype;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df.to_dict('records')
+    
+    def load_infra_classes(self):
+        sql = """SELECT CONCAT(label_war, ' (', label_en, ')') AS label, id AS value
+        FROM utilities.infraclass;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df.to_dict('records')
+
+    def load_qty_units(self):
+        sql = """SELECT CONCAT(label_war, ' (', label_en, ')') AS label, id AS value
+        FROM utilities.qtyunit;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df.to_dict('records')
+
+    # Sectors and needs dropdowns
+    def load_sectors(self):
+        sql = """SELECT CONCAT(symbol, ';', desc_war, ';', desc_en) AS label, id AS value
+        FROM utilities.demographicsector;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        for i in range (len(df.index)):
+            df.at[i, 'label'] = [
+                str(df['label'][i]).split(";")[0] + " " + str(df['label'][i]).split(";")[1],
+                html.Br(),
+                html.Small(
+                    str(df['label'][i]).split(";")[2],
+                    className = 'text-muted'
+                )
+            ]
+        return df.to_dict('records')
+    
+    def load_needs(self):
+        sql = """SELECT CONCAT(symbol, ';', desc_war, ';', desc_en) AS label, id AS value
+        FROM utilities.demographicneed;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        for i in range (len(df.index)):
+            df.at[i, 'label'] = [
+                str(df['label'][i]).split(";")[0] + " " + str(df['label'][i]).split(";")[1],
+                html.Br(),
+                html.Small(
+                    str(df['label'][i]).split(";")[2],
+                    className = 'text-muted'
+                )
+            ]
+        return df.to_dict('records')

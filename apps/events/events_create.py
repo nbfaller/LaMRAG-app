@@ -8,7 +8,7 @@ import hashlib
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings, CardStyle, RequiredTag
+from utilities.utils import MarginSettings, CardStyle, RequiredTag, DropdownDataLoader
 
 layout = html.Div(
     [
@@ -550,6 +550,7 @@ eve_cre_url_pathname = '/events/create'
 def eve_cre_populatedropdowns(pathname, region, province, citymun):
     if pathname == eve_cre_url_pathname:
         dropdowns = []
+        ddl = DropdownDataLoader(db)
 
         # New event id
         event_id = 1
@@ -562,25 +563,11 @@ def eve_cre_populatedropdowns(pathname, region, province, citymun):
         dropdowns.append(event_id)
 
         # Event types
-        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
-        FROM utilities.eventtype
-        ORDER BY id ASC;
-        """
-        values = []
-        cols = ['label', 'value']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        types = df.to_dict('records')
+        types = ddl.load_event_types()
         dropdowns.append(types)
 
         # Barangays
-        sql = """SELECT name AS label, id AS value
-        FROM utilities.addressbrgy WHERE region_id = %s AND province_id = %s AND citymun_id = %s;
-        """
-        values = [region, province, citymun]
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        brgys = df.to_dict('records')
+        brgys = ddl.load_barangays(region, province, citymun)
         dropdowns.append(brgys)
 
         return dropdowns

@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings, CardStyle, ReturnLinkCallback
+from utilities.utils import MarginSettings, CardStyle, ReturnLinkCallback, DropdownDataLoader
 
 layout = html.Div(
     [
@@ -161,17 +161,11 @@ def eve_vie_populatedropdowns(pathname):
     ]
     if any(eve_vie_url_pathname):
         dropdowns = []
+        ddl = DropdownDataLoader(db)
 
         # Event types
-        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
-        FROM utilities.eventtype;
-        """
-        values = []
-        cols = ['label', 'value']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        eventtypes = df.to_dict('records')
-        dropdowns.append(eventtypes)
+        types = ddl.load_event_types()
+        dropdowns.append(types)
 
         return dropdowns
     else: raise PreventUpdate

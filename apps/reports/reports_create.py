@@ -10,7 +10,7 @@ import pandas as pd
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings, CardStyle, RequiredTag
+from utilities.utils import MarginSettings, CardStyle, RequiredTag, DropdownDataLoader
 
 layout = html.Div(
     [
@@ -2043,7 +2043,6 @@ def rep_cre_geolocset(housegps, infragps, pos, date):
         Output('rep_cre_input_reporttype_id', 'disabled'),
         # Purok
         Output('rep_cre_input_purok', 'value'),
-        Output('rep_cre_input_purok', 'disabled'),
         # Date of occurrence
         Output('rep_cre_input_date', 'date'),
         # Hours of occurrence
@@ -2116,6 +2115,7 @@ def rep_cre_populatedropdowns(
 ):
     if pathname == rep_cre_url_pathname:
         dropdowns = []
+        ddl = DropdownDataLoader(db)
         report_id = 1
         version_id = 1
 
@@ -2176,66 +2176,36 @@ def rep_cre_populatedropdowns(
         dropdowns.append(header)
 
         # Report types
-        type_value = None
-        type_disabled = False
-        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
-        FROM utilities.reporttype;
-        """
-        values = []
-        cols = ['label', 'value']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        reporttypes = df.to_dict('records')
+        reporttypes = ddl.load_report_types()
         dropdowns.append(reporttypes)
-        # Set value if report creation mode is 'update'
-        if existing_df.shape[0]:
-            type_value = existing_df['type_id'][0]
-            type_disabled = True
-        dropdowns.append(type_value)
-        dropdowns.append(type_disabled)
+
+        type_value, type_disabled = ddl.lock_report_type(existing_df)
+        dropdowns.extend([type_value, type_disabled])
 
         # Purok
         purok_value = None
-        purok_disabled = False
         # Set value if report creation mode is 'update'
-        if existing_df.shape[0]:
-            purok_value = existing_df['purok'][0]
-            purok_disabled = True
+        if existing_df.shape[0]: purok_value = existing_df['purok'][0]
         dropdowns.append(purok_value)
-        dropdowns.append(purok_disabled)
 
         # Date of occurrence
         date_value = None
         # Set value if report creation mode is 'update'
-        if existing_df.shape[0]:
-            date_value = existing_df['occurrence_date'][0]
+        if existing_df.shape[0]: date_value = existing_df['occurrence_date'][0]
         dropdowns.append(date_value)
 
         # Time of occurrence
-        sql = """SELECT label, value
-        FROM utilities.time_hh
-        ORDER BY value ASC;
-        """
-        values = []
-        df = db.querydatafromdatabase(sql, values, cols)
-        hh = df.to_dict('records')
-        dropdowns.append(hh)
-        dropdowns.append(hh)
-        dropdowns.append(hh)
+        c = 0
+        hh = ddl.load_time_hh()
+        while c < 3:
+            dropdowns.append(hh)
+            c += 1
 
-        sql = """SELECT label, value
-        FROM utilities.time_mmss
-        ORDER BY value ASC;
-        """
-        values = []
-        df = db.querydatafromdatabase(sql, values, cols)
-        mmss = df.to_dict('records')
-        dropdowns.append(mmss)
-        dropdowns.append(mmss)
-        dropdowns.append(mmss)
-        dropdowns.append(mmss)
-        dropdowns.append(mmss)
-        dropdowns.append(mmss)
+        c = 0
+        mmss = ddl.load_time_mmss()
+        while c < 6:
+            dropdowns.append(mmss)
+            c += 1
 
         existing_hh = None
         existing_mm = None
@@ -2256,14 +2226,7 @@ def rep_cre_populatedropdowns(
         dropdowns.append(existing_ampm)
 
         # Barangays
-        sql = """SELECT name AS label, id AS value
-        FROM utilities.addressbrgy
-        WHERE region_id = %s AND province_id = %s AND citymun_id = %s;
-        """
-        values = [region, province, citymun]
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        brgys = df.to_dict('records')
+        brgys = ddl.load_barangays(region, province, citymun)
         dropdowns.append(brgys)
 
         brgys_value = None
@@ -2282,6 +2245,7 @@ def rep_cre_populatedropdowns(
         FROM utilities.relinctype;
         """
         values = []
+        cols = ['label', 'value']
         df = db.querydatafromdatabase(sql, values, cols)
         df = df.sort_values('value')
         relinctypes = df.to_dict('records')
@@ -2300,58 +2264,25 @@ def rep_cre_populatedropdowns(
             existing_relinc = db.querydatafromdatabase(sql2, values2, cols2)
 
         # Assgined sex
-        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
-        FROM utilities.assignedsex
-        """
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        sexes = df.to_dict('records')
+        sexes = ddl.load_assignedsexes()
         dropdowns.append(sexes)
         dropdowns.append(sexes)
 
         # Regions (and setting app-locked region as default value)
-        sql = """SELECT name as label, id as value
-        FROM utilities.addressregion;
-        """
-        values = []
-        cols = ['label', 'value']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        regions = df.to_dict('records')
+        regions = ddl.load_regions()
         dropdowns.append(regions)
         dropdowns.append(region)
 
         # Casualty type
-        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') as label, id as value
-        FROM utilities.casualtytype;
-        """
-        values = []
-        cols = ['label', 'value']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        casualtytypes = df.to_dict('records')
+        casualtytypes = ddl.load_casualty_types()
         dropdowns.append(casualtytypes)
 
         # Casualty status
-        sql = """SELECT CONCAT(label_war, ' (', label_en, ')') as label, id as value
-        FROM utilities.casualtystatus;
-        """
-        values = []
-        cols = ['label', 'value']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        casualtystatuses = df.to_dict('records')
+        casualtystatuses = ddl.load_casualty_statuses()
         dropdowns.append(casualtystatuses)
 
         # Public utility types
-        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') as label, id as value
-        FROM utilities.pubutiltype;
-        """
-        values = []
-        cols = ['label', 'value']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        pubutiltypes = df.to_dict('records')
+        pubutiltypes = ddl.load_public_utility_types()
         dropdowns.append(pubutiltypes)
 
         # Public utility interruption types
@@ -2481,37 +2412,16 @@ def rep_cre_populatedropdowns(
         dropdowns.append(dmgdhousetype_desc)
 
         # Infrastructure types
-        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') as label, id as value, desc_war, desc_en
-        FROM utilities.infratype;
-        """
-        values = []
-        cols = ['label', 'value', 'desc_war', 'desc_en']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        infratypes = df[['label', 'value']].to_dict('records')
+        infratypes = ddl.load_infra_types()
         dropdowns.append(infratypes)
 
         # Infrastructure classes
-        sql = """SELECT CONCAT(label_war, ' (', label_en, ')') as label, id as value
-        FROM utilities.infraclass;
-        """
-        values = []
-        cols = ['label', 'value']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        infraclasses = df.to_dict('records')
+        infraclasses = ddl.load_infra_classes()
         dropdowns.append(infraclasses)
 
         # Infrastructure quantity units
-        sql = """SELECT CONCAT(label_war, ' (', label_en, ')') as label, id as value
-        FROM utilities.qtyunit;
-        """
-        values = []
-        cols = ['label', 'value']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        infraclasses = df.to_dict('records')
-        dropdowns.append(infraclasses)
+        qtyunits = ddl.load_qty_units()
+        dropdowns.append(qtyunits)
         dropdowns.append(1)
 
         return dropdowns

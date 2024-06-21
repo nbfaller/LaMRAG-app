@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings, CardStyle, RequiredTag
+from utilities.utils import MarginSettings, CardStyle, RequiredTag, DropdownDataLoader
 
 layout = html.Div(
     [
@@ -479,6 +479,7 @@ dat_ena_url_pathname = '/data/activate'
 def dat_ena_populatedropdowns(pathname, region, province, citymun):
     if pathname == dat_ena_url_pathname:
         dropdowns = []
+        ddl = DropdownDataLoader(db)
 
         # New window id
         window_id = 1
@@ -491,14 +492,7 @@ def dat_ena_populatedropdowns(pathname, region, province, citymun):
         dropdowns.append(window_id)
 
         # Barangays
-        sql = """SELECT name AS label, id AS value
-        FROM utilities.addressbrgy WHERE region_id = %s AND province_id = %s AND citymun_id = %s;
-        """
-        values = [region, province, citymun]
-        cols = ['label', 'value']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        brgys = df.to_dict('records')
+        brgys = ddl.load_barangays(region, province, citymun)
         dropdowns.append(brgys)
 
         # Minimum date

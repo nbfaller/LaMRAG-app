@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings, CardStyle, ReturnLinkCallback
+from utilities.utils import MarginSettings, CardStyle, ReturnLinkCallback, DropdownDataLoader
 
 layout = html.Div(
     [
@@ -624,16 +624,10 @@ return_link_callback_instance = ReturnLinkCallback(app, 'dat_bar')
 def dat_bar_populatedropdowns(pathname, region, province, citymun, brgy, selectedbrgy):
     if pathname == '/data/barangays':
         dropdowns = []
-
+        ddl = DropdownDataLoader(db)
+        
         # Barangays
-        sql = """SELECT name AS label, id AS value
-        FROM utilities.addressbrgy WHERE region_id = %s AND province_id = %s AND citymun_id = %s;
-        """
-        values = [region, province, citymun]
-        cols = ['label', 'value']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        brgys = df.to_dict('records')
+        brgys = ddl.load_barangays(region, province, citymun)
         dropdowns.append(brgys)
 
         if brgy > 0: dropdowns.append(brgy)

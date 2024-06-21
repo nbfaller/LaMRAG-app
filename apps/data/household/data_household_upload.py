@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings, CardStyle, RequiredTag
+from utilities.utils import MarginSettings, CardStyle, RequiredTag, DropdownDataLoader
 
 layout = html.Div(
     [
@@ -513,6 +513,7 @@ def dat_hou_upl_geolocset(selectgps, pos, date):
 def dat_hou_upl_populatedropdowns(pathname, region, province, citymun, brgy):
     if pathname == dat_hou_upl_pathname:
         dropdowns = []
+        ddl = DropdownDataLoader(db)
 
         # New household id
         newhousehold_id = 1
@@ -533,15 +534,7 @@ def dat_hou_upl_populatedropdowns(pathname, region, province, citymun, brgy):
         dropdowns.append(newresident_id)
 
         # Barangays
-        sql = """SELECT name as label, id as value
-        FROM utilities.addressbrgy
-        WHERE region_id = %s AND province_id = %s AND citymun_id = %s;
-        """
-        values = [region, province, citymun]
-        cols = ['label', 'value']
-        df = db.querydatafromdatabase(sql, values, cols)
-        df = df.sort_values('value')
-        brgys = df.to_dict('records')
+        brgys = ddl.load_barangays(region, province, citymun)
         dropdowns.append(brgys)
         dropdowns.append(brgy)
 
@@ -581,51 +574,18 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
     to_return = []
     residents_className = 'mt-3 mb-3 d-none'
     submit_className = 'mt-3 d-none'
+    ddl = DropdownDataLoader(db)
 
     # Populating dropdowns
     # Assgined sex
-    sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
-    FROM utilities.assignedsex;
-    """
-    values = []
-    cols = ['label', 'value']
-    df = db.querydatafromdatabase(sql, values, cols)
-    df = df.sort_values('value')
-    sexes = df.to_dict('records')
+    sexes = ddl.load_assignedsexes()
 
     # Populating checklists
     # Sectors
-    sql = """SELECT CONCAT(symbol, ';', desc_war, ';', desc_en) AS label, id AS value
-    FROM utilities.demographicsector;
-    """
-    df = db.querydatafromdatabase(sql, values, cols)
-    df = df.sort_values('value')
-    for i in range (len(df.index)):
-        df.at[i, 'label'] = [
-            str(df['label'][i]).split(";")[0] + " " + str(df['label'][i]).split(";")[1],
-            html.Br(),
-            html.Small(
-                str(df['label'][i]).split(";")[2],
-                className = 'text-muted'
-            )
-        ]
-    sectors = df.to_dict('records')
+    sectors = ddl.load_sectors()
+
     # Needs
-    sql = """SELECT CONCAT(symbol, ';', desc_war, ';', desc_en) AS label, id AS value
-    FROM utilities.demographicneed;
-    """
-    df = db.querydatafromdatabase(sql, values, cols)
-    df = df.sort_values('value')
-    for i in range (len(df.index)):
-        df.at[i, 'label'] = [
-            str(df['label'][i]).split(";")[0] + " " + str(df['label'][i]).split(";")[1],
-            html.Br(),
-            html.Small(
-                str(df['label'][i]).split(";")[2],
-                className = 'text-muted'
-            )
-        ]
-    needs = df.to_dict('records')
+    needs = ddl.load_needs()
 
     # Current date (for maximum date of birth)# Minimum date
     today = datetime.today()
