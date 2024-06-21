@@ -372,12 +372,18 @@ def com_home_loginprocess(btn, sessionlogout_time,
     prevent_initial_call = True
 )
 
-def com_home_routelogin(logintime, logouttime, user_id, sessionlogout, pathname):
+def com_home_routelogin(
+    logintime, logouttime,
+    user_id, sessionlogout, pathname
+):
     ctx = dash.callback_context
-    if ctx.triggered and (pathname == '/' or pathname == '/home'): # Fix this part
-        if user_id > 0: url = '/dashboard'
-        else: url = '/'
-    elif ctx.triggered and sessionlogout and (pathname == '/logout'):
+    if ctx.triggered:
         url = '/'
+        eventid = ctx.triggered[0]['prop_id'].split('.')[0]
+        if eventid == 'app_currentuser_id' and user_id > 0:
+            url = '/dashboard'
+        elif eventid == 'app_sessionlogout' and sessionlogout:
+            url = '/'
+        else: raise PreventUpdate
+        return [url]
     else: raise PreventUpdate
-    return [url]

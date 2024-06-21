@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings, CardStyle
+from utilities.utils import MarginSettings, CardStyle, ReturnLinkCallback
 
 layout = html.Div(
     [
@@ -108,10 +108,18 @@ layout = html.Div(
                                                 html.A(
                                                     [
                                                         html.I(className = 'bi bi-arrow-return-left me-2'),
-                                                        "Balik sa dashboard",
-                                                        html.Small(" (Return to dashboard)", className = 'text-muted')
+                                                        html.Span(
+                                                            "Balik sa home",
+                                                            id = 'eve_vie_spa_returnlink_war'
+                                                        ),
+                                                        html.Small(
+                                                            " (Return to home)",
+                                                            id = 'eve_vie_sma_returnlink_en',
+                                                            className = 'text-muted'
+                                                        )
                                                     ],
-                                                    href = '/dashboard'
+                                                    id = 'eve_vie_hta_returnlink',
+                                                    href = '/'
                                                 )
                                             ],
                                             class_name = 'col-auto'
@@ -130,6 +138,15 @@ layout = html.Div(
             class_name = 'justify-content-center'
         ),
     ]
+)
+
+# Common callback for changing return link depending
+# on user login status
+return_link_callback_instance = ReturnLinkCallback(
+    app,
+    'eve_vie_hta_returnlink',
+    'eve_vie_spa_returnlink_war',
+    'eve_vie_sma_returnlink_en'
 )
 
 # Callback for populating dropdowns and checklists

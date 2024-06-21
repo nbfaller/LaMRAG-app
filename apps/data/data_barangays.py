@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 # App definition
 from app import app
 from apps import dbconnect as db
-from utilities.utils import MarginSettings, CardStyle
+from utilities.utils import MarginSettings, CardStyle, ReturnLinkCallback
 
 layout = html.Div(
     [
@@ -555,6 +555,39 @@ layout = html.Div(
                             ],
                             id = 'dat_bar_div_cards',
                             className = MarginSettings().div
+                        ),
+                        html.Hr(),
+                        html.Div(
+                            [
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.A(
+                                                    [
+                                                        html.I(className = 'bi bi-arrow-return-left me-2'),
+                                                        html.Span(
+                                                            "Balik sa home",
+                                                            id = 'dat_bar_spa_returnlink_war'
+                                                        ),
+                                                        html.Small(
+                                                            " (Return to home)",
+                                                            id = 'dat_bar_sma_returnlink_en',
+                                                            className = 'text-muted'
+                                                        )
+                                                    ],
+                                                    id = 'dat_bar_hta_returnlink',
+                                                    href = '/'
+                                                )
+                                            ],
+                                            class_name = 'col-auto'
+                                        )
+                                    ],
+                                    class_name = MarginSettings().row + ' justify-content-end'
+                                )
+                            ],
+                            id = 'dat_bar_div_footer',
+                            className = MarginSettings().footer
                         )
                     ],
                     class_name = 'col-md-10'
@@ -563,6 +596,15 @@ layout = html.Div(
             class_name = 'justify-content-center'
         )
     ]
+)
+
+# Common callback for changing return link depending
+# on user login status
+return_link_callback_instance = ReturnLinkCallback(
+    app,
+    'dat_bar_hta_returnlink',
+    'dat_bar_spa_returnlink_war',
+    'dat_bar_sma_returnlink_en'
 )
 
 # Callback for populating dropdowns

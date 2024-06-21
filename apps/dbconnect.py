@@ -10,9 +10,6 @@ class dbcreds:
         port = 5433,
         password = 'password'
     )
-    #heroku = dict(
-    #    DATABASE_URL = os.environ['database']
-    #)
 
 def getdblocation():
     local = False
