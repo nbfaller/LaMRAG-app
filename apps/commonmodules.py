@@ -30,6 +30,26 @@ def cm_opensidebar(btn):
         else: raise PreventUpdate
     else: raise PreventUpdate
 
+# Callback for setting logo href depending on login status
+@app.callback(
+    [
+        Output('com_mod_hta_navbarbrand', 'href')
+    ],
+    [
+        Input('url', 'pathname')
+    ],
+    [
+        State('app_sessionlogout', 'data'),
+        State('app_currentuser_id', 'data')
+    ]
+)
+
+def cm_setlogohref(pathname, sessionlogout, user_id):
+    href = '/'
+    if not(sessionlogout) and int(user_id) > 0:
+        href = '/dashboard'
+    return [href]
+
 # Callback for setting navbar greeting and showing buttons if logged in
 @app.callback(
     [
@@ -152,6 +172,7 @@ navbar = dbc.Navbar(
                     #class_name = 'justify-content-center g-0',
                     class_name = 'justify-content-md-start justify-content-center g-0',
                 ),
+                id = 'com_mod_hta_navbarbrand',
                 href = '/'
             ),
             class_name = 'ms-md-4 me-md-2 ms-0 me-0'
