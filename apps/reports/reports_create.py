@@ -2456,11 +2456,11 @@ def rep_cre_populateevents(brgy, mode, region, province, citymun, report_id):
         brgy = int(brgy)
         report_id = int(report_id)
         # Events
-        sql = """SELECT event.name AS label, event.id AS value
-        FROM events.event
-        INNER JOIN events.eventbrgy ON event.id = eventbrgy.event_id
-        LEFT JOIN utilities.eventtype ON event.type_id = eventtype.id
-        WHERE eventbrgy.region_id = %s AND eventbrgy.province_id = %s AND eventbrgy.citymun_id = %s AND eventbrgy.brgy_id = %s;
+        sql = """SELECT e.name AS label, e.id AS value
+        FROM events.event AS e
+        INNER JOIN events.eventbrgy AS eb ON e.id = eb.event_id
+        LEFT JOIN utilities.eventtype AS et ON e.type_id = et.id
+        WHERE eb.region_id = %s AND eb.province_id = %s AND eb.citymun_id = %s AND eb.brgy_id = %s;
         """
         values = [region, province, citymun, brgy]
         cols = ['label', 'value']
@@ -2469,21 +2469,18 @@ def rep_cre_populateevents(brgy, mode, region, province, citymun, report_id):
         events = df.to_dict('records')
         options = events
         disabled = False
+        
         if mode == 'update':
             sql = """SELECT r.event_id FROM reports.reportversion AS rv
             LEFT JOIN reports.report AS r ON rv.report_id = r.id
             WHERE rv.report_id = %s
             ORDER BY event_id DESC LIMIT 1;
             """
-            values = [report_id - 1]
+            values = [report_id]
             cols = ['event_id']
             df = db.querydatafromdatabase(sql, values, cols)
             value = df['event_id'][0]
             disabled = True
-        #    event_value = existing_df['event_id'][0]
-        #    event_disabled = True
-        #dropdowns.append(event_value)
-        #dropdowns.append(event_disabled)
     return [options, value, disabled]
 
 # Callback for showing report forms based on type

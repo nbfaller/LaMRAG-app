@@ -340,13 +340,15 @@ def rep_vie_loadsearchresults(pathname, brgy, type, event, purok, region, provin
         if df.shape[0]:
             for i in df.index:
                 # Names as hyperlinks
-                df.loc[i, 'Report type'] = html.A(
+                row = html.A(
                     df['Report type'][i],
                     href = '/reports/report?id=%s' % df['No.'][i]
                 )
 
+                df.at[i, 'Report type'] = html.B(row, style = {'color' : '#ff5757'}) if df.at[i, 'Status'] == 1 else row
+
             results = dbc.Table.from_dataframe(
-                df,
+                df[['No.', 'Event', 'Report type', 'Barangay', 'Purok']],
                 striped = False,
                 bordered = False,
                 hover = True,
