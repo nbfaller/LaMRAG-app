@@ -77,7 +77,7 @@ layout = html.Div(
                                                                                             dbc.Col(
                                                                                                 html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                                                 width = 'auto',
-                                                                                                class_name = MarginSettings().alert_icon
+                                                                                                class_name = MarginSettings.alert_icon
                                                                                             ),
                                                                                             dbc.Col(
                                                                                                 id = 'com_hom_alert_passwordvalidation_col_text'
@@ -87,7 +87,7 @@ layout = html.Div(
                                                                                     id = 'com_hom_alert_passwordvalidation',
                                                                                     is_open = False,
                                                                                     color = 'warning',
-                                                                                    class_name = MarginSettings().label,
+                                                                                    class_name = MarginSettings.label,
                                                                                     dismissable = True,
                                                                                     #fade = True,
                                                                                 )
@@ -192,7 +192,7 @@ layout = html.Div(
                                                 className = 'text-muted'
                                             )
                                         ],
-                                        className =  MarginSettings().paragraph# + ' text-muted'
+                                        className =  MarginSettings.paragraph# + ' text-muted'
                                     )
                                 ],
                                 body = True,
@@ -223,7 +223,7 @@ layout = html.Div(
                                                 className = 'text-muted'
                                             )
                                         ],
-                                        className =  MarginSettings().paragraph# + ' text-muted'
+                                        className =  MarginSettings.paragraph# + ' text-muted'
                                     )
                                 ],
                                 body = True,

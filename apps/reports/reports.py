@@ -30,7 +30,7 @@ layout = html.Div(
                                             id = 'rep_vie_h1_header'
                                         ),
                                     ],
-                                    class_name = MarginSettings().row,
+                                    class_name = MarginSettings.row,
                                 ),
                                 dbc.Row(
                                     [
@@ -41,7 +41,7 @@ layout = html.Div(
                                                     #html.Small(" (Event)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_vie_label_brgy_id',
-                                                class_name = MarginSettings().label
+                                                class_name = MarginSettings.label
                                             ),
                                             class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3 col-lg-2'
                                         ),
@@ -55,14 +55,14 @@ layout = html.Div(
                                                 #dbc.FormText(
                                                 #    "Kun opisyal ka san barangay, awtomatiko nga pipilion dinhi an imo barangay. (If you are a barangay official, your barangay will be automatically selected.)",
                                                 #    color = 'secondary',
-                                                #    class_name = MarginSettings().form_text
+                                                #    class_name = MarginSettings.form_text
                                                 #),
                                             ],
                                             class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-9 col-lg-10'
                                         )
                                     ],
                                     id = 'rep_vie_row_brgy_id',
-                                    class_name = MarginSettings().row,
+                                    class_name = MarginSettings.row,
                                 ),
                                 dbc.Row(
                                     [
@@ -73,7 +73,7 @@ layout = html.Div(
                                                     #html.Small(" (Year)", className = 'text-muted')
                                                 ],
                                                 id = 'rep_vie_label_filter',
-                                                class_name = MarginSettings().label
+                                                class_name = MarginSettings.label
                                             ),
                                             class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3 col-lg-2'
                                         ),
@@ -88,7 +88,7 @@ layout = html.Div(
                                             class_name = 'align-self-center mb-0 col-12 col-md-9 col-lg-10'
                                         ),
                                     ],
-                                    class_name = MarginSettings().row
+                                    class_name = MarginSettings.row
                                 ),
                                 dbc.Row(
                                     [
@@ -99,8 +99,19 @@ layout = html.Div(
                                                 #type = 'text',
                                                 placeholder = "Event",
                                                 #value = 1
+                                                disabled = True
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-6 col-lg-7'
+                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-6 col-lg-4'
+                                        ),
+                                        dbc.Col(
+                                            dcc.Dropdown(
+                                                id = 'rep_vie_input_reportstatus_id',
+                                                multi = True,
+                                                #type = 'number',
+                                                placeholder = "Status",
+                                                #min = 1
+                                            ),
+                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3 col-lg-4'
                                         ),
                                         dbc.Col(
                                             dbc.Input(
@@ -109,22 +120,54 @@ layout = html.Div(
                                                 placeholder = "Purok",
                                                 min = 1
                                             ),
-                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3 col-lg-3'
+                                            class_name = 'align-self-center mb-2 mb-md-0 col-12 col-md-3 col-lg-2'
                                         ),
                                     ],
-                                    className = MarginSettings().row + ' justify-content-end'
+                                    className = MarginSettings.row + ' justify-content-end'
                                 )
                             ],
                             id = 'rep_vie_div_header',
-                            className = MarginSettings().header
+                            className = MarginSettings.header
                         ),
                         html.Div(
-                            id = 'rep_vie_div_results',
-                            className = MarginSettings().div,
-                            style = {
-                                'max-width' : '100%',
-                                'overflow' : 'scroll'
-                            }
+                            [
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.P(
+                                                    [
+                                                        "Alayon paghinumdom nga diri pa napuprubaran an mga report nga ",
+                                                        html.Span("pula", style = {'color' : '#ff5757'}),
+                                                        " an kulor.",
+                                                        html.Small(
+                                                            [
+                                                                " (Please note that reports colored in ",
+                                                                html.Span("red", style = {'color' : '#ff5757'}),
+                                                                " are not yet verified.)",
+                                                            ],
+                                                            className = 'text-muted'
+                                                        )
+                                                    ], className = MarginSettings.paragraph
+                                                ),
+                                            ]
+                                        )
+                                    ], class_name = MarginSettings.row
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            id = 'rep_vie_col_results',
+                                            #className = MarginSettings.div,
+                                            style = {
+                                                'max-width' : '100%',
+                                                'overflow' : 'scroll'
+                                            }
+                                        )
+                                    ]
+                                )
+                            ],
+                            className = MarginSettings.div
                         ),
                         html.Div(
                             [
@@ -143,7 +186,7 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = MarginSettings().row
+                                    ], class_name = MarginSettings.row
                                 ),
                                 dbc.Row(
                                     [
@@ -153,11 +196,11 @@ layout = html.Div(
                                             )
                                         )
                                     ],
-                                    class_name = MarginSettings().row
+                                    class_name = MarginSettings.row
                                 )
                             ],
                             id = 'rep_vie_div_chart',
-                            className = MarginSettings().footer + ' d-block'
+                            className = MarginSettings.footer + ' d-block'
                         ),
                         html.Hr(),
                         html.Div(
@@ -178,11 +221,11 @@ layout = html.Div(
                                             class_name = 'col-auto'
                                         )
                                     ],
-                                    class_name = MarginSettings().row + ' justify-content-end'
+                                    class_name = MarginSettings.row + ' justify-content-end'
                                 )
                             ],
                             id = 'rep_vie_div_footer',
-                            className = MarginSettings().footer
+                            className = MarginSettings.footer
                         )
                     ],
                     class_name = 'col-md-10'
@@ -200,6 +243,7 @@ layout = html.Div(
         Output('rep_vie_input_brgy_id', 'value'),
         Output('rep_vie_input_brgy_id', 'disabled'),
         Output('rep_vie_input_reporttype_id', 'options'),
+        Output('rep_vie_input_reportstatus_id', 'options')
     ],
     [
         Input('url', 'pathname')
@@ -231,13 +275,18 @@ def rep_vie_populatedropdowns(pathname, region, province, citymun, brgy):
         # Report types
         reporttypes = ddl.load_report_types()
         dropdowns.append(reporttypes)
+
+        # Report statuses
+        reportstatuses = ddl.load_report_statuses()
+        dropdowns.append(reportstatuses)
+
         return dropdowns
     else: raise PreventUpdate
 
 # Callback for searching reports
 @app.callback(
     [
-        Output('rep_vie_div_results', 'children')
+        Output('rep_vie_col_results', 'children')
     ],
     [
         Input('url', 'pathname'),
@@ -334,7 +383,7 @@ def rep_vie_loadsearchresults(pathname, brgy, type, event, purok, region, provin
                     ]
                 )
             ],
-            #class_name = MarginSettings().row
+            #class_name = MarginSettings.row
         ),
 
         if df.shape[0]:
@@ -345,7 +394,7 @@ def rep_vie_loadsearchresults(pathname, brgy, type, event, purok, region, provin
                     href = '/reports/report?id=%s' % df['No.'][i]
                 )
 
-                df.at[i, 'Report type'] = html.B(row, style = {'color' : '#ff5757'}) if df.at[i, 'Status'] == 1 else row
+                df.at[i, 'Report type'] = html.Span(row, style = {'color' : '#ff5757'}) if df.at[i, 'Status'] == 1 else row
 
             results = dbc.Table.from_dataframe(
                 df[['No.', 'Event', 'Report type', 'Barangay', 'Purok']],
@@ -377,7 +426,7 @@ def rep_vie_loadsearchresults(pathname, brgy, type, event, purok, region, provin
 
 def rep_vie_generatereportsgraph(pathname, brgy, region, province, citymun):
     fig = None
-    class_name = MarginSettings().footer + ' d-block'
+    class_name = MarginSettings.footer + ' d-block'
     conditions = [
         pathname == '/reports',
         pathname == '/reports/view'

@@ -39,7 +39,7 @@ layout = html.Div(
                                         ),
                                         width = 'auto'
                                     ),
-                                    class_name = MarginSettings().row,
+                                    class_name = MarginSettings.row,
                                 ),
                                 dbc.Row(
                                     [
@@ -48,11 +48,11 @@ layout = html.Div(
                                             id = 'rep_rep_h1_header'
                                         )
                                     ],
-                                    class_name = MarginSettings().row,
+                                    class_name = MarginSettings.row,
                                 )
                             ],
                             id = 'rep_rep_div_header',
-                            className = MarginSettings().header
+                            className = MarginSettings.header
                         ),
                         html.Hr(),
                         # Basic information
@@ -71,7 +71,7 @@ layout = html.Div(
                                                             html.Small(" (Basic information)", className = 'text-muted')
                                                         ]
                                                     ),
-                                                ], class_name = MarginSettings().row
+                                                ], class_name = MarginSettings.row
                                             ),
                                             dbc.Row(
                                                 [
@@ -83,7 +83,7 @@ layout = html.Div(
                                                             'overflow' : 'scroll'
                                                         }
                                                     )
-                                                ], #class_name = MarginSettings().row
+                                                ], #class_name = MarginSettings.row
                                             )
                                         #]
                                     #),
@@ -91,7 +91,7 @@ layout = html.Div(
                                 #)
                             ],
                             id = 'rep_rep_div_basicinfo',
-                            className = MarginSettings().div
+                            className = MarginSettings.div
                         ),
                         #html.Hr(),
                         html.Div(
@@ -106,7 +106,7 @@ layout = html.Div(
                                                 html.Small(" (Versions)", className = 'text-muted')
                                             ]
                                         ),
-                                    ], class_name = MarginSettings().row
+                                    ], class_name = MarginSettings.row
                                 ),
                                 dbc.Row(
                                     [
@@ -213,11 +213,11 @@ layout = html.Div(
                                                 ),
                                             ]
                                         ),
-                                    ], class_name = MarginSettings().row
+                                    ], class_name = MarginSettings.row
                                 ),
                             ],
                             id = 'rep_rep_div_data',
-                            className = MarginSettings().div
+                            className = MarginSettings.div
                         ),
                         html.Hr(),
                         html.Div(
@@ -238,11 +238,11 @@ layout = html.Div(
                                             class_name = 'col-auto'
                                         )
                                     ],
-                                    class_name = MarginSettings().row + ' justify-content-end'
+                                    class_name = MarginSettings.row + ' justify-content-end'
                                 )
                             ],
                             id = 'rep_rep_div_footer',
-                            className = MarginSettings().footer
+                            className = MarginSettings.footer
                         )
                     ],
                     class_name = 'col-md-10'
@@ -272,7 +272,7 @@ layout = html.Div(
                                                             """,
                                                             className = 'text-muted'
                                                         )
-                                                    ], className = MarginSettings().paragraph
+                                                    ], className = MarginSettings.paragraph
                                                 ),
                                             ]
                                         )
@@ -289,7 +289,7 @@ layout = html.Div(
                                                             dbc.Col(
                                                                 html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                 width = 'auto',
-                                                                class_name = MarginSettings().alert_icon
+                                                                class_name = MarginSettings.alert_icon
                                                             ),
                                                             dbc.Col(
                                                                 id = 'rep_rep_alert_passwordvalidation_col_text'
@@ -299,7 +299,7 @@ layout = html.Div(
                                                     id = 'rep_rep_alert_passwordvalidation',
                                                     is_open = False,
                                                     color = 'warning',
-                                                    class_name = MarginSettings().label,
+                                                    class_name = MarginSettings.label,
                                                     dismissable = True,
                                                     #fade = True,
                                                 )
@@ -321,7 +321,7 @@ layout = html.Div(
                                         )
                                     ],
                                     id = 'rep_rep_row_password',
-                                    class_name = MarginSettings().row + ' d-block'
+                                    class_name = MarginSettings.row + ' d-block'
                                 ),
                             ],
                             id = 'rep_rep_modal_confirm_body'
@@ -954,7 +954,7 @@ def rep_rep_submitcreation(
             # Modal dissmisability
             modal_backdrop = True
             # Password visibility
-            class_password = MarginSettings().row + ' ' + vis_block
+            class_password = MarginSettings.row + ' ' + vis_block
             if not(password):
                 alert_open = True
                 alert_class_name = 'mb-3'
@@ -1006,7 +1006,7 @@ def rep_rep_submitcreation(
                     # Modal dissmisability
                     modal_backdrop = 'static'
                     # Password visibility
-                    class_password = MarginSettings().row + ' ' + vis_none
+                    class_password = MarginSettings.row + ' ' + vis_none
 
                     alert_col_text = [
                         "Na-validate na an report.",

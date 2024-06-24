@@ -42,11 +42,11 @@ layout = html.Div(
                                                             ["(Fields with red asterisks ", RequiredTag.tag, " are required.)"],
                                                             className = 'text-muted'
                                                         )
-                                                    ], MarginSettings().paragraph
+                                                    ], MarginSettings.paragraph
                                                 )
                                             ],
                                             id = 'dat_hou_upl_row_header',
-                                            class_name = MarginSettings().row
+                                            class_name = MarginSettings.row
                                         ),
                                         dbc.Row(
                                             [
@@ -58,7 +58,7 @@ layout = html.Div(
                                                                     dbc.Col(
                                                                         html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                         width = 'auto',
-                                                                        class_name = MarginSettings().alert_icon 
+                                                                        class_name = MarginSettings.alert_icon 
                                                                     ),
                                                                     dbc.Col(
                                                                         [
@@ -76,7 +76,7 @@ layout = html.Div(
                                                             id = 'dat_hou_upl_alert_inputvalidation',
                                                             is_open = False,
                                                             color = 'warning',
-                                                            class_name = MarginSettings().label,
+                                                            class_name = MarginSettings.label,
                                                             dismissable = True,
                                                             #fade = True,
                                                         )
@@ -84,7 +84,7 @@ layout = html.Div(
                                                 )
                                             ],
                                             id = 'dat_hou_upl_row_inputvalidation',
-                                            class_name = MarginSettings().row
+                                            class_name = MarginSettings.row
                                         ),
                                         dbc.Row(
                                             [
@@ -95,7 +95,7 @@ layout = html.Div(
                                                             #html.Small(" (Event)", className = 'text-muted')
                                                         ],
                                                         id = 'dat_hou_upl_label_brgy_id',
-                                                        class_name = MarginSettings().label
+                                                        class_name = MarginSettings.label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -109,14 +109,14 @@ layout = html.Div(
                                                         dbc.FormText(
                                                             "Kun opisyal ka san barangay, awtomatiko nga pipilion dinhi an imo barangay. (If you are a barangay official, your barangay will be automatically selected.)",
                                                             color = 'secondary',
-                                                            class_name = MarginSettings().form_text
+                                                            class_name = MarginSettings.form_text
                                                         ),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 )
                                             ],
                                             id = 'dat_hou_upl_row_brgy_id',
-                                            class_name = MarginSettings().row,
+                                            class_name = MarginSettings.row,
                                         ),
                                         dbc.Row(
                                             [
@@ -127,7 +127,7 @@ layout = html.Div(
                                                             #html.Small(" (Purok)", className = 'text-muted')
                                                         ],
                                                         id = 'dat_hou_upl_label_purok',
-                                                        class_name = MarginSettings().label
+                                                        class_name = MarginSettings.label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -143,12 +143,12 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Alayon pagbutang san numero san purok kun diin ini natabó. (Please input the purok number where this incident occurred.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = MarginSettings().form_text
+                                                        #    class_name = MarginSettings.form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 ),
-                                            ], class_name = MarginSettings().row,
+                                            ], class_name = MarginSettings.row,
                                         ),
                                         dbc.Row(
                                             [
@@ -160,7 +160,7 @@ layout = html.Div(
                                                             html.Small(" (Location of home)", className = 'text-muted')
                                                         ],
                                                         id = 'dat_hou_upl_label_loc',
-                                                        class_name = MarginSettings().label
+                                                        class_name = MarginSettings.label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -196,7 +196,7 @@ layout = html.Div(
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = MarginSettings().row
+                                            ], class_name = MarginSettings.row
                                         ),
                                         dbc.Row(
                                             [
@@ -207,7 +207,7 @@ layout = html.Div(
                                                             html.Small(" (Number of household residents)", className = 'text-muted')
                                                         ],
                                                         id = 'dat_hou_upl_label_rescount',
-                                                        class_name = MarginSettings().label
+                                                        class_name = MarginSettings.label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                                 ),
@@ -224,12 +224,12 @@ layout = html.Div(
                                                         #dbc.FormText(
                                                         #    "Alayon pagbutang san numero san purok kun diin ini natabó. (Please input the purok number where this incident occurred.)",
                                                         #    color = 'secondary',
-                                                        #    class_name = MarginSettings().form_text
+                                                        #    class_name = MarginSettings.form_text
                                                         #),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
                                                 ),
-                                            ], class_name = MarginSettings().row,
+                                            ], class_name = MarginSettings.row,
                                         ),
                                     ]
                                 ),
@@ -251,14 +251,14 @@ layout = html.Div(
                                                         ),
                                                     ]
                                                 )
-                                            ], class_name = MarginSettings().row
+                                            ], class_name = MarginSettings.row
                                         ),
                                         dbc.Row(
                                             id = 'dat_hou_upl_row_residents'
                                         ),
                                     ],
                                     id = 'dat_hou_upl_div_residents',
-                                    className = MarginSettings().div + ' d-none',
+                                    className = MarginSettings.div + ' d-none',
                                     #style = {'display' : 'none'}
                                 ),
                                 # Submit button
@@ -283,7 +283,7 @@ layout = html.Div(
                                         )
                                     ],
                                     id = 'dat_hou_upl_div_submit',
-                                    className = MarginSettings().footer + 'd-none'
+                                    className = MarginSettings.footer + 'd-none'
                                 )
                             ]
                         )
@@ -315,7 +315,7 @@ layout = html.Div(
                                                             """,
                                                             className = 'text-muted'
                                                         )
-                                                    ], MarginSettings().paragraph
+                                                    ], MarginSettings.paragraph
                                                 ),
                                             ]
                                         )
@@ -332,7 +332,7 @@ layout = html.Div(
                                                             dbc.Col(
                                                                 html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                 width = 'auto',
-                                                                class_name = MarginSettings().alert_icon 
+                                                                class_name = MarginSettings.alert_icon 
                                                             ),
                                                             dbc.Col(
                                                                 id = 'dat_hou_upl_alert_passwordvalidation_col_text'
@@ -342,7 +342,7 @@ layout = html.Div(
                                                     id = 'dat_hou_upl_alert_passwordvalidation',
                                                     is_open = False,
                                                     color = 'warning',
-                                                    class_name = MarginSettings().label,
+                                                    class_name = MarginSettings.label,
                                                     dismissable = True,
                                                     #fade = True,
                                                 )
@@ -364,7 +364,7 @@ layout = html.Div(
                                         )
                                     ],
                                     id = 'dat_hou_upl_row_password',
-                                    class_name = MarginSettings().row
+                                    class_name = MarginSettings.row
                                 ),
                             ],
                             id = 'dat_hou_upl_modal_confirm_body'
@@ -621,7 +621,7 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                             'type' : 'dat_hou_upl_label_name',
                                             'index' : i
                                         },
-                                        class_name = MarginSettings().label
+                                        class_name = MarginSettings.label
                                     ),
                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                 ),
@@ -667,7 +667,7 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                     ],
                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                 ),
-                            ], class_name = MarginSettings().row,
+                            ], class_name = MarginSettings.row,
                         ),
                         dbc.Row(
                             [
@@ -681,7 +681,7 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                             'type' : 'dat_hou_upl_label_birthdate',
                                             'index' : i
                                         },
-                                        class_name = MarginSettings().label
+                                        class_name = MarginSettings.label
                                     ),
                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                 ),
@@ -710,7 +710,7 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                             'type' : 'dat_hou_upl_label_assignedsex_id',
                                             'index' : i
                                         },
-                                        class_name = MarginSettings().label
+                                        class_name = MarginSettings.label
                                     ),
                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                 ),
@@ -728,12 +728,12 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                         #dbc.FormText(
                                         #    "Mga active event la an puwede mahimuan report. (Reports can only be filed for active events.)",
                                         #    color = 'secondary',
-                                        #    class_name = MarginSettings().form_text
+                                        #    class_name = MarginSettings.form_text
                                         #),
                                     ],
                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
                                 ),
-                            ], className = MarginSettings().div,
+                            ], className = MarginSettings.div,
                         ),
                         # Affirmative identity
                         html.Div(
@@ -760,9 +760,9 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                                     Everyone is enjoined to fill out these details whenever applicable.)""",
                                                     className = 'text-muted'
                                                 )
-                                            ], MarginSettings().paragraph
+                                            ], MarginSettings.paragraph
                                         ),
-                                    ], class_name = MarginSettings().row
+                                    ], class_name = MarginSettings.row
                                 ),
                                 dbc.Row(
                                     [
@@ -773,7 +773,7 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                                     'type' : 'dat_hou_upl_label_livedname',
                                                     'index' : i
                                                 },
-                                                class_name = MarginSettings().label
+                                                class_name = MarginSettings.label
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
@@ -788,7 +788,7 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                         )
-                                    ], class_name = MarginSettings().row
+                                    ], class_name = MarginSettings.row
                                 ),
                                 dbc.Row(
                                     [
@@ -802,7 +802,7 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                                     'type' : 'dat_hou_upl_label_honorific',
                                                     'index' : i
                                                 },
-                                                class_name = MarginSettings().label
+                                                class_name = MarginSettings.label
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
@@ -827,7 +827,7 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                                     'type' : 'dat_hou_upl_label_pronouns',
                                                     'index' : i
                                                 },
-                                                class_name = MarginSettings().label
+                                                class_name = MarginSettings.label
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         ),
@@ -842,9 +842,9 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                             ),
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                         )
-                                    ], class_name = MarginSettings().row
+                                    ], class_name = MarginSettings.row
                                 )
-                            ], className = MarginSettings().div
+                            ], className = MarginSettings.div
                         ),
                         # Additional information
                         html.Div(
@@ -876,11 +876,11 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                                             as the following whenever applicable.)""",
                                                             className = 'text-muted'
                                                         )
-                                                    ], MarginSettings().paragraph
+                                                    ], MarginSettings.paragraph
                                                 ),
                                             ]
                                         )
-                                    ], class_name = MarginSettings().row
+                                    ], class_name = MarginSettings.row
                                 ),
                                 dbc.Row(
                                     [
@@ -908,7 +908,7 @@ def dat_hou_upl_populatedropdowns(count, brgy, purok, loc):
                                             ],
                                             class_name = 'mb-0 col-12 col-md-6'
                                         ),
-                                    ], class_name = MarginSettings().row
+                                    ], class_name = MarginSettings.row
                                 )
                             ]
                         ),
@@ -1103,7 +1103,7 @@ def dat_hou_upl_submitcreation(
             # Modal dissmisability
             modal_backdrop = True
             # Password visibility
-            class_password = MarginSettings().row + ' ' + vis_block
+            class_password = MarginSettings.row + ' ' + vis_block
 
             if not(password):
                 alert_open = True
@@ -1191,7 +1191,7 @@ def dat_hou_upl_submitcreation(
                     # Modal dissmisability
                     modal_backdrop = 'static'
                     # Password visibility
-                    class_password = MarginSettings().row + ' ' + vis_none
+                    class_password = MarginSettings.row + ' ' + vis_none
                 else:
                     alert_open = True
                     alert_class_name = 'mb-3'

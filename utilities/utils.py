@@ -1,20 +1,20 @@
 from dash import html
 import dash_bootstrap_components as dbc
+from dash import dcc, html, dash_table, callback
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 
 # Styling classes
 class MarginSettings:
-    def __init__(self):
-        self.header = 'mb-3'
-        self.div = 'mt-3 mb-3'
-        self.row = 'mb-2'
-        self.subhead = 'mt-3'
-        self.paragraph = 'mb-0'
-        self.label = 'mb-0'
-        self.form_text = 'mt-1'
-        self.alert_icon = 'pe-0 me-0 col-12 col-md-auto mb-2 mb-md-0'
-        self.footer = 'mt-3'
+    header = 'mb-3'
+    div = 'mt-3 mb-3'
+    row = 'mb-2'
+    subhead = 'mt-3'
+    paragraph = 'mb-0'
+    label = 'mb-0'
+    form_text = 'mt-1'
+    alert_icon = 'pe-0 me-0 col-12 col-md-auto mb-2 mb-md-0'
+    footer = 'mt-3'
 
 class CardStyle:
     @staticmethod
@@ -62,7 +62,7 @@ class HeaderRowConstructor:
             subheader = [
                 html.P(
                     subheader_components,
-                    className = MarginSettings().paragraph
+                    className = MarginSettings.paragraph
                 )
             ]
         
@@ -70,7 +70,7 @@ class HeaderRowConstructor:
 
         return dbc.Row(
             components,
-            class_name = MarginSettings().row
+            class_name = MarginSettings.row
         )
 
 # Common callbacks
@@ -145,6 +145,16 @@ class DropdownDataLoader:
             type_value = df['type_id'][0]
             type_disabled = True
         return type_value, type_disabled
+
+    def load_report_statuses(self):
+        sql = """SELECT CONCAT(symbol, ' ', label_war, ' (', label_en, ')') AS label, id AS value
+        FROM utilities.reportstatus;
+        """
+        values = []
+        cols = ['label', 'value']
+        df = self.db.querydatafromdatabase(sql, values, cols)
+        df = df.sort_values('value')
+        return df.to_dict('records')
 
     def load_user_types(self):
         sql = """SELECT label AS label, id AS value
@@ -340,3 +350,90 @@ class DropdownDataLoader:
                 )
             ]
         return df.to_dict('records')
+
+# Form field constructor
+class FormFieldConstructor:
+    def __init__(
+        self,
+        id_prefix: str, id_actual: str,
+        input_type,
+        input_children: list = None,
+        input_props: dict = None,
+        label_war: str = None, label_en: str = None,
+        form_text_war: str = None,
+        form_text_en: str = None,
+        required: bool = False,
+        label_col_class: str = 'col-md-3 col-lg-3',
+        input_col_class: str = 'col-md-9 col-lg-9'
+    ):
+        self.id_prefix = id_prefix
+        self.id_actual = id_actual
+        self.input_type = input_type
+        self.input_children = input_children if input_children is not None else []
+        self.input_props = input_props if input_props is not None else {}
+        self.label_war = label_war
+        self.label_en = label_en
+        self.form_text_war = form_text_war
+        self.form_text_en = form_text_en
+        self.required = required
+        self.label_col_class = label_col_class
+        self.input_col_class = input_col_class
+    
+    def create_label(self):
+        if not self.label_war: return None
+
+        label = [self.label_war]
+        if self.required:
+            label.append(RequiredTag.tag)
+        if self.label_en:
+            label.extend(
+                [
+                    html.Br(),
+                    html.Small(
+                        self.label_en,
+                        className = 'text-muted'
+                    )
+                ]
+            )
+        return dbc.Col(
+            [
+                dbc.Label(
+                    children = label,
+                    id = self.id_prefix + '_label_' + self.id_actual,
+                    className = MarginSettings.label
+                )
+            ],
+            class_name = 'align-self-center mb-2 mb-lg-0 col-12 ' + self.label_col_class
+        )
+
+    def create_input(self, input_id = None):
+        input_component = [
+            self.input_type(
+                id = self.id_prefix + '_input_' + self.id_actual if not input_id else self.id_prefix + '_input_' + input_id,
+                **self.input_props
+            )
+        ]
+        if self.form_text_war:
+            form_text = self.form_text_war
+            if self.form_text_en:
+                form_text += ' (%s)' % self.form_text_en
+            input_component.append(
+                dbc.FormText(
+                    form_text,
+                    color = 'secondary',
+                    className = MarginSettings.form_text
+                )
+            )
+        return dbc.Col(
+            input_component,
+            class_name = 'align-self-center mb-2 mb-lg-0 col-12 ' + self.input_col_class
+        )
+
+    def construct(self):
+        return dbc.Row(
+            [
+                self.create_label(),
+                self.create_input()
+            ],
+            id = self.id_prefix + '_row_' + self.id_actual,
+        )

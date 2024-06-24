@@ -32,11 +32,11 @@ layout = html.Div(
                                                             ["(Fields with red asterisks ", RequiredTag.tag, " are required.)"],
                                                             className = 'text-muted'
                                                         )
-                                                    ], className = MarginSettings().paragraph
+                                                    ], className = MarginSettings.paragraph
                                                 )
                                             ],
                                             id = 'eve_cre_row_header',
-                                            class_name = MarginSettings().row
+                                            class_name = MarginSettings.row
                                         ),
                                         dbc.Row(
                                             [
@@ -48,7 +48,7 @@ layout = html.Div(
                                                                     dbc.Col(
                                                                         html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                         width = 'auto',
-                                                                        class_name = MarginSettings().alert_icon
+                                                                        class_name = MarginSettings.alert_icon
                                                                     ),
                                                                     dbc.Col(
                                                                         [
@@ -66,15 +66,15 @@ layout = html.Div(
                                                             id = 'eve_cre_alert_inputvalidation',
                                                             is_open = False,
                                                             color = 'warning',
-                                                            class_name = MarginSettings().label,
+                                                            class_name = MarginSettings.label,
                                                             dismissable = True
                                                         )
                                                     ]
                                                 )
                                             ],
-                                            #class_name = MarginSettings().row
+                                            #class_name = MarginSettings.row
                                         )
-                                    ], className = MarginSettings().header
+                                    ], className = MarginSettings.header
                                 ),
                                 html.Hr(),
                                 html.Div(
@@ -89,7 +89,7 @@ layout = html.Div(
                                                             html.Small(" (Event type)", className = 'text-muted')
                                                         ],
                                                         id = 'eve_cre_label_eventtype_id',
-                                                        class_name = MarginSettings().label
+                                                        class_name = MarginSettings.label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -105,12 +105,12 @@ layout = html.Div(
                                                             (Separate events should be created for those caused by others, such as
                                                             tsunamis caused by earthquakes or storm surges caused by typhoons.)""",
                                                             color = 'secondary',
-                                                            class_name = MarginSettings().form_text
+                                                            class_name = MarginSettings.form_text
                                                         ),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = MarginSettings().row,
+                                            ], class_name = MarginSettings.row,
                                             id = 'eve_cre_row_event'
                                         ),
                                         # Event name
@@ -123,7 +123,7 @@ layout = html.Div(
                                                             html.Small(" (Event name, if possible)", className = 'text-muted')
                                                         ],
                                                         id = 'eve_cre_label_reporttype_id',
-                                                        class_name = MarginSettings().label
+                                                        class_name = MarginSettings.label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -144,12 +144,12 @@ layout = html.Div(
                                                             type of event here if you chose "Others" in the menu
                                                             above.)""",
                                                             color = 'secondary',
-                                                            class_name = MarginSettings().form_text
+                                                            class_name = MarginSettings.form_text
                                                         ),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = MarginSettings().row,
+                                            ], class_name = MarginSettings.row,
                                             id = 'eve_cre_row_name'
                                         ),
                                         # Affected barangays
@@ -162,7 +162,7 @@ layout = html.Div(
                                                             html.Small(" (Affected barangays)", className = 'text-muted')
                                                         ],
                                                         id = 'eve_cre_label_brgy_id',
-                                                        class_name = MarginSettings().label
+                                                        class_name = MarginSettings.label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -200,12 +200,12 @@ layout = html.Div(
                                                             (Please select all barangays that were affected,
                                                             have been affected, or may be affected.)""",
                                                             color = 'secondary',
-                                                            class_name = MarginSettings().form_text
+                                                            class_name = MarginSettings.form_text
                                                         ),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 ),
-                                            ], class_name = MarginSettings().row,
+                                            ], class_name = MarginSettings.row,
                                             id = 'eve_cre_row_brgy'
                                         ),
                                         # Start date
@@ -218,7 +218,7 @@ layout = html.Div(
                                                             html.Small(" (Date of occurrence)", className = 'text-muted')
                                                         ],
                                                         id = 'eve_cre_label_startdate',
-                                                        class_name = MarginSettings().label
+                                                        class_name = MarginSettings.label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -236,12 +236,12 @@ layout = html.Div(
                                                             """Pwede himuan event an mga panhitabó nga natabó na o matatabó pala.
                                                             (Events that have already occurred or are yet to occur can be created.)""",
                                                             color = 'secondary',
-                                                            class_name = MarginSettings().form_text
+                                                            class_name = MarginSettings.form_text
                                                         ),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 ),
-                                            ], class_name = MarginSettings().row
+                                            ], class_name = MarginSettings.row
                                         ),
                                         # Date of occurrence
                                         dbc.Row(
@@ -253,7 +253,7 @@ layout = html.Div(
                                                             html.Small(" (End date)", className = 'text-muted')
                                                         ],
                                                         id = 'eve_cre_label_enddate',
-                                                        class_name = MarginSettings().label
+                                                        class_name = MarginSettings.label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -272,14 +272,14 @@ layout = html.Div(
                                                             """Alayon pagbilin nga blangko kun usa la ini nga adlaw natabo.
                                                             (Please leave blank if the event only occurs for one day)""",
                                                             color = 'secondary',
-                                                            class_name = MarginSettings().form_text
+                                                            class_name = MarginSettings.form_text
                                                         ),
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 ),
                                             ],
                                             id = 'eve_cre_row_enddate',
-                                            class_name = MarginSettings().row
+                                            class_name = MarginSettings.row
                                         ),
                                         # Event description
                                         dbc.Row(
@@ -291,7 +291,7 @@ layout = html.Div(
                                                             html.Small(" (Description)", className = 'text-muted')
                                                         ],
                                                         id = 'eve_cre_label_description',
-                                                        class_name = MarginSettings().label
+                                                        class_name = MarginSettings.label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3'
                                                 ),
@@ -310,12 +310,12 @@ layout = html.Div(
                                                     ],
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9'
                                                 )
-                                            ], class_name = MarginSettings().row,
+                                            ], class_name = MarginSettings.row,
                                             id = 'eve_cre_row_synopsis'
                                         ),
                                     ],
                                     id = 'eve_cre_div_details',
-                                    className = MarginSettings().div
+                                    className = MarginSettings.div
                                 ),
                                 html.Hr(),
                                 # Create button
@@ -326,7 +326,7 @@ layout = html.Div(
                                                 dbc.Col(
                                                     html.I(className = 'bi bi-exclamation-square-fill me-2'),
                                                     width = 'auto',
-                                                    class_name = MarginSettings().alert_icon
+                                                    class_name = MarginSettings.alert_icon
                                                 ),
                                                 dbc.Col(
                                                     html.P(
@@ -354,10 +354,10 @@ layout = html.Div(
                                                                 """,
                                                                 className = 'text-muted'
                                                             )
-                                                        ], className = MarginSettings().paragraph
+                                                        ], className = MarginSettings.paragraph
                                                     )
                                                 )
-                                            ], class_name = MarginSettings().row
+                                            ], class_name = MarginSettings.row
                                         ),
                                         dbc.Row(
                                             [
@@ -377,7 +377,7 @@ layout = html.Div(
                                             class_name = 'justify-content-end'
                                         )
                                     ],
-                                    className = MarginSettings().footer
+                                    className = MarginSettings.footer
                                 )
                             ]
                         )
@@ -409,7 +409,7 @@ layout = html.Div(
                                                             """,
                                                             className = 'text-muted'
                                                         )
-                                                    ], className = MarginSettings().paragraph
+                                                    ], className = MarginSettings.paragraph
                                                 ),
                                             ]
                                         )
@@ -426,7 +426,7 @@ layout = html.Div(
                                                             dbc.Col(
                                                                 html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                                 width = 'auto',
-                                                                class_name = MarginSettings().alert_icon
+                                                                class_name = MarginSettings.alert_icon
                                                             ),
                                                             dbc.Col(
                                                                 id = 'eve_cre_alert_passwordvalidation_col_text'
@@ -436,7 +436,7 @@ layout = html.Div(
                                                     id = 'eve_cre_alert_passwordvalidation',
                                                     is_open = False,
                                                     color = 'warning',
-                                                    class_name = MarginSettings().label,
+                                                    class_name = MarginSettings.label,
                                                     dismissable = True,
                                                     #fade = True,
                                                 )
@@ -458,7 +458,7 @@ layout = html.Div(
                                         )
                                     ],
                                     id = 'eve_cre_row_password',
-                                    class_name = MarginSettings().row
+                                    class_name = MarginSettings.row
                                 ),
                             ],
                             id = 'eve_cre_modal_confirm_body'
@@ -754,7 +754,7 @@ def eve_cre_submitcreation(
             # Modal dissmisability
             modal_backdrop = True
             # Password visibility
-            class_password = MarginSettings().row + ' ' + vis_block
+            class_password = MarginSettings.row + ' ' + vis_block
 
             if not(password):
                 alert_open = True
@@ -822,7 +822,7 @@ def eve_cre_submitcreation(
                     # Modal dissmisability
                     modal_backdrop = 'static'
                     # Password visibility
-                    class_password = MarginSettings().row + ' ' + vis_none
+                    class_password = MarginSettings.row + ' ' + vis_none
                 else:
                     alert_open = True
                     alert_class_name = 'mb-3'

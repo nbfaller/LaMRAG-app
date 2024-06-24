@@ -33,7 +33,7 @@ layout = html.Div(
                                         ),
                                         width = 'auto'
                                     ),
-                                    class_name = MarginSettings().row,
+                                    class_name = MarginSettings.row,
                                 ),
                                 dbc.Row(
                                     [
@@ -42,11 +42,11 @@ layout = html.Div(
                                             id = 'eve_eve_h1_header'
                                         ),
                                     ],
-                                    class_name = MarginSettings().row,
+                                    class_name = MarginSettings.row,
                                 )
                             ],
                             id = 'eve_eve_div_header',
-                            className = MarginSettings().header
+                            className = MarginSettings.header
                         ),
                         html.Hr(),
                         # Basic information
@@ -65,7 +65,7 @@ layout = html.Div(
                                                             html.Small(" (Basic information)", className = 'text-muted')
                                                         ]
                                                     ),
-                                                ], class_name = MarginSettings().row
+                                                ], class_name = MarginSettings.row
                                             ),
                                             dbc.Row(
                                                 [
@@ -77,7 +77,7 @@ layout = html.Div(
                                                             'overflow' : 'scroll'
                                                         }
                                                     )
-                                                ], class_name = MarginSettings().row
+                                                ], class_name = MarginSettings.row
                                             ),
                                             dbc.Row(
                                                 [
@@ -105,7 +105,7 @@ layout = html.Div(
                                 #)
                             ],
                             id = 'eve_eve_div_basicinfo',
-                            className = MarginSettings().div
+                            className = MarginSettings.div
                         ),
                         html.Hr(),
                         html.Div(
@@ -120,23 +120,23 @@ layout = html.Div(
                                                 html.Small(" (Description)", className = 'text-muted')
                                             ]
                                         ),
-                                    ], class_name = MarginSettings().row
+                                    ], class_name = MarginSettings.row
                                 ),
                                 dbc.Row(
                                     [
                                         html.P(
                                             id = 'eve_eve_htp_description',
-                                            className = MarginSettings().paragraph,
+                                            className = MarginSettings.paragraph,
                                             style = {
                                                 'white-space' : 'pre-wrap'
                                             }
                                         )
                                     ],
-                                    class_name = MarginSettings().row,
+                                    class_name = MarginSettings.row,
                                 )
                             ],
                             id = 'eve_eve_div_description',
-                            className = MarginSettings().div + ' d-block'
+                            className = MarginSettings.div + ' d-block'
                         ),
                         html.Hr(),
                         html.Div(
@@ -152,7 +152,7 @@ layout = html.Div(
                                             ]
                                         ),
                                     ],
-                                    class_name = MarginSettings().row
+                                    class_name = MarginSettings.row
                                 ),
                                 dbc.Row(
                                     [
@@ -205,7 +205,7 @@ layout = html.Div(
                                             class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-5 col-lg-4'
                                         )
                                     ],
-                                    class_name = MarginSettings().row
+                                    class_name = MarginSettings.row
                                 ),
                                 dbc.Row(
                                     [
@@ -216,11 +216,11 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = MarginSettings().row
+                                    ], class_name = MarginSettings.row
                                 ),
                             ],
                             id = 'eve_eve_div_data',
-                            className = MarginSettings().div
+                            className = MarginSettings.div
                         ),
                         html.Hr(),
                         html.Div(
@@ -235,7 +235,7 @@ layout = html.Div(
                                                 html.Small(" (Generated consolidated reports)", className = 'text-muted')
                                             ]
                                         ),
-                                    ], class_name = MarginSettings().row
+                                    ], class_name = MarginSettings.row
                                 ),
                                 dbc.Row(
                                     [
@@ -246,10 +246,10 @@ layout = html.Div(
                                                 ),
                                             ]
                                         )
-                                    ], class_name = MarginSettings().row
+                                    ], class_name = MarginSettings.row
                                 ),
                             ],
-                            className = MarginSettings().div
+                            className = MarginSettings.div
                         ),
                         html.Hr(),
                         html.Div(
@@ -270,11 +270,11 @@ layout = html.Div(
                                             class_name = 'col-auto'
                                         )
                                     ],
-                                    class_name = MarginSettings().row + ' justify-content-end'
+                                    class_name = MarginSettings.row + ' justify-content-end'
                                 )
                             ],
                             id = 'eve_eve_div_footer',
-                            className = MarginSettings().footer
+                            className = MarginSettings.footer
                         )
                     ],
                     class_name = 'col-md-10'
@@ -348,7 +348,7 @@ def eve_eve_setevent(pathname, search, region, province, citymun, brgy):
                 # Description
                 to_return.append(df['Deskripsiyon (Description)'][0])
                 if df['Deskripsiyon (Description)'][0]:
-                    description_class = MarginSettings().div + ' d-block'
+                    description_class = MarginSettings.div + ' d-block'
                 to_return.append(description_class)
 
                 # Basic information table

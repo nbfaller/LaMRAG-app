@@ -34,7 +34,7 @@ layout = html.Div(
                                             id = 'com_abt_h1_header'
                                         ),
                                     ],
-                                    class_name = MarginSettings().row,
+                                    class_name = MarginSettings.row,
                                 ),
                                 dbc.Row(
                                     [
@@ -88,7 +88,7 @@ layout = html.Div(
                                 ),
                             ],
                             id = 'com_abt_div_header',
-                            className = MarginSettings().header
+                            className = MarginSettings.header
                         ),
                         html.Hr(),
                         html.Div(
@@ -115,7 +115,7 @@ layout = html.Div(
                                 ),
                             ],
                             id = 'com_abt_div_team',
-                            className = MarginSettings().div
+                            className = MarginSettings.div
                         )
                     ],
                     class_name = 'col-md-10'

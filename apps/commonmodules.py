@@ -831,11 +831,11 @@ change_password = dbc.Modal(
                                                     by your new password in the next two fields.""",
                                                     className = 'text-muted'
                                                 )
-                                            ], className = MarginSettings().paragraph
+                                            ], className = MarginSettings.paragraph
                                         )
                                     ]
                                 )
-                            ], class_name = MarginSettings().row
+                            ], class_name = MarginSettings.row
                         ),
                         dbc.Row(
                             [
@@ -847,7 +847,7 @@ change_password = dbc.Modal(
                                                     dbc.Col(
                                                         html.I(className = 'bi bi-exclamation-circle-fill me-2'),
                                                         width = 'auto',
-                                                        class_name = MarginSettings().alert_icon
+                                                        class_name = MarginSettings.alert_icon
                                                     ),
                                                     dbc.Col(
                                                         id = 'cm_alert_paswordvalidation_col_text'
@@ -857,7 +857,7 @@ change_password = dbc.Modal(
                                             id = 'cm_alert_passwordvalidation',
                                             is_open = False,
                                             color = 'warning',
-                                            class_name = MarginSettings().label,
+                                            class_name = MarginSettings.label,
                                             dismissable = True 
                                         )
                                     ]
@@ -877,7 +877,7 @@ change_password = dbc.Modal(
                                 )
                             ],
                             id = 'cm_row_existingpassword',
-                            class_name = MarginSettings().row + ' d-block'
+                            class_name = MarginSettings.row + ' d-block'
                         ),
                         dbc.Row(
                             [
@@ -892,7 +892,7 @@ change_password = dbc.Modal(
                                 )
                             ],
                             id = 'cm_row_newpassword_initial',
-                            class_name = MarginSettings().row + ' d-block'
+                            class_name = MarginSettings.row + ' d-block'
                         ),
                         dbc.Row(
                             [
@@ -907,7 +907,7 @@ change_password = dbc.Modal(
                                 )
                             ],
                             id = 'cm_row_newpassword_verification',
-                            class_name = MarginSettings().row + ' d-block'
+                            class_name = MarginSettings.row + ' d-block'
                         ),
                     ]
                 ),
