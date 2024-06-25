@@ -147,3 +147,32 @@ textarea:focus {
 .Select:has-value, .Select:is-clearable, .Select:is-disabled, .Select:is-searchable .Select--single {
     background-color: #444;
 }
+
+/* Upload */
+.Upload {
+    border: 1px solid #ced4da;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 400;
+    border-radius: 0.25rem;
+    /*background-color: #fff;*/
+    line-height: 1.5;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    width: 100%; /* Assuming you want it to span the full width */
+    /*height: 60px; /* Adjust based on your preference */
+    /*line-height: 60px; /* Center the text vertically */
+    border-width: 1px;
+    border-style: dashed;
+    border-radius: 5px;
+    /*text-align: center;*/
+  }
+  
+  .Upload:hover {
+    border-color: #b3b3b3; /* Slightly darker border on hover */
+  }
+  
+  .Upload:focus {
+    border-color: #c4b3a1;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(135, 113, 90, 0.25);
+  }
