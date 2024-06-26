@@ -7,10 +7,17 @@ from dash.exceptions import PreventUpdate
 from urllib.parse import urlparse, parse_qs
 import hashlib
 import pandas as pd
+# File upload dependencies
+import base64
+import os
+from werkzeug.utils import secure_filename
+import datetime
+import uuid
 # App definition
 from app import app
 from apps import dbconnect as db
 from utilities.utils import MarginSettings, CardStyle, RequiredTag, DropdownDataLoader
+from config.config import UPLOAD_DIRECTORY
 
 layout = html.Div(
     [
@@ -1789,6 +1796,51 @@ layout = html.Div(
                                                 )
                                             ], class_name = MarginSettings.row
                                         ),
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    dbc.Label(
+                                                        [
+                                                            "Dokumentasyon", html.Br(),
+                                                            html.Small(" (Documentation)", className = 'text-muted')
+                                                        ],
+                                                        id = 'rep_cre_label_docu',
+                                                        class_name = MarginSettings.label
+                                                    ),
+                                                    class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
+                                                ),
+                                                dbc.Col(
+                                                    [
+                                                        dcc.Upload(
+                                                            [
+                                                                html.H3(
+                                                                    html.I(className = 'bi bi-file-earmark-plus'),
+                                                                ),
+                                                                html.P(
+                                                                    [
+                                                                        'Pagdanas ug hulog file dinhi o ',
+                                                                        html.A('pindot para ka makapili file nga isusumite.'),
+                                                                        html.Br(),
+                                                                        html.Small(
+                                                                            [
+                                                                                'Drag and drop a file or ', html.A('click here to select files for upload.')
+                                                                            ],
+                                                                            className = 'text-muted'
+                                                                        )
+                                                                    ],
+                                                                    className = MarginSettings.paragraph
+                                                                ),
+                                                            ],
+                                                            id = 'rep_cre_upl_docu',
+                                                            # Allow multiple files to be uploaded
+                                                            multiple = True,
+                                                            className = 'Upload text-center'
+                                                        ),
+                                                    ],
+                                                    class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-9 col-lg-9'
+                                                )
+                                            ], class_name = MarginSettings.row
+                                        ),
                                         html.Hr(),
                                         dbc.Row(
                                             [
@@ -2800,6 +2852,58 @@ def rep_cre_setpubutilintdatetime(date, hh, mm):
         if hh and mm: ss_disabled = False
     return [hh_disabled, mm_disabled, ss_disabled, ampm_disabled]
 
+# Callback for displaying uploaded files inside dcc.Upload component
+@app.callback(
+    [
+        Output('rep_cre_upl_docu', 'children'),
+        Output('rep_cre_upl_docu', 'className'),
+    ],
+    [
+        Input('rep_cre_upl_docu', 'contents'),
+    ],
+    [
+        State('rep_cre_upl_docu', 'filename'),
+        State('rep_cre_upl_docu', 'last_modified')
+    ]
+)
+
+def rep_cre_displayuploads(contents, names, dates):
+    if contents is not None:
+        children = [
+            #names,
+            #rep_cre_savefile(name, content) for name, content in zip(names, contents)
+        ]
+        # Mapping of file extensions to Bootstrap icons
+        icon_mapping = {
+            '.pdf': 'bi bi-file-earmark-pdf-fill',
+            '.docx': 'bi bi-file-earmark-word-fill',
+            '.doc': 'bi bi-file-earmark-word-fill',
+            '.xlsx': 'bi bi-file-earmark-excel-fill',
+            '.xls': 'bi bi-file-earmark-excel-fill',
+            '.csv': 'bi bi-file-earmark-spreadsheet-fill',
+            '.pptx': 'bi bi-file-earmark-ppt-fill',
+            '.ppt': 'bi bi-file-earmark-ppt-fill',
+            '.txt': 'bi bi-file-earmark-text-fill',
+            '.zip': 'bi bi-file-earmark-zip-fill',
+            '.rar': 'bi bi-file-earmark-zip-fill',
+            '.jpg': 'bi bi-file-earmark-image-fill',
+            '.png': 'bi bi-file-earmark-image-fill',
+            '.gif': 'bi bi-file-earmark-image-fill',
+            '.mp4': 'bi bi-file-earmark-play-fill',
+            '.mp3': 'bi bi-file-earmark-music-fill',
+            '.wav': 'bi bi-file-earmark-music-fill',
+            '.flac': 'bi bi-file-earmark-music-fill',
+            '.ogg': 'bi bi-file-earmark-music-fill',
+        }
+        default_icon = 'bi bi-box-fill'
+        for name in names:
+            _, ext = os.path.splitext(name)
+            # Get the icon class from the mapping or use the default
+            icon_class = icon_mapping.get(ext, default_icon)
+            children.append(html.Li([html.I(className = icon_class + ' me-2'), name]))
+        return [children, 'Upload text-start']
+    else: raise PreventUpdate
+
 # Callback for confirming report creation
 @app.callback(
     [
@@ -3479,6 +3583,9 @@ def rep_cre_confirmcreation(
             State('rep_cre_input_time_ss', 'value'),
             State('rep_cre_input_time_ampm', 'value'),
             State('rep_cre_input_remarks', 'value'),
+            State('rep_cre_upl_docu', 'contents'),
+            State('rep_cre_upl_docu', 'filename'),
+            State('rep_cre_upl_docu', 'last_modified'),
         # Report type 1: Related incidents
         State('rep_cre_input_relinctype_id', 'value'),
         State('rep_cre_input_relinc_qty', 'value'),
@@ -3545,7 +3652,7 @@ def rep_cre_submitcreation(
     # Common information
     brgy_id, event, type, purok, date,
         # OPTIONAL
-        hh, mm, ss, ampm, remarks,
+        hh, mm, ss, ampm, remarks, docu_contents, docu_names, docu_dates,
     
     # Report type 1: Related incidents
     relinc_type, relinc_qty, relinc_status,
@@ -3746,7 +3853,10 @@ def rep_cre_submitcreation(
                             dmgdinfra_type, dmgdinfra_loc, dmgdinfra_loc_gps
                         ]
                         db.modifydatabase(sql, values)
-                    
+                    # File upload
+                    if docu_contents is not None:
+                        for name, content in zip(docu_names, docu_contents):
+                            rep_cre_savefile(newreport_id, newversion_id, name, content)
                     # Open alert
                     alert_open = True
                     alert_class_name = 'mb-3'
@@ -3791,3 +3901,29 @@ def rep_cre_submitcreation(
             ]
         else: raise PreventUpdate
     else: raise PreventUpdate
+
+def rep_cre_savefile(report_id, version_id, name, content):
+    # Extract the file extension from the original name
+    _, ext = os.path.splitext(name)
+    
+    # Generate a unique identifier for the file submission using both datetime and UUID
+    datetime_part = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
+    uuid_part = str(uuid.uuid4())
+    unique_identifier = f"{datetime_part}_{uuid_part}"
+    
+    # Construct the new filename structure
+    custom_name = f"{report_id}_{version_id}_{unique_identifier}{ext}"
+    
+    # Filename sanitization
+    secure_name = secure_filename(custom_name)
+    
+    # Ensure the filename does not result in path traversal
+    final_path = os.path.realpath(os.path.join(UPLOAD_DIRECTORY, secure_name))
+    upload_dir_realpath = os.path.realpath(UPLOAD_DIRECTORY)
+    if not final_path.startswith(upload_dir_realpath):
+        raise ValueError("Attempted directory traversal in file upload.")
+    
+    # Decode the content and save the file
+    data = content.encode("utf8").split(b";base64,")[1]
+    with open(final_path, "wb") as fp:
+        fp.write(base64.decodebytes(data))

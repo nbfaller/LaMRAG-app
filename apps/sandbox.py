@@ -72,27 +72,23 @@ layout = html.Div(
                                                     [
                                                         dcc.Upload(
                                                             [
-                                                                html.Div(
+                                                                html.H3(
+                                                                    html.I(className = 'bi bi-file-earmark-plus'),
+                                                                ),
+                                                                html.P(
                                                                     [
-                                                                        html.H3(
-                                                                            html.I(className = 'bi bi-file-earmark-plus'),
-                                                                        ),
-                                                                        html.P(
+                                                                        'Pagdanas ug hulog file dinhi o ',
+                                                                        html.A('pindot para ka makapili file nga isusumite.'),
+                                                                        html.Br(),
+                                                                        html.Small(
                                                                             [
-                                                                                'Pagdanas ug hulog file dinhi o ',
-                                                                                html.A('pindot para ka makapili file nga isusumite.'),
-                                                                                html.Br(),
-                                                                                html.Small(
-                                                                                    [
-                                                                                        'Drag and drop a file or ', html.A('click here to select files for upload.')
-                                                                                    ],
-                                                                                    className = 'text-muted'
-                                                                                )
+                                                                                'Drag and drop a file or ', html.A('click here to select files for upload.')
                                                                             ],
-                                                                            className = MarginSettings.paragraph
-                                                                        ),
+                                                                            className = 'text-muted'
+                                                                        )
                                                                     ],
-                                                                )
+                                                                    className = MarginSettings.paragraph
+                                                                ),
                                                             ],
                                                             id = 'sbox_upl_docu',
                                                             # Allow multiple files to be uploaded
