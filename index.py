@@ -11,7 +11,7 @@ from urllib.parse import urlparse, parse_qs
 # App definition
 from app import app
 from apps import dbconnect as db
-from apps import dashboard, home, commonmodules as cm, error, sandbox, about, forbidden
+from apps import dashboard, home, commonmodules as cm, error, sandbox, about, privacy, forbidden
 from apps.users import users_register, users_search
 from apps.reports import reports, reports_create, reports_report
 from apps.events import events, events_create, events_event
@@ -93,6 +93,7 @@ def displaypage(pathname, search, sessionlogout, user_id, usertype_id, brgy_id):
             if user_id < 0: # If logged out
                 public_paths = [
                     '/about',
+                    '/privacy',
                     '/data/barangays',
                     '/data/demographics',
                     '/events',
@@ -108,6 +109,7 @@ def displaypage(pathname, search, sessionlogout, user_id, usertype_id, brgy_id):
                 access_control = {
                     # Public access
                     '/about': [1, 2, 3],
+                    '/privacy' : [1, 2, 3],
                     '/data/barangays' : [1, 2, 3],
                     '/data/demographics' : [1, 2, 3],
                     '/events' : [1, 2, 3],

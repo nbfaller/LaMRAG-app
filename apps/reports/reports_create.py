@@ -2119,21 +2119,31 @@ def rep_cre_geolocset(housegps, infragps, pos, date):
         Output('rep_cre_input_brgy_id', 'disabled'),
         # Related incident
         Output('rep_cre_input_relinctype_id', 'options'),
-        #Output('rep_cre_input_relinctype_id', 'value'),
-        #Output('rep_cre_input_relinctype_id', 'disabled'),
-        # Update values for related incident
-            #Output('rep_cre_input_relinc_qty', 'value'),
-            #Output('rep_cre_input_relinc_description', 'value'),
-            #Output('rep_cre_input_relinc_actions', 'value'),
-            #Output('rep_cre_input_relincstatus_id', 'value'),
+        Output('rep_cre_input_relinctype_id', 'value'),
+        Output('rep_cre_input_relinctype_id', 'disabled'),
+            # Update values for related incident
+            Output('rep_cre_input_relinc_qty', 'value'),
+            Output('rep_cre_input_relinc_description', 'value'),
+            Output('rep_cre_input_relinc_actions', 'value'),
         # Assigned sex at birth
         Output('rep_cre_input_casualty_assignedsex_id', 'options'),
+            #Output('rep_cre_input_casualty_assignedsex_id', 'value'),
         Output('rep_cre_input_dmgdhouse_assignedsex_id', 'options'),
+            #Output('rep_cre_input_dmgdhouse_assignedsex_id', 'value'),
         # Casualty
         Output('rep_cre_input_casualty_region_id', 'options'),
         Output('rep_cre_input_casualty_region_id', 'value'),
         Output('rep_cre_input_casualtytype_id', 'options'),
+        #Output('rep_cre_input_casualtytype_id', 'value'),
         Output('rep_cre_input_casualtystatus_id', 'options'),
+        #Output('rep_cre_input_casualtystatus_id', 'value'),
+            # Update values for casualty
+            #Output('rep_cre_input_casualty_fname', 'value'),
+            #Output('rep_cre_input_casualty_mname', 'value'),
+            #Output('rep_cre_input_casualty_lname', 'value'),
+            #Output('rep_cre_input_casualty_age', 'value'),
+            #Output('rep_cre_input_casualty_cause', 'value'),
+            #Output('rep_cre_input_casualty_infosource', 'value'),
         # Public utility status
         Output('rep_cre_input_pubutiltype_id', 'options'),
         Output('rep_cre_input_pubutilinttype_id', 'options'),
@@ -2302,6 +2312,13 @@ def rep_cre_populatedropdowns(
         df = df.sort_values('value')
         relinctypes = df.to_dict('records')
         dropdowns.append(relinctypes)
+
+        # Related incident default values
+        relinc_type = None
+        relinc_disabled = False
+        relinc_qty = None
+        relinc_description = None
+        relinc_actions = None
         if existing_df.shape[0] and int(existing_df['type_id'][0]) == 1:
             sql2 = """SELECT
                 type_id,
@@ -2314,6 +2331,18 @@ def rep_cre_populatedropdowns(
             values2 = [int(report_id), int(version_id) - 1]
             cols2 = ['type_id', 'qty', 'description', 'actions_taken', 'status_id']
             existing_relinc = db.querydatafromdatabase(sql2, values2, cols2)
+            if existing_relinc.shape[0]:
+                relinc_type = existing_relinc['type_id'][0]
+                relinc_disabled = True
+                relinc_qty = existing_relinc['qty'][0]
+                relinc_description = existing_relinc['description'][0]# if existing_relinc['description'][0] else ''
+                relinc_actions = existing_relinc['actions_taken'][0]# if existing_relinc['actions_taken'][0] else None
+        
+        dropdowns.extend(
+            [
+                relinc_type, relinc_disabled, relinc_qty, relinc_description, relinc_actions
+            ]
+        )
 
         # Assgined sex
         sexes = ddl.load_assignedsexes()
@@ -2697,14 +2726,28 @@ def rep_cre_enablestreet(region, province, citymun, brgy):
     [
         Input('rep_cre_input_relinctype_id', 'value')
     ],
+    [
+        # Mode
+        State('rep_cre_sto_mode', 'data'),
+        # New report and version id based on mode
+        State('rep_cre_sto_newreport_id', 'data'),
+        State('rep_cre_sto_newversion_id', 'data'),
+    ],
     prevent_initial_call = True
 )
 
-def rep_cre_populaterelincstatus(type):
+def rep_cre_populaterelincstatus(type, mode, report_id, version_id):
     options = None
     value = None
     disabled = True
     if type:
+        existing_relinc = pd.DataFrame()
+        if mode == 'update':
+            sql = """SELECT status_id FROM reports.relinc WHERE report_id = %s AND version_id = %s;"""
+            values = [int(report_id), int(version_id) - 1]
+            cols = ['status_id']
+            existing_relinc = db.querydatafromdatabase(sql, values, cols)
+
         sql = """SELECT CONCAT(label_war, ' (', label_en, ')') AS label,
             id AS value FROM utilities.relincstatus
             WHERE relinctype_id = %s;"""
@@ -2714,12 +2757,10 @@ def rep_cre_populaterelincstatus(type):
         df = df.sort_values('value')
         if df.shape[0] > 0:
             options = df.to_dict('records')
+            disabled = False
+            value = existing_relinc['status_id'][0] if existing_relinc.shape[0] else df['value'][0]
             if df.shape[0] == 1:
-                value = df['value'][0]
                 disabled = True
-            else:
-                value = None
-                disabled = False
         else:
             options = df.to_dict('records')
             value = None
