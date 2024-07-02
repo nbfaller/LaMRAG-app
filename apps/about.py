@@ -147,7 +147,7 @@ layout = html.Div(
                                                                 dbc.Col(
                                                                     [
                                                                         dbc.CardImg(
-                                                                            src = "/static/team/nics.png",
+                                                                            #src = "/static/team/nics.png",
                                                                             style = {
                                                                                 'width': '100%',  # Ensure the image can scale in width
                                                                                 'height': '100%',  # Ensure the image can scale in height
