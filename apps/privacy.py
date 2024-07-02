@@ -565,7 +565,8 @@ layout = html.Div(
                                                 html.P(
                                                     [
                                                         """Bagacay Health Center, Magsaysay Extension (Diversion Road)""", html.Br(),
-                                                        """Calbayog City, Samar 6710"""
+                                                        """Calbayog City, Samar 6710""", html.Br(),
+                                                        html.I(className = 'bi bi-telephone-fill me-2'), "(+6355) 301 1294"
                                                     ]
                                                 )
                                             ],
@@ -1047,7 +1048,8 @@ layout = html.Div(
                                                 html.P(
                                                     [
                                                         """Bagacay Health Center, Magsaysay Extension (Diversion Road)""", html.Br(),
-                                                        """Calbayog City, Samar 6710"""
+                                                        """Calbayog City, Samar 6710""", html.Br(),
+                                                        html.I(className = 'bi bi-telephone-fill me-2'), "(+6355) 301 1294"
                                                     ]
                                                 )
                                             ],
