@@ -1580,7 +1580,7 @@ layout = html.Div(
                                                             "Ngaran/deskripsiyon", RequiredTag.tag, html.Br(),
                                                             html.Small(" (Name/description)", className = 'text-muted')
                                                         ],
-                                                        id = 'rep_cre_label_dmgdinfra_desc',
+                                                        id = 'rep_cre_label_dmgdinfra_description',
                                                         class_name = MarginSettings.label
                                                     ),
                                                     class_name = 'align-self-center mb-2 mb-lg-0 col-12 col-md-3 col-lg-3'
@@ -2119,31 +2119,14 @@ def rep_cre_geolocset(housegps, infragps, pos, date):
         Output('rep_cre_input_brgy_id', 'disabled'),
         # Related incident
         Output('rep_cre_input_relinctype_id', 'options'),
-        Output('rep_cre_input_relinctype_id', 'value'),
-        Output('rep_cre_input_relinctype_id', 'disabled'),
-            # Update values for related incident
-            Output('rep_cre_input_relinc_qty', 'value'),
-            Output('rep_cre_input_relinc_description', 'value'),
-            Output('rep_cre_input_relinc_actions', 'value'),
         # Assigned sex at birth
         Output('rep_cre_input_casualty_assignedsex_id', 'options'),
-            #Output('rep_cre_input_casualty_assignedsex_id', 'value'),
         Output('rep_cre_input_dmgdhouse_assignedsex_id', 'options'),
-            #Output('rep_cre_input_dmgdhouse_assignedsex_id', 'value'),
         # Casualty
         Output('rep_cre_input_casualty_region_id', 'options'),
         Output('rep_cre_input_casualty_region_id', 'value'),
         Output('rep_cre_input_casualtytype_id', 'options'),
-        #Output('rep_cre_input_casualtytype_id', 'value'),
         Output('rep_cre_input_casualtystatus_id', 'options'),
-        #Output('rep_cre_input_casualtystatus_id', 'value'),
-            # Update values for casualty
-            #Output('rep_cre_input_casualty_fname', 'value'),
-            #Output('rep_cre_input_casualty_mname', 'value'),
-            #Output('rep_cre_input_casualty_lname', 'value'),
-            #Output('rep_cre_input_casualty_age', 'value'),
-            #Output('rep_cre_input_casualty_cause', 'value'),
-            #Output('rep_cre_input_casualty_infosource', 'value'),
         # Public utility status
         Output('rep_cre_input_pubutiltype_id', 'options'),
         Output('rep_cre_input_pubutilinttype_id', 'options'),
@@ -2156,7 +2139,50 @@ def rep_cre_geolocset(housegps, infragps, pos, date):
         Output('rep_cre_input_infratype_id', 'options'),
         Output('rep_cre_input_infraclass_id', 'options'),
         Output('rep_cre_input_dmgdinfra_qtyunit_id', 'options'),
+        # Update values for related incident
+        Output('rep_cre_input_relinctype_id', 'value'),
+        Output('rep_cre_input_relinctype_id', 'disabled'),
+        Output('rep_cre_input_relinc_qty', 'value'),
+        Output('rep_cre_input_relinc_description', 'value'),
+        Output('rep_cre_input_relinc_actions', 'value'),
+        # Update values for casualty
+        Output('rep_cre_input_casualtytype_id', 'value'),
+        Output('rep_cre_input_casualtytype_id', 'disabled'),
+        Output('rep_cre_input_casualty_fname', 'value'),
+        Output('rep_cre_input_casualty_mname', 'value'),
+        Output('rep_cre_input_casualty_lname', 'value'),
+        Output('rep_cre_input_casualty_age', 'value'),
+        Output('rep_cre_input_casualty_assignedsex_id', 'value'),
+        Output('rep_cre_input_casualty_cause', 'value'),
+        Output('rep_cre_input_casualty_infosource', 'value'),
+        Output('rep_cre_input_casualtystatus_id', 'value'),
+        # Update values for public utility status
+        Output('rep_cre_input_pubutiltype_id', 'value'),
+        Output('rep_cre_input_pubutiltype_id', 'disabled'),
+        Output('rep_cre_input_pubutilinttype_id', 'value'),
+        Output('rep_cre_input_pubutilint_res_date', 'date'),
+        Output('rep_cre_input_pubutilint_res_time_hh', 'value'),
+        Output('rep_cre_input_pubutilint_res_time_mm', 'value'),
+        Output('rep_cre_input_pubutilint_res_time_ss', 'value'),
+        Output('rep_cre_input_pubutilint_res_time_ampm', 'value'),
+        # Update values for damaged house
+        Output('rep_cre_input_dmgdhousetype_id', 'value'),
+        Output('rep_cre_input_dmgdhouse_fname', 'value'),
+        Output('rep_cre_input_dmgdhouse_mname', 'value'),
+        Output('rep_cre_input_dmgdhouse_lname', 'value'),
+        Output('rep_cre_input_dmgdhouse_age', 'value'),
+        Output('rep_cre_input_dmgdhouse_assignedsex_id', 'value'),
+        # Update values for infrastructure
+        Output('rep_cre_input_infratype_id', 'value'),
+        Output('rep_cre_input_infratype_id', 'disabled'),
+        Output('rep_cre_input_infraclass_id', 'value'),
+        Output('rep_cre_input_infraclass_id', 'disabled'),
+        Output('rep_cre_input_dmgdinfra_description', 'value'),
+        Output('rep_cre_input_dmgdinfra_description', 'disabled'),
+        Output('rep_cre_input_dmgdinfra_qty', 'value'),
         Output('rep_cre_input_dmgdinfra_qtyunit_id', 'value'),
+        Output('rep_cre_input_dmgdinfra_cost', 'value'),
+        Output('rep_cre_input_dmgdinfratype_id', 'value'),
     ],
     [
         Input('url', 'pathname')
@@ -2312,37 +2338,6 @@ def rep_cre_populatedropdowns(
         df = df.sort_values('value')
         relinctypes = df.to_dict('records')
         dropdowns.append(relinctypes)
-
-        # Related incident default values
-        relinc_type = None
-        relinc_disabled = False
-        relinc_qty = None
-        relinc_description = None
-        relinc_actions = None
-        if existing_df.shape[0] and int(existing_df['type_id'][0]) == 1:
-            sql2 = """SELECT
-                type_id,
-                qty,
-                description,
-                actions_taken,
-                status_id
-                FROM reports.relinc
-                WHERE report_id = %s AND version_id = %s;"""
-            values2 = [int(report_id), int(version_id) - 1]
-            cols2 = ['type_id', 'qty', 'description', 'actions_taken', 'status_id']
-            existing_relinc = db.querydatafromdatabase(sql2, values2, cols2)
-            if existing_relinc.shape[0]:
-                relinc_type = existing_relinc['type_id'][0]
-                relinc_disabled = True
-                relinc_qty = existing_relinc['qty'][0]
-                relinc_description = existing_relinc['description'][0]# if existing_relinc['description'][0] else ''
-                relinc_actions = existing_relinc['actions_taken'][0]# if existing_relinc['actions_taken'][0] else None
-        
-        dropdowns.extend(
-            [
-                relinc_type, relinc_disabled, relinc_qty, relinc_description, relinc_actions
-            ]
-        )
 
         # Assgined sex
         sexes = ddl.load_assignedsexes()
@@ -2503,7 +2498,180 @@ def rep_cre_populatedropdowns(
         # Infrastructure quantity units
         qtyunits = ddl.load_qty_units()
         dropdowns.append(qtyunits)
-        dropdowns.append(1)
+
+        # Related incident default values
+        relinc_type = None
+        relinc_disabled = False
+        relinc_qty = None
+        relinc_description = None
+        relinc_actions = None
+        # Casualty default values
+        casualtytype_id = None
+        casualtytype_disabled = False
+        casualty_fname = None
+        casualty_mname = None
+        casualty_lname = None
+        casualty_age = None
+        casualty_assignedsex = None
+        casualty_cause = None
+        casualty_infosource = None
+        casualtystatus_id = None
+        # Public utility status default values
+        pubutiltype_id = None
+        pubutiltype_disabled = False
+        pubutilinttype_id = None
+        pubutilint_res_date = None
+        pubutilint_res_time_hh = None
+        pubutilint_res_time_mm = None
+        pubutilint_res_time_ss = None
+        pubutilint_res_time_ampm = None
+        # Damaged house default values
+        dmgdhousetype_id = None
+        dmgdhouse_fname = None
+        dmgdhouse_mname = None
+        dmgdhouse_lname = None
+        dmgdhouse_age = None
+        dmgdhouse_assignedsex = None
+        # Infrastructure default values
+        infratype_id = None
+        infratype_disabled = False
+        infraclass_id = None
+        infraclass_disabled = False
+        dmgdinfra_description = None
+        dmgdinfra_description_disabled = False
+        dmgdinfra_qty = None
+        dmgdinfra_qtyunit_id = 1
+        dmgdinfra_cost = None
+        dmgdinfratype_id = None
+
+        if existing_df.shape[0]:
+            if int(existing_df['type_id'][0]) == 1:
+                sql2 = """SELECT
+                    type_id,
+                    qty,
+                    description,
+                    actions_taken,
+                    status_id
+                    FROM reports.relinc
+                    WHERE report_id = %s AND version_id = %s;"""
+                values2 = [int(report_id), int(version_id) - 1]
+                cols2 = ['type_id', 'qty', 'description', 'actions_taken', 'status_id']
+                existing_relinc = db.querydatafromdatabase(sql2, values2, cols2)
+                if existing_relinc.shape[0]:
+                    relinc_type = existing_relinc['type_id'][0]
+                    relinc_disabled = True
+                    relinc_qty = existing_relinc['qty'][0]
+                    relinc_description = existing_relinc['description'][0]# if existing_relinc['description'][0] else ''
+                    relinc_actions = existing_relinc['actions_taken'][0]# if existing_relinc['actions_taken'][0] else None
+            elif int(existing_df['type_id'][0]) == 2:
+                sql2 = """SELECT
+                    type_id,
+                    fname,
+                    mname,
+                    lname,
+                    age,
+                    assignedsex_id,
+                    cause,
+                    infosource,
+                    status_id
+                    FROM reports.casualty
+                    WHERE report_id = %s AND version_id = %s;"""
+                values2 = [int(report_id), int(version_id) - 1]
+                cols2 = ['type_id', 'fname', 'mname', 'lname', 'age', 'assignedsex_id', 'cause', 'infosource', 'status_id']
+                existing_casualty = db.querydatafromdatabase(sql2, values2, cols2)
+                if existing_casualty.shape[0]:
+                    casualtytype_id = existing_casualty['type_id'][0]
+                    casualtytype_disabled = True
+                    casualty_fname = existing_casualty['fname'][0]
+                    casualty_mname = existing_casualty['mname'][0]
+                    casualty_lname = existing_casualty['lname'][0]
+                    casualty_age = existing_casualty['age'][0]
+                    casualty_assignedsex = existing_casualty['assignedsex_id'][0]
+                    casualty_cause = existing_casualty['cause'][0]
+                    casualty_infosource = existing_casualty['infosource'][0]
+                    casualtystatus_id = existing_casualty['status_id'][0]
+            elif int(existing_df['type_id'][0]) == 3:
+                sql2 = """SELECT
+                u.type_id,
+                r.inttype_id,
+                r.res_date,
+                r.res_time
+                FROM reports.pubutilint AS r
+                LEFT JOIN utilities.pubutil AS u ON r.pubutil_id = u.id
+                WHERE report_id = %s AND version_id = %s;"""
+                values2 = [int(report_id), int(version_id) - 1]
+                cols2 = ['type_id', 'inttype_id', 'res_date', 'res_time']
+                existing_pubutilint = db.querydatafromdatabase(sql2, values2, cols2)
+                if existing_pubutilint.shape[0]:
+                    pubutiltype_id = existing_pubutilint['type_id'][0]
+                    pubutiltype_disabled = True
+                    pubutilinttype_id = existing_pubutilint['inttype_id'][0]
+                    pubutilint_res_date = existing_pubutilint['res_date'][0]
+                    if existing_pubutilint['res_time'][0]:
+                        pubutilint_res_time_hh = int(existing_pubutilint['res_time'][0].split(':')[0])
+                        pubutilint_res_time_mm = int(existing_pubutilint['res_time'][0].split(':')[1])
+                        pubutilint_res_time_ss = int(existing_pubutilint['res_time'][0].split(':')[2])
+                        if pubutilint_res_time_hh > 12:
+                            pubutilint_res_time_hh -= 12
+                            pubutilint_res_time_ampm = 'PM'
+                        else: pubutilint_res_time_ampm = 'AM'
+            elif int(existing_df['type_id'][0]) == 4:
+                sql2 = """SELECT
+                type_id,
+                fname,
+                mname,
+                lname,
+                age,
+                assignedsex_id
+                FROM reports.dmgdhouse
+                WHERE report_id = %s AND version_id = %s;
+                """
+                values2 = [int(report_id), int(version_id) - 1]
+                cols2 = ['type_id', 'fname', 'mname', 'lname', 'age', 'assignedsex_id']
+                existing_dmgdhouse = db.querydatafromdatabase(sql2, values2, cols2)
+                if existing_dmgdhouse.shape[0]:
+                    dmgdhousetype_id = existing_dmgdhouse['type_id'][0]
+                    dmgdhouse_fname = existing_dmgdhouse['fname'][0]
+                    dmgdhouse_mname = existing_dmgdhouse['mname'][0]
+                    dmgdhouse_lname = existing_dmgdhouse['lname'][0]
+                    dmgdhouse_age = existing_dmgdhouse['age'][0]
+                    dmgdhouse_assignedsex = existing_dmgdhouse['assignedsex_id'][0]
+            elif int(existing_df['type_id'][0]) == 5:
+                sql2 = """SELECT
+                infratype_id,
+                infraclass_id,
+                infraname,
+                qty,
+                qtyunit_id,
+                infracost,
+                dmgtype_id
+                FROM reports.dmgdinfra
+                WHERE report_id = %s AND version_id = %s;
+                """
+                values2 = [int(report_id), int(version_id) - 1]
+                cols2 = ['infratype_id', 'infraclass_id', 'infraname', 'qty', 'qtyunit_id', 'infracost', 'dmgtype_id']
+                existing_dmgdinfra = db.querydatafromdatabase(sql2, values2, cols2)
+                if existing_dmgdinfra.shape[0]:
+                    infratype_id = existing_dmgdinfra['infratype_id'][0]
+                    infratype_disabled = True
+                    infraclass_id = existing_dmgdinfra['infraclass_id'][0]
+                    infraclass_disabled = True
+                    dmgdinfra_description = existing_dmgdinfra['infraname'][0]
+                    dmgdinfra_description_disabled = True
+                    dmgdinfra_qty = existing_dmgdinfra['qty'][0]
+                    dmgdinfra_qtyunit_id = existing_dmgdinfra['qtyunit_id'][0]
+                    dmgdinfra_cost = existing_dmgdinfra['infracost'][0]
+                    dmgdinfratype_id = existing_dmgdinfra['dmgtype_id'][0]
+        
+        dropdowns.extend(
+            [
+                relinc_type, relinc_disabled, relinc_qty, relinc_description, relinc_actions,
+                casualtytype_id, casualtytype_disabled, casualty_fname, casualty_mname, casualty_lname, casualty_age, casualty_assignedsex, casualty_cause, casualty_infosource, casualtystatus_id,
+                pubutiltype_id, pubutiltype_disabled, pubutilinttype_id, pubutilint_res_date, pubutilint_res_time_hh, pubutilint_res_time_mm, pubutilint_res_time_ss, pubutilint_res_time_ampm,
+                dmgdhousetype_id, dmgdhouse_fname, dmgdhouse_mname, dmgdhouse_lname, dmgdhouse_age, dmgdhouse_assignedsex,
+                infratype_id, infratype_disabled, infraclass_id, infraclass_disabled, dmgdinfra_description, dmgdinfra_description_disabled, dmgdinfra_qty, dmgdinfra_qtyunit_id, dmgdinfra_cost, dmgdinfratype_id
+            ]
+        )
 
         return dropdowns
     else: raise PreventUpdate

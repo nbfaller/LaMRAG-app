@@ -327,7 +327,7 @@ layout = html.Div(
                                                 ),
                                                 html.Li(
                                                     [
-                                                        html.B("Pananalipod san mga katungod: "),
+                                                        html.B("Pagsasalipod san mga katungod: "),
                                                         "Para mapanalipdan an mga katungod, pananag-iya, ug seguridad san Siyudad san Calbayog, an mga nagamit san LáMRAG, o an publiko; ug"
                                                     ],
                                                     className = 'ms-3'
